@@ -40,10 +40,10 @@ namespace Assets
 
             BuildingFactory = buildingFactory;
             RoadFactory = roadFactory;
+            Zoom = settings.DetailLevel;
             Tiles = new Dictionary<Vector2, Tile>();
             CenterTms = tile;
             CenterInMercator = GM.TileBounds(CenterTms, Zoom).center;
-            Zoom = settings.DetailLevel;
             Range = settings.Range;
             LoadImages = settings.LoadImages;
 
