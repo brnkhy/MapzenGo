@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Assets.Models.Factories
 {
-    public class BuildingFactory : MonoBehaviour
+    public class BuildingFactory : Factory
     {
         [SerializeField] private Building.Settings _settings;
         //using building center for key is quite wrong actually, but works for now
@@ -18,7 +18,7 @@ namespace Assets.Models.Factories
             _buildingDictionary = new Dictionary<Vector3, Building>();
         }
 
-        public void CreateBuilding(Vector2 tileMercPos, JSONObject geo, Transform parent = null)
+        public override void Create(Vector2 tileMercPos, JSONObject geo, Transform parent = null)
         {
             parent = parent ?? transform;
             var buildingCorners = new List<Vector3>();

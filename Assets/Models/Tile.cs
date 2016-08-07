@@ -19,14 +19,12 @@ namespace Assets
         [SerializeField]
         public Rect Rect;
 
-        private BuildingFactory _buildingFactory;
-        private RoadFactory _roadFactory;
+        private Dictionary<Type, Factory> _factories;
         private Settings _settings;
 
-        public Tile Initialize(BuildingFactory buildingFactory, RoadFactory roadFactory, Settings settings)
+        public Tile Initialize(Dictionary<Type, Factory> factory, Settings settings)
         {
-            _buildingFactory = buildingFactory;
-            _roadFactory = roadFactory;
+            _factories = factory;
             _settings = settings;
             Rect = GM.TileBounds(_settings.TileTms, _settings.Zoom);
             return this;
@@ -72,6 +70,7 @@ namespace Assets
 
                 StartCoroutine(CreateBuildings(mapData["buildings"], _settings.TileCenter));
                 StartCoroutine(CreateRoads(mapData["roads"], _settings.TileCenter));
+                StartCoroutine(CreateWater(mapData["water"], _settings.TileCenter));
             });
             
         }
@@ -80,7 +79,16 @@ namespace Assets
         {
             foreach (var geo in mapData["features"].list.Where(x => x["geometry"]["type"].str == "Polygon"))
             {
-                _buildingFactory.CreateBuilding(tileMercPos, geo, transform);
+                _factories[typeof(BuildingFactory)].Create(tileMercPos, geo, transform);
+                yield return null;
+            }
+        }
+
+        private IEnumerator CreateWater(JSONObject mapData, Vector2 tileMercPos)
+        {
+            foreach (var geo in mapData["features"].list.Where(x => x["geometry"]["type"].str == "Polygon"))
+            {
+                _factories[typeof(WaterFactory)].Create(tileMercPos, geo, transform);
                 yield return null;
             }
         }
@@ -90,7 +98,7 @@ namespace Assets
             for (int index = 0; index < mapData["features"].list.Count; index++)
             {
                 var geo = mapData["features"].list[index];
-                _roadFactory.CreateRoad(tileMercPos, geo, index, transform);
+                _factories[typeof(RoadFactory)].Create(tileMercPos, geo, transform);
                 yield return null;
             }
         }
@@ -102,6 +110,5 @@ namespace Assets
             public Vector3 TileCenter { get; set; }
             public bool LoadImages { get; set; }
         }
-
     }
 }

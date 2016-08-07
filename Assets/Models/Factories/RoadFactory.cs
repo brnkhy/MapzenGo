@@ -7,9 +7,9 @@ using UnityEngine;
 
 namespace Assets.Models.Factories
 {
-    public class RoadFactory : MonoBehaviour
+    public class RoadFactory : Factory
     {
-        public void CreateRoad(Vector2 tileMercPos, JSONObject geo, int index, Transform tt)
+        public override void Create(Vector2 tileMercPos, JSONObject geo, Transform tt = null)
         {
             if (geo["geometry"]["type"].str == "LineString")
             {
@@ -21,7 +21,7 @@ namespace Assets.Models.Factories
                     var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
                     roadEnds.Add(localMercPos.ToVector3xz());
                 }
-                CreateRoadSegment(tt, index, geo, roadEnds);
+                CreateRoadSegment(tt, geo, roadEnds);
             }
             else if (geo["geometry"]["type"].str == "MultiLineString")
             {
@@ -37,14 +37,14 @@ namespace Assets.Models.Factories
                         var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
                         roadEnds.Add(localMercPos.ToVector3xz());
                     }
-                    CreateRoadSegment(tt, index, geo, roadEnds);
+                    CreateRoadSegment(tt, geo, roadEnds);
                 }
             }
         }
 
-        private void CreateRoadSegment(Transform tt, int index, JSONObject geo, List<Vector3> roadEnds)
+        private void CreateRoadSegment(Transform tt, JSONObject geo, List<Vector3> roadEnds)
         {
-            var m = new GameObject("road " + index).AddComponent<RoadPolygon>();
+            var m = new GameObject("road").AddComponent<RoadPolygon>();
             m.transform.SetParent(tt, false);
             try
             {

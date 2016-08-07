@@ -18,9 +18,9 @@ namespace Assets.Models
         [SerializeField]
         private int _removeAfter;
 
-        public override void Init(BuildingFactory buildingFactory, RoadFactory roadFactory, World.Settings settings)
+        public override void Init(Dictionary<Type, Factory> factories, World.Settings settings)
         {
-            base.Init(buildingFactory, roadFactory, settings);
+            base.Init(factories, settings);
             _removeAfter = Math.Max(_removeAfter, Range * 2 + 1);
             var refTile = Tiles.Values.First();
             _centerCollider = new Rect(Vector2.zero - refTile.Rect.size / 2 * transform.lossyScale.x, refTile.Rect.size * transform.lossyScale.x);

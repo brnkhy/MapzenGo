@@ -15,12 +15,11 @@ namespace Assets
     public class TileManager : MonoBehaviour
     {
         private readonly string _mapzenUrl = "https://vector.mapzen.com/osm/{0}/{1}/{2}/{3}.{4}?api_key={5}";
-        private readonly string _key = "vector-tiles-5sBcqh6"; //try getting your own key if this doesn't work
-        private readonly string _mapzenLayers = "buildings,roads";
+        [SerializeField] private string _key = "vector-tiles-5sBcqh6"; //try getting your own key if this doesn't work
+        [SerializeField] private string _mapzenLayers = "buildings,roads,water";
         private readonly string _mapzenFormat = "json";
 
-        protected BuildingFactory BuildingFactory;
-        protected RoadFactory RoadFactory;
+        private Dictionary<Type, Factory> _factories;
         protected Transform TileHost;
 
         protected bool LoadImages;
@@ -30,17 +29,16 @@ namespace Assets
         protected Dictionary<Vector2, Tile> Tiles; //will use this later on
         protected Vector2 CenterTms; //tms tile coordinate
         protected Vector2 CenterInMercator; //this is like distance (meters) in mercator 
-        
-        public virtual void Init(BuildingFactory buildingFactory, RoadFactory roadFactory, World.Settings settings)
+
+        public virtual void Init(Dictionary<Type, Factory> factories, World.Settings settings)
         {
+            _factories = factories;
             var v2 = GM.LatLonToMeters(settings.Lat, settings.Long);
             var tile = GM.MetersToTile(v2, settings.DetailLevel);
 
             TileHost = new GameObject("Tiles").transform;
             TileHost.SetParent(transform, false);
 
-            BuildingFactory = buildingFactory;
-            RoadFactory = roadFactory;
             Zoom = settings.DetailLevel;
             TileSize = settings.TileSize;
             Tiles = new Dictionary<Vector2, Tile>();
@@ -74,8 +72,7 @@ namespace Assets
             var rect = GM.TileBounds(tileTms, Zoom);
             var tile = new GameObject("tile " + tileTms.x + "-" + tileTms.y)
                 .AddComponent<Tile>()
-                .Initialize(BuildingFactory,
-                      RoadFactory,
+                .Initialize(_factories,
                       new Tile.Settings()
                       {
                           Zoom = Zoom,
@@ -94,6 +91,7 @@ namespace Assets
         private void LoadTile(Vector2 tileTms, Tile tile)
         {
             var url = string.Format(_mapzenUrl, _mapzenLayers, Zoom, tileTms.x, tileTms.y, _mapzenFormat, _key);
+            Debug.Log(url);
             ObservableWWW.Get(url)
                 .Subscribe(
                     tile.ConstructTile, //success
