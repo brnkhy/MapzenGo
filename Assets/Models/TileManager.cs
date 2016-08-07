@@ -25,6 +25,7 @@ namespace Assets
 
         protected bool LoadImages;
         protected int Zoom = 16; //detail level of TMS system
+        protected float TileSize = 100;
         protected int Range = 1;
         protected Dictionary<Vector2, Tile> Tiles; //will use this later on
         protected Vector2 CenterTms; //tms tile coordinate
@@ -41,6 +42,7 @@ namespace Assets
             BuildingFactory = buildingFactory;
             RoadFactory = roadFactory;
             Zoom = settings.DetailLevel;
+            TileSize = settings.TileSize;
             Tiles = new Dictionary<Vector2, Tile>();
             CenterTms = tile;
             CenterInMercator = GM.TileBounds(CenterTms, Zoom).center;
@@ -48,6 +50,9 @@ namespace Assets
             LoadImages = settings.LoadImages;
 
             LoadTiles(CenterTms, CenterInMercator);
+
+            var rect = GM.TileBounds(CenterTms, Zoom);
+            transform.localScale = Vector3.one * (TileSize / rect.width);
         }
 
         protected void LoadTiles(Vector2 tms, Vector2 center)
@@ -79,8 +84,8 @@ namespace Assets
                           LoadImages = LoadImages
                       });
             Tiles.Add(tileTms, tile);
-            tile.transform.SetParent(TileHost, true);
             tile.transform.position = (rect.center - centerInMercator).ToVector3xz();
+            tile.transform.SetParent(TileHost);
             LoadTile(tileTms, tile);
 
             yield return null;

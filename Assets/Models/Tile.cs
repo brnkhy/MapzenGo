@@ -48,11 +48,11 @@ namespace Assets
                 if (!this) // checks if tile still exists and haven't destroyed yet
                     return;
 
-                var go = GameObject.CreatePrimitive(PrimitiveType.Plane).transform;
+                var go = GameObject.CreatePrimitive(PrimitiveType.Quad).transform;
                 go.name = "map";
-                go.localScale = new Vector3(Rect.width / 10, 1, Rect.width / 10);
-                go.rotation = Quaternion.AngleAxis(180, new Vector3(0, 1, 0));
-                go.parent = this.transform;
+                go.SetParent(transform, true);
+                go.localScale = new Vector3(Rect.width, Rect.width, 1);
+                go.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
                 go.localPosition = Vector3.zero;
                 go.localPosition -= new Vector3(0, 1, 0);
                 var rend = go.GetComponent<Renderer>();

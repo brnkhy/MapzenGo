@@ -45,7 +45,7 @@ namespace Assets.Models.Factories
         private void CreateRoadSegment(Transform tt, int index, JSONObject geo, List<Vector3> roadEnds)
         {
             var m = new GameObject("road " + index).AddComponent<RoadPolygon>();
-            m.transform.SetParent(tt, true);
+            m.transform.SetParent(tt, false);
             try
             {
                 m.Initialize(geo["properties"]["id"].str, tt.position, roadEnds, geo["properties"]["kind"].str);
@@ -54,6 +54,7 @@ namespace Assets.Models.Factories
             {
                 Debug.Log(ex);
             }
+            m.transform.localScale = Vector3.one;
         }
     }
 }

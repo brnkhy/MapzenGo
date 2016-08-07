@@ -37,5 +37,7 @@ public class World : MonoBehaviour
         public int DetailLevel = 16;
         [SerializeField]
         public bool LoadImages = false;
+        [SerializeField]
+        public float TileSize = 100;
     }
 }

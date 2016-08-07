@@ -61,7 +61,7 @@ namespace Assets.Models.Factories
                     building.Init(buildingCorners, kind, _settings);
 
                     building.name = "building";
-                    building.transform.parent = parent;
+                    building.transform.SetParent(parent, false);
                     building.transform.localPosition = buildingCenter;
                     _buildingDictionary.Add(uniqPos, building);
                 }

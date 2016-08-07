@@ -33,13 +33,13 @@ namespace Assets
             {
                 var roadPlane = Instantiate(Resources.Load<GameObject>("RoadQuad"));
                 roadPlane.GetComponentInChildren<MeshRenderer>().material = Resources.Load<Material>("Road");
-                roadPlane.transform.position = (tile + verts[index] + tile + verts[index - 1]) / 2;
-                roadPlane.transform.SetParent(transform, true);
+                roadPlane.transform.position = (verts[index] + verts[index - 1]) / 2;
                 Vector3 scale = roadPlane.transform.localScale;
                 scale.z = Vector3.Distance(verts[index], verts[index - 1]) / 10;
                 scale.x = ((float)(int) Type + 1) / 4;
                 roadPlane.transform.localScale = scale;
-                roadPlane.transform.LookAt(tile + verts[index - 1]);
+                roadPlane.transform.LookAt(verts[index - 1]);
+                roadPlane.transform.SetParent(transform, false);
             }
         }
     }
