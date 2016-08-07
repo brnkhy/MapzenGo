@@ -85,7 +85,7 @@ namespace Assets
                       });
             Tiles.Add(tileTms, tile);
             tile.transform.position = (rect.center - centerInMercator).ToVector3xz();
-            tile.transform.SetParent(TileHost);
+            tile.transform.SetParent(TileHost, false);
             LoadTile(tileTms, tile);
 
             yield return null;
