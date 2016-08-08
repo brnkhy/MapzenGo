@@ -86,7 +86,7 @@ namespace Assets
 
         private IEnumerator CreateWater(JSONObject mapData, Vector2 tileMercPos)
         {
-            foreach (var geo in mapData["features"].list.Where(x => x["geometry"]["type"].str == "Polygon"))
+            foreach (var geo in mapData["features"].list.Where(x => x["geometry"]["type"].str == "Polygon" || x["geometry"]["type"].str == "MultiPolygon"))
             {
                 _factories[typeof(WaterFactory)].Create(tileMercPos, geo, transform);
                 yield return null;
