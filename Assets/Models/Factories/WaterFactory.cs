@@ -22,9 +22,9 @@ namespace Assets.Models.Factories
         public override void Create(Vector2 tileMercPos, JSONObject geo, Transform parent = null)
         {
             parent = parent ?? transform;
-            var waterCorners = new List<Vector3>();
             foreach (var bb in geo["geometry"]["coordinates"].list)
             {
+                var waterCorners = new List<Vector3>();
                 var jo = (bb.list[0].list[0].IsArray) ? bb.list[0] : bb;
                 //var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
                 for (int i = 0; i < jo.list.Count - 1; i++)
