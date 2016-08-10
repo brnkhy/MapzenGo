@@ -91,7 +91,7 @@ namespace Assets
         private void LoadTile(Vector2 tileTms, Tile tile)
         {
             var url = string.Format(_mapzenUrl, _mapzenLayers, Zoom, tileTms.x, tileTms.y, _mapzenFormat, _key);
-            Debug.Log(url);
+            //Debug.Log(url);
             ObservableWWW.Get(url)
                 .Subscribe(
                     tile.ConstructTile, //success

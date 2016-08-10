@@ -34,7 +34,7 @@ namespace Assets.Models
             {
                 //player movement in TMS tiles
                 var tileDif = GetMovementVector();
-                Debug.Log(tileDif);
+                //Debug.Log(tileDif);
                 //move locals
                 Centralize(tileDif);
                 //create new tiles
