@@ -11,11 +11,11 @@ namespace Assets.Models.Factories
     {
         [SerializeField] private Building.Settings _settings;
         //using building center for key is quite wrong actually, but works for now
-        private Dictionary<Vector3, Building> _buildingDictionary { get; set; }
+        private Dictionary<string, Building> _buildingDictionary { get; set; }
 
         public void Start()
         {
-            _buildingDictionary = new Dictionary<Vector3, Building>();
+            _buildingDictionary = new Dictionary<string, Building>();
         }
 
         public override void Create(Vector2 tileMercPos, JSONObject geo, Transform parent = null)
@@ -32,19 +32,12 @@ namespace Assets.Models.Factories
                 var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
                 buildingCorners.Add(localMercPos.ToVector3xz());
             }
-
-            //prevents duplicates coming from different tiles
-            //it sucks yea but works for now, cant use propery/id in json for some reason
-            var uniqPos = new Vector3(bb.list[0][1].f, 0, bb.list[0][0].f);
-            if (_buildingDictionary.ContainsKey(uniqPos))
-            {
-                return;
-            }
-
+            
             try
             {
+                var id = geo["properties"]["id"].ToString();
                 var buildingCenter = buildingCorners.Aggregate((acc, cur) => acc + cur) / buildingCorners.Count;
-                if (!_buildingDictionary.ContainsKey(buildingCenter))
+                if (!_buildingDictionary.ContainsKey(id))
                 {
                     for (int i = 0; i < buildingCorners.Count; i++)
                     {
@@ -52,18 +45,24 @@ namespace Assets.Models.Factories
                         buildingCorners[i] = buildingCorners[i] - buildingCenter;
                     }
                     var building = new GameObject().AddComponent<Building>();
+                    building.name = "building " + geo["properties"]["id"].ToString();
                     var kind = "";
                     if (geo["properties"].HasField("landuse_kind"))
                         kind = geo["properties"]["landuse_kind"].str;
                     if (geo["properties"].HasField("name"))
                         building.Name = geo["properties"]["name"].str;
 
-                    building.Init(buildingCorners, kind, _settings);
+                    building.Id = geo["properties"]["id"].ToString();
+                    building.Name = "building";
+                    building.Type = geo["type"].str;
+                    building.SortKey = (int) geo["properties"]["sort_key"].f;
+                    building.Kind = geo["properties"]["kind"].str;
+                    building.LanduseKind = kind;
+                    building.Init(buildingCorners, _settings);
 
-                    building.name = "building";
                     building.transform.SetParent(parent, false);
                     building.transform.localPosition = buildingCenter;
-                    _buildingDictionary.Add(uniqPos, building);
+                    _buildingDictionary.Add(id, building);
                 }
             }
             catch (Exception ex)
@@ -72,6 +71,8 @@ namespace Assets.Models.Factories
             }
             //}
         }
+
+        
 
     }
 }

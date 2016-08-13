@@ -10,22 +10,33 @@ namespace Assets.Models
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class Building : MonoBehaviour
     {
-        private List<Vector3> _verts;
-
-        public string LanduseKind;
+        public string Id { get; set; }
+        public string Type;
+        public string Kind;
         public string Name;
 
-        public void Init(List<Vector3> buildingCorners, string kind, Settings settings)
+        public string LanduseKind
         {
-            LanduseKind = kind;
-            _verts = buildingCorners;
-            GetComponent<MeshFilter>().mesh = CreateMesh(_verts, settings);
-            GetComponent<MeshRenderer>().material = Resources.Load<Material>(LanduseKind);
+            get { return _landuseKind; }
+            set
+            {
+                _landuseKind = value;
+                GetComponent<MeshRenderer>().material = Resources.Load<Material>(LanduseKind);
+            }
         }
-        
-        private static Mesh CreateMesh(List<Vector3> verts, Settings settings)
+
+        public int SortKey;
+        private string _landuseKind;
+
+        public void Init(List<Vector3> buildingCorners, Settings settings)
         {
-            var height = UnityEngine.Random.Range(settings.MinimumBuildingHeight, settings.MaximumBuildingHeight);
+            GetComponent<MeshFilter>().mesh = CreateMesh(buildingCorners, settings);
+        }
+
+        private Mesh CreateMesh(List<Vector3> verts, Settings settings)
+        {
+            var height = UnityEngine.Random.Range(settings.MinimumBuildingHeight,
+                        settings.MaximumBuildingHeight);
             var tris = new Triangulator(verts.Select(x => x.ToVector2xz()).ToArray());
             var mesh = new Mesh();
 
@@ -86,4 +97,5 @@ namespace Assets.Models
             public int MaximumBuildingHeight = 5;
         }
     }
+
 }
