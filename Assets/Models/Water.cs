@@ -10,15 +10,14 @@ namespace Assets.Models
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class Water : MonoBehaviour
     {
-        private List<Vector3> _verts;
-
-        public string LanduseKind;
+        public string Id { get; set; }
+        public string Type;
+        public string Kind;
         public string Name;
 
         public void Init(List<Vector3> buildingCorners, Settings settings)
         {
-            _verts = buildingCorners;
-            GetComponent<MeshFilter>().mesh = CreateMesh(_verts, settings);
+            GetComponent<MeshFilter>().mesh = CreateMesh(buildingCorners, settings);
             GetComponent<MeshRenderer>().material = Resources.Load<Material>("Water");
         }
         

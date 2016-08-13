@@ -12,11 +12,11 @@ namespace Assets.Models.Factories
         [SerializeField]
         private Water.Settings _settings;
         //using water center for key is quite wrong actually, but works for now
-        private Dictionary<Vector3, Water> _waterDictionary { get; set; }
+        private Dictionary<string, Water> _waterDictionary { get; set; }
 
         public void Start()
         {
-            _waterDictionary = new Dictionary<Vector3, Water>();
+            _waterDictionary = new Dictionary<string, Water>();
         }
 
         public override void Create(Vector2 tileMercPos, JSONObject geo, Transform parent = null)
@@ -34,19 +34,12 @@ namespace Assets.Models.Factories
                     var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
                     waterCorners.Add(localMercPos.ToVector3xz());
                 }
-
-                //prevents duplicates coming from different tiles
-                //it sucks yea but works for now, cant use propery/id in json for some reason
-                var uniqPos = new Vector3(jo.list[0][1].f, 0, jo.list[0][0].f);
-                if (_waterDictionary.ContainsKey(uniqPos))
-                {
-                    return;
-                }
-
+                
                 try
                 {
+                    var id = geo["properties"]["id"].ToString();
                     var waterCenter = waterCorners.Aggregate((acc, cur) => acc + cur) / waterCorners.Count;
-                    if (!_waterDictionary.ContainsKey(waterCenter))
+                    if (!_waterDictionary.ContainsKey(id))
                     {
                         for (int i = 0; i < waterCorners.Count; i++)
                         {
@@ -55,11 +48,16 @@ namespace Assets.Models.Factories
                         }
                         var water = new GameObject().AddComponent<Water>();
 
+                        water.Id = geo["properties"]["id"].ToString();
+                        water.Name = "water";
+                        water.Type = geo["type"].str;
+                        water.Kind = geo["properties"]["kind"].str;
+
                         water.Init(waterCorners, _settings);
                         water.name = "water";
                         water.transform.SetParent(parent, false);
                         water.transform.localPosition = waterCenter - new Vector3(0, 0.1f, 0);
-                        _waterDictionary.Add(uniqPos, water);
+                        _waterDictionary.Add(id, water);
                     }
                 }
                 catch (Exception ex)
