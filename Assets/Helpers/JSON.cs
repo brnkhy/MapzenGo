@@ -1,5 +1,5 @@
 ﻿#define PRETTY		//Comment out when you no longer need to read JSON to disable pretty print system-wide
-#define USEFLOAT	//Use floats for numbers instead of doubles	(enable if you're getting too many significant digits in string output)
+//#define USEFLOAT	//Use floats for numbers instead of doubles	(enable if you're getting too many significant digits in string output)
 
 using UnityEngine;
 using System.Collections;
