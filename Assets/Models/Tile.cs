@@ -12,7 +12,7 @@ using UniRx;
 
 namespace Assets
 {
-    public class Tile :MonoBehaviour
+    public class Tile : MonoBehaviour
     {
         public string MapImageUrlBase = "http://b.tile.openstreetmap.org/";
 
@@ -40,7 +40,7 @@ namespace Assets
             string url;
 
             var heavyMethod = Observable.Start(() => new JSONObject(text));
-            
+
             heavyMethod.ObserveOnMainThread().Subscribe(mapData =>
             {
                 if (!this) // checks if tile still exists and haven't destroyed yet
@@ -72,15 +72,20 @@ namespace Assets
                 StartCoroutine(CreateRoads(mapData["roads"], _settings.TileCenter));
                 StartCoroutine(CreateWater(mapData["water"], _settings.TileCenter));
             });
-            
+
         }
 
         private IEnumerator CreateBuildings(JSONObject mapData, Vector2 tileMercPos)
         {
             foreach (var geo in mapData["features"].list.Where(x => x["geometry"]["type"].str == "Polygon"))
             {
-                _factories[typeof(BuildingFactory)].Create(tileMercPos, geo, transform);
-                yield return null;
+                var factory = _factories[typeof(BuildingFactory)];
+                foreach (var building in factory.Create(tileMercPos, geo))
+                {
+                    building.transform.SetParent(transform, false);
+                    //I'm not keeping these anywhere for now but you can always create a list or something here and save them
+                    yield return null;
+                }
             }
         }
 
@@ -88,18 +93,27 @@ namespace Assets
         {
             foreach (var geo in mapData["features"].list.Where(x => x["geometry"]["type"].str == "Polygon" || x["geometry"]["type"].str == "MultiPolygon"))
             {
-                _factories[typeof(WaterFactory)].Create(tileMercPos, geo, transform);
-                yield return null;
+                var factory = _factories[typeof(WaterFactory)];
+                foreach (var water in factory.Create(tileMercPos, geo))
+                {
+                    water.transform.SetParent(transform, false);
+                    //I'm not keeping these anywhere for now but you can always create a list or something here and save them
+                    yield return null;
+                }
             }
         }
 
         private IEnumerator CreateRoads(JSONObject mapData, Vector2 tileMercPos)
         {
-            for (int index = 0; index < mapData["features"].list.Count; index++)
+            foreach (var geo in mapData["features"].list)
             {
-                var geo = mapData["features"].list[index];
-                _factories[typeof(RoadFactory)].Create(tileMercPos, geo, transform);
-                yield return null;
+                var factory = _factories[typeof(RoadFactory)];
+                foreach (var road in factory.Create(tileMercPos, geo).Where(x => x != null))
+                {
+                    road.transform.SetParent(transform, false);
+                    //I'm not keeping these anywhere for now but you can always create a list or something here and save them
+                    yield return null;
+                }
             }
         }
 

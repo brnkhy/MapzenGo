@@ -10,7 +10,7 @@ namespace Assets.Models
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class Water : MonoBehaviour
     {
-        public string Id { get; set; }
+        public string Id;
         public string Type;
         public string Kind;
         public string Name;
