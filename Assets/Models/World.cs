@@ -44,5 +44,7 @@ public class World : MonoBehaviour
         public bool LoadImages = false;
         [SerializeField]
         public float TileSize = 100;
+        [SerializeField]
+        public bool UseLayers;
     }
 }

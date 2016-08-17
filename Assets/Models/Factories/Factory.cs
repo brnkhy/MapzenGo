@@ -8,4 +8,9 @@ public class Factory : MonoBehaviour
     {
         return null;
     }
+
+    public virtual GameObject CreateLayer(Vector2 tileMercPos, List<JSONObject> toList)
+    {
+        return null;
+    }
 }

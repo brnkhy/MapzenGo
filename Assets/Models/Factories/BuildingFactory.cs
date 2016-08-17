@@ -73,7 +73,7 @@ namespace Assets.Models.Factories
             }
         }
 
-        public GameObject CreateLayer(Vector2 tileMercPos, List<JSONObject> geoList)
+        public override GameObject CreateLayer(Vector2 tileMercPos, List<JSONObject> geoList)
         {
             var go = new GameObject();
             var mesh = go.AddComponent<MeshFilter>().mesh;
@@ -113,8 +113,6 @@ namespace Assets.Models.Factories
                         var c = verts.Count;
                         verts.AddRange(m.vertices.Select(x => x + buildingCenter));
                         indices.AddRange(m.triangles.Select(x => x + c));
-
-
                         _active.Add(key);
                     }
                     catch (Exception ex)

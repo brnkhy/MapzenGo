@@ -69,7 +69,7 @@ namespace Assets
                 }
 
                 StartCoroutine(CreateBuildings(mapData["buildings"], _settings.TileCenter));
-                //StartCoroutine(CreateRoads(mapData["roads"], _settings.TileCenter));
+                StartCoroutine(CreateRoads(mapData["roads"], _settings.TileCenter));
                 //StartCoroutine(CreateWater(mapData["water"], _settings.TileCenter));
             });
 
@@ -77,50 +77,84 @@ namespace Assets
 
         private IEnumerator CreateBuildings(JSONObject mapData, Vector2 tileMercPos)
         {
-            var factory = _factories[typeof(BuildingFactory)];
-            var b = (factory as BuildingFactory).CreateLayer(tileMercPos,
-                mapData["features"].list.Where(x => x["geometry"]["type"].str == "Polygon").ToList());
-            b.transform.SetParent(transform, false);
-            yield return null;
-            //foreach (var geo in mapData["features"].list.Where(x => x["geometry"]["type"].str == "Polygon"))
-            //{
+            var factory = _factories[typeof (BuildingFactory)];
+            if (_settings.UseLayers)
+            {
+                var b = factory.CreateLayer(tileMercPos,
+                    mapData["features"].list.Where(x => x["geometry"]["type"].str == "Polygon").ToList());
+                b.transform.SetParent(transform, false);
+                yield return null;
+            }
+            else
+            {
+                foreach (var geo in mapData["features"].list.Where(x => x["geometry"]["type"].str == "Polygon"))
+                {
 
-            //foreach (var building in factory.Create(tileMercPos, geo))
-            //{
-            //    building.transform.SetParent(transform, false);
-            //    //I'm not keeping these anywhere for now but you can always create a list or something here and save them
-            //    yield return null;
-            //}
-            //}
+                    foreach (var building in factory.Create(tileMercPos, geo))
+                    {
+                        building.transform.SetParent(transform, false);
+                        //I'm not keeping these anywhere for now but you can always create a list or something here and save them
+                        yield return null;
+                    }
+                }
+            }
         }
 
         private IEnumerator CreateWater(JSONObject mapData, Vector2 tileMercPos)
         {
-            foreach (var geo in mapData["features"].list.Where(x => x["geometry"]["type"].str == "Polygon" || x["geometry"]["type"].str == "MultiPolygon"))
+            var factory = _factories[typeof(WaterFactory)];
+            if (_settings.UseLayers)
             {
-                var factory = _factories[typeof(WaterFactory)];
-                foreach (var water in factory.Create(tileMercPos, geo))
+                var b = factory.CreateLayer(tileMercPos,
+                    mapData["features"].list.Where(
+                            x => x["geometry"]["type"].str == "Polygon" || x["geometry"]["type"].str == "MultiPolygon").ToList());
+                b.transform.SetParent(transform, false);
+                yield return null;
+            }
+            else
+            {
+                foreach (var geo in
+                        mapData["features"].list.Where(
+                            x => x["geometry"]["type"].str == "Polygon" || x["geometry"]["type"].str == "MultiPolygon").ToList())
                 {
-                    water.transform.SetParent(transform, false);
-                    //I'm not keeping these anywhere for now but you can always create a list or something here and save them
-                    yield return null;
+                    
+                    foreach (var water in factory.Create(tileMercPos, geo))
+                    {
+                        water.transform.SetParent(transform, false);
+                        //I'm not keeping these anywhere for now but you can always create a list or something here and save them
+                        yield return null;
+                    }
                 }
             }
         }
 
         private IEnumerator CreateRoads(JSONObject mapData, Vector2 tileMercPos)
         {
-            foreach (var geo in mapData["features"].list)
+            var factory = _factories[typeof(RoadFactory)];
+            if (_settings.UseLayers)
             {
-                var factory = _factories[typeof(RoadFactory)];
-                foreach (var road in factory.Create(tileMercPos, geo).Where(x => x != null))
+                var roadList = mapData["features"].list.Where(
+                    x => x["geometry"]["type"].str == "LineString" || x["geometry"]["type"].str == "MultiLineString")
+                    .ToList();
+                var b = factory.CreateLayer(tileMercPos, roadList);
+                b.transform.SetParent(transform, false);
+                yield return null;
+            }
+            else
+            {
+                foreach (var geo in mapData["features"].list)
                 {
-                    road.transform.SetParent(transform, false);
-                    //I'm not keeping these anywhere for now but you can always create a list or something here and save them
-                    yield return null;
+                    
+                    foreach (var road in factory.Create(tileMercPos, geo).Where(x => x != null))
+                    {
+                        road.transform.SetParent(transform, false);
+                        //I'm not keeping these anywhere for now but you can always create a list or something here and save them
+                        yield return null;
+                    }
                 }
             }
         }
+
 
         public class Settings
         {
@@ -128,6 +162,7 @@ namespace Assets
             public Vector2 TileTms { get; set; }
             public Vector3 TileCenter { get; set; }
             public bool LoadImages { get; set; }
+            public bool UseLayers { get; set; }
         }
     }
 }

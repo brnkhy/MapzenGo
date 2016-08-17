@@ -26,6 +26,8 @@ namespace Assets
         protected int Zoom = 16; //detail level of TMS system
         protected float TileSize = 100;
         protected int Range = 1;
+        protected bool UseLayers = true;
+
         protected Dictionary<Vector2, Tile> Tiles; //will use this later on
         protected Vector2 CenterTms; //tms tile coordinate
         protected Vector2 CenterInMercator; //this is like distance (meters) in mercator 
@@ -41,6 +43,7 @@ namespace Assets
 
             Zoom = settings.DetailLevel;
             TileSize = settings.TileSize;
+            UseLayers = settings.UseLayers;
             Tiles = new Dictionary<Vector2, Tile>();
             CenterTms = tile;
             CenterInMercator = GM.TileBounds(CenterTms, Zoom).center;
@@ -78,7 +81,8 @@ namespace Assets
                           Zoom = Zoom,
                           TileTms = tileTms,
                           TileCenter = rect.center,
-                          LoadImages = LoadImages
+                          LoadImages = LoadImages,
+                          UseLayers = UseLayers
                       });
             Tiles.Add(tileTms, tile);
             tile.transform.position = (rect.center - centerInMercator).ToVector3xz();
@@ -91,7 +95,7 @@ namespace Assets
         private void LoadTile(Vector2 tileTms, Tile tile)
         {
             var url = string.Format(_mapzenUrl, _mapzenLayers, Zoom, tileTms.x, tileTms.y, _mapzenFormat, _key);
-            //Debug.Log(url);
+            Debug.Log(url);
             ObservableWWW.Get(url)
                 .Subscribe(
                     tile.ConstructTile, //success
