@@ -69,24 +69,29 @@ namespace Assets
                 }
 
                 StartCoroutine(CreateBuildings(mapData["buildings"], _settings.TileCenter));
-                StartCoroutine(CreateRoads(mapData["roads"], _settings.TileCenter));
-                StartCoroutine(CreateWater(mapData["water"], _settings.TileCenter));
+                //StartCoroutine(CreateRoads(mapData["roads"], _settings.TileCenter));
+                //StartCoroutine(CreateWater(mapData["water"], _settings.TileCenter));
             });
 
         }
 
         private IEnumerator CreateBuildings(JSONObject mapData, Vector2 tileMercPos)
         {
-            foreach (var geo in mapData["features"].list.Where(x => x["geometry"]["type"].str == "Polygon"))
-            {
-                var factory = _factories[typeof(BuildingFactory)];
-                foreach (var building in factory.Create(tileMercPos, geo))
-                {
-                    building.transform.SetParent(transform, false);
-                    //I'm not keeping these anywhere for now but you can always create a list or something here and save them
-                    yield return null;
-                }
-            }
+            var factory = _factories[typeof(BuildingFactory)];
+            var b = (factory as BuildingFactory).CreateLayer(tileMercPos,
+                mapData["features"].list.Where(x => x["geometry"]["type"].str == "Polygon").ToList());
+            b.transform.SetParent(transform, false);
+            yield return null;
+            //foreach (var geo in mapData["features"].list.Where(x => x["geometry"]["type"].str == "Polygon"))
+            //{
+
+            //foreach (var building in factory.Create(tileMercPos, geo))
+            //{
+            //    building.transform.SetParent(transform, false);
+            //    //I'm not keeping these anywhere for now but you can always create a list or something here and save them
+            //    yield return null;
+            //}
+            //}
         }
 
         private IEnumerator CreateWater(JSONObject mapData, Vector2 tileMercPos)

@@ -33,7 +33,7 @@ namespace Assets.Models
             GetComponent<MeshFilter>().mesh = CreateMesh(buildingCorners, settings);
         }
 
-        private Mesh CreateMesh(List<Vector3> verts, Settings settings)
+        public static Mesh CreateMesh(List<Vector3> verts, Settings settings)
         {
             var height = UnityEngine.Random.Range(settings.MinimumBuildingHeight,
                         settings.MaximumBuildingHeight);

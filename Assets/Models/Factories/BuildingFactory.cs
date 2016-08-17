@@ -13,7 +13,8 @@ namespace Assets.Models.Factories
     {
         private HashSet<string> _active = new HashSet<string>();
 
-        [SerializeField] private Building.Settings _settings;
+        [SerializeField]
+        private Building.Settings _settings;
 
         public override IEnumerable<MonoBehaviour> Create(Vector2 tileMercPos, JSONObject geo)
         {
@@ -70,6 +71,65 @@ namespace Assets.Models.Factories
                 yield return building;
                 //}
             }
+        }
+
+        public GameObject CreateLayer(Vector2 tileMercPos, List<JSONObject> geoList)
+        {
+            var go = new GameObject();
+            var mesh = go.AddComponent<MeshFilter>().mesh;
+            go.AddComponent<MeshRenderer>();
+            var verts = new List<Vector3>();
+            var indices = new List<int>();
+
+            foreach (var geo in geoList)
+            {
+                var key = geo["properties"]["id"].ToString();
+                if (!_active.Contains(key))
+                {
+                    var buildingCorners = new List<Vector3>();
+                    //foreach (var bb in geo["geometry"]["coordinates"].list)
+                    //{
+                    var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
+                    for (int i = 0; i < bb.list.Count - 1; i++)
+                    {
+                        var c = bb.list[i];
+                        var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
+                        var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
+                        buildingCorners.Add(localMercPos.ToVector3xz());
+                    }
+
+
+                    try
+                    {
+                        //building = new GameObject().AddComponent<Building>();
+                        var buildingCenter = buildingCorners.Aggregate((acc, cur) => acc + cur) / buildingCorners.Count;
+                        for (int i = 0; i < buildingCorners.Count; i++)
+                        {
+                            //using corner position relative to building center
+                            buildingCorners[i] = buildingCorners[i] - buildingCenter;
+                        }
+
+                        var m = Building.CreateMesh(buildingCorners, _settings);
+                        var c = verts.Count;
+                        verts.AddRange(m.vertices.Select(x => x + buildingCenter));
+                        indices.AddRange(m.triangles.Select(x => x + c));
+
+
+                        _active.Add(key);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.Log(ex);
+                    }
+
+                    //}
+                }
+            }
+            mesh.vertices = verts.ToArray();
+            mesh.triangles = indices.ToArray();
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            return go;
         }
     }
 }
