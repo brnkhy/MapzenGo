@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assets.Helpers;
+using UniRx;
 using UnityEngine;
 
 namespace Assets.Models.Factories
 {
     public class RoadFactory : Factory
     {
+        public override string XmlTag { get { return "roads"; } }
         [SerializeField] private Road.Settings _settings;
 
         public override IEnumerable<MonoBehaviour> Create(Vector2 tileMercPos, JSONObject geo)
@@ -74,7 +76,24 @@ namespace Assets.Models.Factories
             go.AddComponent<MeshRenderer>();
             var verts = new List<Vector3>();
             var indices = new List<int>();
-            foreach (var geo in geoList)
+
+            var heavyMethod = Observable.Start(() => GetVertices(tileMercPos, geoList, ref verts, ref indices));
+            heavyMethod.ObserveOnMainThread().Subscribe(mapData =>
+            {
+                mesh.vertices = verts.ToArray();
+                mesh.triangles = indices.ToArray();
+                mesh.RecalculateNormals();
+                mesh.RecalculateBounds();
+                go.GetComponent<MeshRenderer>().material = Resources.Load<Material>("road");
+            });
+            
+            return go;
+        }
+
+        private void GetVertices(Vector2 tileMercPos, List<JSONObject> geoList, ref List<Vector3> verts, ref List<int> indices)
+        {
+            foreach (var geo in geoList.Where(
+                x => x["geometry"]["type"].str == "LineString" || x["geometry"]["type"].str == "MultiLineString"))
             {
                 var kind = geo["properties"]["kind"].str.ToRoadType();
                 var roadEnds = new List<Vector3>();
@@ -108,11 +127,6 @@ namespace Assets.Models.Factories
                     }
                 }
             }
-            mesh.vertices = verts.ToArray();
-            mesh.triangles = indices.ToArray();
-            mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
-            return go;
         }
 
         private void CreateMesh(List<Vector3> list, RoadType kind, ref List<Vector3> verts, ref List<int> indices)

@@ -38,7 +38,6 @@ namespace Assets
         private void ConstructAsync(string text)
         {
             string url;
-
             var heavyMethod = Observable.Start(() => new JSONObject(text));
 
             heavyMethod.ObserveOnMainThread().Subscribe(mapData =>
@@ -68,11 +67,33 @@ namespace Assets
                     });
                 }
 
-                StartCoroutine(CreateBuildings(mapData["buildings"], _settings.TileCenter));
-                StartCoroutine(CreateRoads(mapData["roads"], _settings.TileCenter));
+                RunFactories(mapData);
+
+                //StartCoroutine(CreateBuildings(mapData["buildings"], _settings.TileCenter));
+                //StartCoroutine(CreateRoads(mapData["roads"], _settings.TileCenter));
                 //StartCoroutine(CreateWater(mapData["water"], _settings.TileCenter));
             });
+        }
 
+        private void RunFactories(JSONObject mapData)
+        {
+            foreach (var factory in _factories.Values)
+            {
+                if (_settings.UseLayers)
+                {
+                    var b = factory.CreateLayer(_settings.TileCenter, mapData[factory.XmlTag]["features"].list);
+                    if(b) //getting a weird error without this, no idea really
+                        b.transform.SetParent(transform, false);
+                }
+                else
+                {
+                    foreach (var building in mapData[factory.XmlTag].list.SelectMany(geo => factory.Create(_settings.TileCenter, geo)))
+                    {
+                        building.transform.SetParent(transform, false);
+                        //I'm not keeping these anywhere for now but you can always create a list or something here and save them
+                    }
+                }
+            }
         }
 
         private IEnumerator CreateBuildings(JSONObject mapData, Vector2 tileMercPos)
@@ -89,7 +110,6 @@ namespace Assets
             {
                 foreach (var geo in mapData["features"].list.Where(x => x["geometry"]["type"].str == "Polygon"))
                 {
-
                     foreach (var building in factory.Create(tileMercPos, geo))
                     {
                         building.transform.SetParent(transform, false);
@@ -154,8 +174,7 @@ namespace Assets
                 }
             }
         }
-
-
+        
         public class Settings
         {
             public int Zoom { get; set; }
