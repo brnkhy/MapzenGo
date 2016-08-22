@@ -65,7 +65,8 @@ namespace Assets
                     var v = new Vector2(tms.x + i, tms.y + j);
                     if (Tiles.ContainsKey(v))
                         continue;
-                    StartCoroutine(CreateTile(v, center));
+                    MainThreadDispatcher.StartUpdateMicroCoroutine(CreateTile(v, center));
+                    //StartCoroutine(CreateTile(v, center));
                 }
             }
         }

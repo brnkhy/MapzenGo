@@ -151,30 +151,44 @@ namespace Assets.Models.Factories
 
             if (settings.IsVolumetric)
             {
-                vertsStartCount = verts.Count;
-                verts.AddRange(corners.Select(x => new Vector3(x.x, 0, x.z)));
 
-                var n = 0;
+                Vector3 v1;
+                Vector3 v2;
+                int ind = 0;
                 for (int i = 1; i < corners.Count; i++)
                 {
-                    indices.Add(vertsStartCount + n);
-                    indices.Add(vertsStartCount + n + 2);
-                    indices.Add(vertsStartCount + n + 1);
-                                
-                    indices.Add(vertsStartCount + n + 1);
-                    indices.Add(vertsStartCount + n + 2);
-                    indices.Add(vertsStartCount + n + 3);
+                    v1 = verts[vertsStartCount + i - 1];
+                    v2 = verts[vertsStartCount + i];
+                    ind = verts.Count;
+                    verts.Add(v1);
+                    verts.Add(v2);
+                    verts.Add(new Vector3(v1.x, 0, v1.z));
+                    verts.Add(new Vector3(v2.x, 0, v2.z));
 
-                    n += 4;
+                    indices.Add(ind);
+                    indices.Add(ind + 2);
+                    indices.Add(ind + 1);
+                                
+                    indices.Add(ind + 1);
+                    indices.Add(ind + 2);
+                    indices.Add(ind + 3);
                 }
 
-                indices.Add(vertsStartCount + n);
-                indices.Add(vertsStartCount + n + 1);
-                indices.Add(vertsStartCount + n + 2);
+                v1 = verts[vertsStartCount];
+                v2 = verts[vertsStartCount + corners.Count - 1];
+                ind = verts.Count;
+                verts.Add(v1);
+                verts.Add(v2);
+                verts.Add(new Vector3(v1.x, 0, v1.z));
+                verts.Add(new Vector3(v2.x, 0, v2.z));
+
+                indices.Add(ind);
+                indices.Add(ind + 1);
+                indices.Add(ind + 2);
                             
-                indices.Add(vertsStartCount + n + 1);
-                indices.Add(vertsStartCount + n + 3);
-                indices.Add(vertsStartCount + n + 2);
+                indices.Add(ind + 1);
+                indices.Add(ind + 3);
+                indices.Add(ind + 2);
             }
         }
     }
