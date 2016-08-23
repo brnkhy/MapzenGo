@@ -16,7 +16,7 @@ namespace Assets
     {
         private readonly string _mapzenUrl = "https://vector.mapzen.com/osm/{0}/{1}/{2}/{3}.{4}?api_key={5}";
         [SerializeField] private string _key = "vector-tiles-5sBcqh6"; //try getting your own key if this doesn't work
-        [SerializeField] private string _mapzenLayers = "buildings,roads,water";
+        [SerializeField] private string _mapzenLayers = "buildings,roads,landuse,water";
         private readonly string _mapzenFormat = "json";
 
         private List<Factory> _factories;

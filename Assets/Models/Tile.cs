@@ -81,6 +81,9 @@ namespace Assets
             {
                 if (_settings.UseLayers)
                 {
+                    if (!mapData.HasField(factory.XmlTag))
+                        continue;
+
                     var b = factory.CreateLayer(_settings.TileCenter, mapData[factory.XmlTag]["features"].list);
                     if(b) //getting a weird error without this, no idea really
                         b.transform.SetParent(transform, false);
