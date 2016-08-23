@@ -36,13 +36,13 @@ namespace Assets.Models.Factories
                     buildingCorners.Add(localMercPos.ToVector3xz());
                 }
 
-
                 try
                 {
                     building = new GameObject().AddComponent<Building>();
                     var verts = new List<Vector3>();
                     var indices = new List<int>();
                     var mesh = building.GetComponent<MeshFilter>().mesh;
+
                     var buildingCenter = buildingCorners.Aggregate((acc, cur) => acc + cur) / buildingCorners.Count;
                     for (int i = 0; i < buildingCorners.Count; i++)
                     {
@@ -50,21 +50,10 @@ namespace Assets.Models.Factories
                         buildingCorners[i] = buildingCorners[i] - buildingCenter;
                     }
 
-                    building.name = "building " + geo["properties"]["id"].ToString();
-                    var kind = "";
-                    if (geo["properties"].HasField("landuse_kind"))
-                        kind = geo["properties"]["landuse_kind"].str;
-                    if (geo["properties"].HasField("name"))
-                        building.Name = geo["properties"]["name"].str;
-
-                    building.Id = geo["properties"]["id"].ToString();
-                    building.Type = geo["type"].str;
-                    building.SortKey = (int)geo["properties"]["sort_key"].f;
-                    building.Kind = kind;
-                    building.LanduseKind = kind;
                     building.transform.localPosition = buildingCenter;
-
+                    SetProperties(geo, building);
                     CreateMesh(buildingCorners, _settings, ref verts, ref indices);
+
                     mesh.vertices = verts.ToArray();
                     mesh.triangles = indices.ToArray();
                     mesh.RecalculateNormals();
@@ -81,6 +70,22 @@ namespace Assets.Models.Factories
                 yield return building;
                 //}
             }
+        }
+
+        private static void SetProperties(JSONObject geo, Building building)
+        {
+            building.name = "building " + geo["properties"]["id"].ToString();
+            var kind = "";
+            if (geo["properties"].HasField("landuse_kind"))
+                kind = geo["properties"]["landuse_kind"].str;
+            if (geo["properties"].HasField("name"))
+                building.Name = geo["properties"]["name"].str;
+
+            building.Id = geo["properties"]["id"].ToString();
+            building.Type = geo["type"].str;
+            building.SortKey = (int) geo["properties"]["sort_key"].f;
+            building.Kind = kind;
+            building.LanduseKind = kind;
         }
 
         public override GameObject CreateLayer(Vector2 tileMercPos, List<JSONObject> geoList)

@@ -77,15 +77,12 @@ namespace Assets.Models.Factories
             var verts = new List<Vector3>();
             var indices = new List<int>();
 
-            var heavyMethod = Observable.Start(() => GetVertices(tileMercPos, geoList, ref verts, ref indices));
-            heavyMethod.ObserveOnMainThread().Subscribe(mapData =>
-            {
-                mesh.vertices = verts.ToArray();
-                mesh.triangles = indices.ToArray();
-                mesh.RecalculateNormals();
-                mesh.RecalculateBounds();
-                go.GetComponent<MeshRenderer>().material = Resources.Load<Material>("road");
-            });
+            GetVertices(tileMercPos, geoList, ref verts, ref indices);
+            mesh.vertices = verts.ToArray();
+            mesh.triangles = indices.ToArray();
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            go.GetComponent<MeshRenderer>().material = Resources.Load<Material>("road");
             
             return go;
         }

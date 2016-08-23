@@ -12,8 +12,9 @@ namespace Assets.Models.Factories
     public class WaterFactory : Factory
     {
         public override string XmlTag { get { return "water"; } }
-        [SerializeField] private Water.Settings _settings;
-        
+        [SerializeField]
+        private Water.Settings _settings;
+
         public override IEnumerable<MonoBehaviour> Create(Vector2 tileMercPos, JSONObject geo)
         {
             if (geo["geometry"]["type"].str == "Polygon" || geo["geometry"]["type"].str == "MultiPolygon")
@@ -47,7 +48,7 @@ namespace Assets.Models.Factories
 
                     try
                     {
-                        var waterCenter = waterCorners.Aggregate((acc, cur) => acc + cur)/waterCorners.Count;
+                        var waterCenter = waterCorners.Aggregate((acc, cur) => acc + cur) / waterCorners.Count;
 
                         for (int i = 0; i < waterCorners.Count; i++)
                         {
@@ -85,16 +86,12 @@ namespace Assets.Models.Factories
             var verts = new List<Vector3>();
             var indices = new List<int>();
 
-            var heavyMethod = Observable.Start(() => CalculateVertices(tileMercPos, items, verts, indices));
-
-            heavyMethod.ObserveOnMainThread().Subscribe(mapData =>
-            {
-                mesh.vertices = verts.ToArray();
-                mesh.triangles = indices.ToArray();
-                mesh.RecalculateNormals();
-                mesh.RecalculateBounds();
-                go.GetComponent<MeshRenderer>().material = Resources.Load<Material>("water");
-            });
+            CalculateVertices(tileMercPos, items, verts, indices);
+            mesh.vertices = verts.ToArray();
+            mesh.triangles = indices.ToArray();
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            go.GetComponent<MeshRenderer>().material = Resources.Load<Material>("water");
             return go;
         }
 
@@ -117,7 +114,7 @@ namespace Assets.Models.Factories
 
                     try
                     {
-                        var waterCenter = waterCorners.Aggregate((acc, cur) => acc + cur)/waterCorners.Count;
+                        var waterCenter = waterCorners.Aggregate((acc, cur) => acc + cur) / waterCorners.Count;
 
                         for (int i = 0; i < waterCorners.Count; i++)
                         {
@@ -139,7 +136,7 @@ namespace Assets.Models.Factories
 
         private void CreateMesh(List<Vector3> ends, ref List<Vector3> verts, ref List<int> indices)
         {
-            
+
         }
 
     }
