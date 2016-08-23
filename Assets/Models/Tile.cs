@@ -19,10 +19,10 @@ namespace Assets
         [SerializeField]
         public Rect Rect;
 
-        private Dictionary<Type, Factory> _factories;
+        private List<Factory> _factories;
         private Settings _settings;
 
-        public Tile Initialize(Dictionary<Type, Factory> factory, Settings settings)
+        public Tile Initialize(List<Factory> factory, Settings settings)
         {
             _factories = factory;
             _settings = settings;
@@ -77,7 +77,7 @@ namespace Assets
 
         private void RunFactories(JSONObject mapData)
         {
-            foreach (var factory in _factories.Values)
+            foreach (var factory in _factories)
             {
                 if (_settings.UseLayers)
                 {
@@ -87,89 +87,11 @@ namespace Assets
                 }
                 else
                 {
-                    foreach (var building in mapData[factory.XmlTag].list.SelectMany(geo => factory.Create(_settings.TileCenter, geo)))
+                    var fac = factory;
+                    foreach (var entity in mapData[factory.XmlTag]["features"].list.SelectMany(geo => fac.Create(_settings.TileCenter, geo)))
                     {
-                        building.transform.SetParent(transform, false);
+                        entity.transform.SetParent(transform, false);
                         //I'm not keeping these anywhere for now but you can always create a list or something here and save them
-                    }
-                }
-            }
-        }
-
-        private IEnumerator CreateBuildings(JSONObject mapData, Vector2 tileMercPos)
-        {
-            var factory = _factories[typeof (BuildingFactory)];
-            if (_settings.UseLayers)
-            {
-                var b = factory.CreateLayer(tileMercPos,
-                    mapData["features"].list.Where(x => x["geometry"]["type"].str == "Polygon").ToList());
-                b.transform.SetParent(transform, false);
-                yield return null;
-            }
-            else
-            {
-                foreach (var geo in mapData["features"].list.Where(x => x["geometry"]["type"].str == "Polygon"))
-                {
-                    foreach (var building in factory.Create(tileMercPos, geo))
-                    {
-                        building.transform.SetParent(transform, false);
-                        //I'm not keeping these anywhere for now but you can always create a list or something here and save them
-                        yield return null;
-                    }
-                }
-            }
-        }
-
-        private IEnumerator CreateWater(JSONObject mapData, Vector2 tileMercPos)
-        {
-            var factory = _factories[typeof(WaterFactory)];
-            if (_settings.UseLayers)
-            {
-                var b = factory.CreateLayer(tileMercPos,
-                    mapData["features"].list.Where(
-                            x => x["geometry"]["type"].str == "Polygon" || x["geometry"]["type"].str == "MultiPolygon").ToList());
-                b.transform.SetParent(transform, false);
-                yield return null;
-            }
-            else
-            {
-                foreach (var geo in
-                        mapData["features"].list.Where(
-                            x => x["geometry"]["type"].str == "Polygon" || x["geometry"]["type"].str == "MultiPolygon").ToList())
-                {
-                    
-                    foreach (var water in factory.Create(tileMercPos, geo))
-                    {
-                        water.transform.SetParent(transform, false);
-                        //I'm not keeping these anywhere for now but you can always create a list or something here and save them
-                        yield return null;
-                    }
-                }
-            }
-        }
-
-        private IEnumerator CreateRoads(JSONObject mapData, Vector2 tileMercPos)
-        {
-            var factory = _factories[typeof(RoadFactory)];
-            if (_settings.UseLayers)
-            {
-                var roadList = mapData["features"].list.Where(
-                    x => x["geometry"]["type"].str == "LineString" || x["geometry"]["type"].str == "MultiLineString")
-                    .ToList();
-                var b = factory.CreateLayer(tileMercPos, roadList);
-                b.transform.SetParent(transform, false);
-                yield return null;
-            }
-            else
-            {
-                foreach (var geo in mapData["features"].list)
-                {
-                    
-                    foreach (var road in factory.Create(tileMercPos, geo).Where(x => x != null))
-                    {
-                        road.transform.SetParent(transform, false);
-                        //I'm not keeping these anywhere for now but you can always create a list or something here and save them
-                        yield return null;
                     }
                 }
             }

@@ -19,7 +19,7 @@ namespace Assets
         [SerializeField] private string _mapzenLayers = "buildings,roads,water";
         private readonly string _mapzenFormat = "json";
 
-        private Dictionary<Type, Factory> _factories;
+        private List<Factory> _factories;
         protected Transform TileHost;
 
         protected bool LoadImages;
@@ -32,7 +32,7 @@ namespace Assets
         protected Vector2 CenterTms; //tms tile coordinate
         protected Vector2 CenterInMercator; //this is like distance (meters) in mercator 
 
-        public virtual void Init(Dictionary<Type, Factory> factories, World.Settings settings)
+        public virtual void Init(List<Factory> factories, World.Settings settings)
         {
             _factories = factories;
             var v2 = GM.LatLonToMeters(settings.Lat, settings.Long);
@@ -66,7 +66,6 @@ namespace Assets
                     if (Tiles.ContainsKey(v))
                         continue;
                     MainThreadDispatcher.StartUpdateMicroCoroutine(CreateTile(v, center));
-                    //StartCoroutine(CreateTile(v, center));
                 }
             }
         }

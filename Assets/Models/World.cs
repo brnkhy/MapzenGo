@@ -13,17 +13,15 @@ public class World : MonoBehaviour
     [SerializeField] private Settings _settings;
     private TileManager _tileManager;
 
-    private Dictionary<Type, Factory> Factories;
+    private List<Factory> Factories;
 
     void Start ()
     {
-        Factories = new Dictionary<Type, Factory>();
-        var buildingFactory = GetComponentInChildren<BuildingFactory>();
-        Factories.Add(typeof(BuildingFactory), buildingFactory);
-        var roadFactory = GetComponentInChildren<RoadFactory>();
-        Factories.Add(typeof(RoadFactory), roadFactory);
-        var waterFactory = GetComponentInChildren<WaterFactory>();
-        Factories.Add(typeof(WaterFactory), waterFactory);
+        Factories = new List<Factory>();
+        foreach (var factory in GetComponentsInChildren<Factory>())
+        {
+            Factories.Add(factory);
+        }
 
         _tileManager = GetComponent<TileManager>();
         _tileManager.Init(Factories, _settings);
