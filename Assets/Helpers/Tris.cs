@@ -8,11 +8,16 @@ namespace Assets.Helpers
 {
     public class Triangulator
     {
-        private List<Vector2> m_points = new List<Vector2>();
+        private List<Vector3> m_points = new List<Vector3>();
 
-        public Triangulator(Vector2[] points)
+        public Triangulator(List<Vector3> points)
         {
-            m_points = new List<Vector2>(points);
+            m_points = points;
+        }
+
+        public Triangulator(Vector3[] points)
+        {
+            m_points = new List<Vector3>(points);
         }
 
         public int[] Triangulate()
@@ -79,9 +84,9 @@ namespace Assets.Helpers
             float A = 0.0f;
             for (int p = n - 1, q = 0; q < n; p = q++)
             {
-                Vector2 pval = m_points[p];
-                Vector2 qval = m_points[q];
-                A += pval.x * qval.y - qval.x * pval.y;
+                Vector3 pval = m_points[p];
+                Vector3 qval = m_points[q];
+                A += pval.x * qval.z - qval.x * pval.z;
             }
             return (A * 0.5f);
         }
@@ -89,33 +94,33 @@ namespace Assets.Helpers
         private bool Snip(int u, int v, int w, int n, int[] V)
         {
             int p;
-            Vector2 A = m_points[V[u]];
-            Vector2 B = m_points[V[v]];
-            Vector2 C = m_points[V[w]];
-            if (Mathf.Epsilon > (((B.x - A.x) * (C.y - A.y)) - ((B.y - A.y) * (C.x - A.x))))
+            Vector3 A = m_points[V[u]];
+            Vector3 B = m_points[V[v]];
+            Vector3 C = m_points[V[w]];
+            if (Mathf.Epsilon > (((B.x - A.x) * (C.z - A.z)) - ((B.z - A.z) * (C.x - A.x))))
                 return false;
             for (p = 0; p < n; p++)
             {
                 if ((p == u) || (p == v) || (p == w))
                     continue;
-                Vector2 P = m_points[V[p]];
+                Vector3 P = m_points[V[p]];
                 if (InsideTriangle(A, B, C, P))
                     return false;
             }
             return true;
         }
 
-        private bool InsideTriangle(Vector2 A, Vector2 B, Vector2 C, Vector2 P)
+        private bool InsideTriangle(Vector3 A, Vector3 B, Vector3 C, Vector3 P)
         {
             float ax, ay, bx, by, cx, cy, apx, apy, bpx, bpy, cpx, cpy;
             float cCROSSap, bCROSScp, aCROSSbp;
 
-            ax = C.x - B.x; ay = C.y - B.y;
-            bx = A.x - C.x; by = A.y - C.y;
-            cx = B.x - A.x; cy = B.y - A.y;
-            apx = P.x - A.x; apy = P.y - A.y;
-            bpx = P.x - B.x; bpy = P.y - B.y;
-            cpx = P.x - C.x; cpy = P.y - C.y;
+            ax = C.x - B.x; ay = C.z - B.z;
+            bx = A.x - C.x; by = A.z - C.z;
+            cx = B.x - A.x; cy = B.z - A.z;
+            apx = P.x - A.x; apy = P.z - A.z;
+            bpx = P.x - B.x; bpy = P.z - B.z;
+            cpx = P.x - C.x; cpy = P.z - C.z;
 
             aCROSSbp = ax * bpy - ay * bpx;
             cCROSSap = cx * apy - cy * apx;
