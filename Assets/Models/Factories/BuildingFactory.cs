@@ -40,6 +40,9 @@ namespace Assets.Models.Factories
                 try
                 {
                     building = new GameObject().AddComponent<Building>();
+                    var verts = new List<Vector3>();
+                    var indices = new List<int>();
+                    var mesh = building.GetComponent<MeshFilter>().mesh;
                     var buildingCenter = buildingCorners.Aggregate((acc, cur) => acc + cur) / buildingCorners.Count;
                     for (int i = 0; i < buildingCorners.Count; i++)
                     {
@@ -61,6 +64,12 @@ namespace Assets.Models.Factories
                     building.LanduseKind = kind;
                     building.transform.localPosition = buildingCenter;
 
+                    CreateMesh(buildingCorners, _settings, ref verts, ref indices);
+                    mesh.vertices = verts.ToArray();
+                    mesh.triangles = indices.ToArray();
+                    mesh.RecalculateNormals();
+                    mesh.RecalculateBounds();
+
                     _active.Add(building.Id);
                     building.OnDestroyAsObservable().Subscribe(x => { _active.Remove(building.Id); });
                 }
@@ -74,7 +83,6 @@ namespace Assets.Models.Factories
             }
         }
 
-        private List<Action> test = new List<Action>();
         public override GameObject CreateLayer(Vector2 tileMercPos, List<JSONObject> geoList)
         {
             var items = geoList.Where(x => x["geometry"]["type"].str == "Polygon");
@@ -86,31 +94,14 @@ namespace Assets.Models.Factories
             go.AddComponent<MeshRenderer>();
             var verts = new List<Vector3>();
             var indices = new List<int>();
-            var bg = new BackgroundWorker();
-            bg.DoWork += (s,e) => { GetVertices(tileMercPos, items, verts, indices); };
-            bg.RunWorkerCompleted += (sender, args) =>
-            {
-                test.Add(() =>
-                {
-                    mesh.vertices = verts.ToArray();
-                    mesh.triangles = indices.ToArray();
-                    mesh.RecalculateNormals();
-                    mesh.RecalculateBounds();
-                    go.GetComponent<MeshRenderer>().material = Resources.Load<Material>("residential");
-                });
-            };
-            bg.RunWorkerAsync();
 
-            //var heavyMethod = Observable.Start(() => GetVertices(tileMercPos, items, verts, indices));
-            //heavyMethod.ObserveOnMainThread().Subscribe(mapData =>
-            //{
-            //    mesh.vertices = verts.ToArray();
-            //    mesh.triangles = indices.ToArray();
-            //    mesh.RecalculateNormals();
-            //    mesh.RecalculateBounds();
-            //    go.GetComponent<MeshRenderer>().material = Resources.Load<Material>("residential");
-            //});
-
+            GetVertices(tileMercPos, items, verts, indices);
+            mesh.vertices = verts.ToArray();
+            mesh.triangles = indices.ToArray();
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            go.GetComponent<MeshRenderer>().material = Resources.Load<Material>("residential");
+            
             return go;
         }
 
@@ -159,7 +150,7 @@ namespace Assets.Models.Factories
         {
             var rnd = new System.Random();
             var height = settings.IsVolumetric ? rnd.Next(settings.MinimumBuildingHeight, settings.MaximumBuildingHeight) : 0;
-            var tris = new Triangulator(corners.Select(x => x.ToVector2xz()).ToArray());
+            var tris = new Triangulator(corners);
 
             var vertsStartCount = verts.Count;
             verts.AddRange(corners.Select(x => new Vector3(x.x, height, x.z)).ToList());
@@ -205,15 +196,6 @@ namespace Assets.Models.Factories
                 indices.Add(ind + 1);
                 indices.Add(ind + 3);
                 indices.Add(ind + 2);
-            }
-        }
-
-        public void Update()
-        {
-            if (test.Any())
-            {
-                test[0]();
-                test.RemoveAt(0);
             }
         }
     }

@@ -16,59 +16,61 @@ namespace Assets.Models.Factories
         
         public override IEnumerable<MonoBehaviour> Create(Vector2 tileMercPos, JSONObject geo)
         {
-            var go = new GameObject("water");
-            var water = go.AddComponent<Water>();
-            var mesh = water.GetComponent<MeshFilter>().mesh;
-            var verts = new List<Vector3>();
-            var indices = new List<int>();
-
-            water.Id = geo["properties"]["id"].ToString();
-            water.Name = "water";
-            water.Type = geo["type"].str;
-            water.Kind = geo["properties"]["kind"].str;
-
-            water.Init();
-            water.name = "water";
-
-            foreach (var bb in geo["geometry"]["coordinates"].list)
+            if (geo["geometry"]["type"].str == "Polygon" || geo["geometry"]["type"].str == "MultiPolygon")
             {
-                var waterCorners = new List<Vector3>();
-                var jo = (bb.list[0].list[0].IsArray) ? bb.list[0] : bb;
-                
-                for (int i = 0; i < jo.list.Count - 1; i++)
-                {
-                    var c = jo.list[i];
-                    var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                    var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
-                    waterCorners.Add(localMercPos.ToVector3xz());
-                }
-                
-                try
-                {
-                    water = new GameObject().AddComponent<Water>();
-                    var waterCenter = waterCorners.Aggregate((acc, cur) => acc + cur) / waterCorners.Count;
-                    
-                    for (int i = 0; i < waterCorners.Count; i++)
-                    {
-                        waterCorners[i] = waterCorners[i] - waterCenter;
-                    }
-                    
-                    water.transform.localPosition = waterCenter - new Vector3(0, 0.1f, 0);
-                    CreateMesh(waterCorners, ref verts, ref indices);
-                }
-                catch (Exception ex)
-                {
-                    Debug.Log(ex);
-                }
-               
-            }
-            
-            mesh.vertices = verts.ToArray();
-            mesh.triangles = indices.ToArray();
-            mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
-            yield return water;
+                var go = new GameObject("water");
+                var water = go.AddComponent<Water>();
+                var mesh = water.GetComponent<MeshFilter>().mesh;
+                var verts = new List<Vector3>();
+                var indices = new List<int>();
 
+                water.Id = geo["properties"]["id"].ToString();
+                water.Name = "water";
+                water.Type = geo["type"].str;
+                water.Kind = geo["properties"]["kind"].str;
+
+                water.Init();
+                water.name = "water";
+
+                foreach (var bb in geo["geometry"]["coordinates"].list)
+                {
+                    var waterCorners = new List<Vector3>();
+                    var jo = (bb.list[0].list[0].IsArray) ? bb.list[0] : bb;
+
+                    for (int i = 0; i < jo.list.Count - 1; i++)
+                    {
+                        var c = jo.list[i];
+                        var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
+                        var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
+                        waterCorners.Add(localMercPos.ToVector3xz());
+                    }
+
+                    try
+                    {
+                        var waterCenter = waterCorners.Aggregate((acc, cur) => acc + cur)/waterCorners.Count;
+
+                        for (int i = 0; i < waterCorners.Count; i++)
+                        {
+                            waterCorners[i] = waterCorners[i] - waterCenter;
+                        }
+
+                        var tris = new Triangulator(waterCorners);
+                        var c = verts.Count;
+                        verts.AddRange(waterCorners.Select(x => x + waterCenter));
+                        indices.AddRange(tris.Triangulate().Select(x => c + x));
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.Log(ex);
+                    }
+                }
+
+                mesh.vertices = verts.ToArray();
+                mesh.triangles = indices.ToArray();
+                mesh.RecalculateNormals();
+                mesh.RecalculateBounds();
+                yield return water;
+            }
         }
 
         public override GameObject CreateLayer(Vector2 tileMercPos, List<JSONObject> geoList)
@@ -122,7 +124,7 @@ namespace Assets.Models.Factories
                             waterCorners[i] = waterCorners[i] - waterCenter;
                         }
 
-                        var tris = new Triangulator(waterCorners.Select(x => x.ToVector2xz()).ToArray());
+                        var tris = new Triangulator(waterCorners);
                         var c = verts.Count;
                         verts.AddRange(waterCorners.Select(x => x + waterCenter));
                         indices.AddRange(tris.Triangulate().Select(x => c + x));
