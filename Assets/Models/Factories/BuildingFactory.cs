@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using Assets.Helpers;
@@ -73,6 +74,7 @@ namespace Assets.Models.Factories
             }
         }
 
+        private List<Action> test = new List<Action>();
         public override GameObject CreateLayer(Vector2 tileMercPos, List<JSONObject> geoList)
         {
             var items = geoList.Where(x => x["geometry"]["type"].str == "Polygon");
@@ -84,16 +86,30 @@ namespace Assets.Models.Factories
             go.AddComponent<MeshRenderer>();
             var verts = new List<Vector3>();
             var indices = new List<int>();
-
-            var heavyMethod = Observable.Start(() => GetVertices(tileMercPos, items, verts, indices));
-            heavyMethod.ObserveOnMainThread().Subscribe(mapData =>
+            var bg = new BackgroundWorker();
+            bg.DoWork += (s,e) => { GetVertices(tileMercPos, items, verts, indices); };
+            bg.RunWorkerCompleted += (sender, args) =>
             {
-                mesh.vertices = verts.ToArray();
-                mesh.triangles = indices.ToArray();
-                mesh.RecalculateNormals();
-                mesh.RecalculateBounds();
-                go.GetComponent<MeshRenderer>().material = Resources.Load<Material>("residential");
-            });
+                test.Add(() =>
+                {
+                    mesh.vertices = verts.ToArray();
+                    mesh.triangles = indices.ToArray();
+                    mesh.RecalculateNormals();
+                    mesh.RecalculateBounds();
+                    go.GetComponent<MeshRenderer>().material = Resources.Load<Material>("residential");
+                });
+            };
+            bg.RunWorkerAsync();
+
+            //var heavyMethod = Observable.Start(() => GetVertices(tileMercPos, items, verts, indices));
+            //heavyMethod.ObserveOnMainThread().Subscribe(mapData =>
+            //{
+            //    mesh.vertices = verts.ToArray();
+            //    mesh.triangles = indices.ToArray();
+            //    mesh.RecalculateNormals();
+            //    mesh.RecalculateBounds();
+            //    go.GetComponent<MeshRenderer>().material = Resources.Load<Material>("residential");
+            //});
 
             return go;
         }
@@ -189,6 +205,15 @@ namespace Assets.Models.Factories
                 indices.Add(ind + 1);
                 indices.Add(ind + 3);
                 indices.Add(ind + 2);
+            }
+        }
+
+        public void Update()
+        {
+            if (test.Any())
+            {
+                test[0]();
+                test.RemoveAt(0);
             }
         }
     }
