@@ -86,11 +86,5 @@ namespace Assets.Models
                 tileDif.y = -1; //invert axis  TMS vs unity
             return tileDif;
         }
-
-        public void Update()
-        {
-            Debug.DrawLine(_centerCollider.min.ToVector3xz(), _centerCollider.min.ToVector3xz() + new Vector3(0, 100, 0), Color.red);
-            Debug.DrawLine(_centerCollider.max.ToVector3xz(), _centerCollider.max.ToVector3xz() + new Vector3(0, 100, 0), Color.red);
-        }
     }
 }
