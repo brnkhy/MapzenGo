@@ -19,7 +19,7 @@ namespace Assets.Models.Factories
 
         public override IEnumerable<MonoBehaviour> Create(Vector2 tileMercPos, JSONObject geo)
         {
-            if (geo["properties"]["kind"].str != "residential")
+            if (geo["properties"]["kind"].str == "park")
             {
                 var buildingCorners = new List<Vector3>();
                 Building building = null;
@@ -82,7 +82,7 @@ namespace Assets.Models.Factories
 
         public override GameObject CreateLayer(Vector2 tileMercPos, List<JSONObject> geoList)
         {
-            var items = geoList.Where(x => x["geometry"]["type"].str == "Polygon" && x["properties"]["kind"].str != "residential");
+            var items = geoList.Where(x => x["geometry"]["type"].str == "Polygon" && x["properties"]["kind"].str == "park");
             if (!items.Any())
                 return null;
 
