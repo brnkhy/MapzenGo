@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class Factory : MonoBehaviour
 {
+    public float Order = 1;
+    public Material BaseMaterial;
     public virtual string XmlTag {get { return ""; } }
 
     public virtual IEnumerable<MonoBehaviour> Create(Vector2 tileMercPos, JSONObject geo)

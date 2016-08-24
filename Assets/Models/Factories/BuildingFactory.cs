@@ -105,8 +105,8 @@ namespace Assets.Models.Factories
             mesh.triangles = indices.ToArray();
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            go.GetComponent<MeshRenderer>().material = Resources.Load<Material>("residential");
-            
+            go.GetComponent<MeshRenderer>().material = BaseMaterial;
+            go.transform.position += Vector3.up * Order;
             return go;
         }
 
