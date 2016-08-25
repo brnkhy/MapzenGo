@@ -42,7 +42,7 @@ namespace Assets.Models.Factories
             {
                 for (var i = 0; i < geo["geometry"]["coordinates"].list.Count; i++)
                 {
-                    var road = new GameObject("road").AddComponent<Road>();
+                    var road = new GameObject("Roads").AddComponent<Road>();
                     var mesh = road.GetComponent<MeshFilter>().mesh;
                     var roadEnds = new List<Vector3>();
                     var verts = new List<Vector3>();
@@ -71,7 +71,7 @@ namespace Assets.Models.Factories
 
         public override GameObject CreateLayer(Vector2 tileMercPos, List<JSONObject> geoList)
         {
-            var go = new GameObject();
+            var go = new GameObject("Roads");
             var mesh = go.AddComponent<MeshFilter>().mesh;
             go.AddComponent<MeshRenderer>();
             var verts = new List<Vector3>();

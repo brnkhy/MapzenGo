@@ -34,7 +34,7 @@ namespace Assets.Models.Factories
 
                 try
                 {
-                    building = new GameObject().AddComponent<Building>();
+                    building = new GameObject("Parks").AddComponent<Building>();
                     var verts = new List<Vector3>();
                     var indices = new List<int>();
                     var mesh = building.GetComponent<MeshFilter>().mesh;
@@ -86,7 +86,7 @@ namespace Assets.Models.Factories
             if (!items.Any())
                 return null;
 
-            var go = new GameObject();
+            var go = new GameObject("Parks");
             var mesh = go.AddComponent<MeshFilter>().mesh;
             go.AddComponent<MeshRenderer>();
             var verts = new List<Vector3>();

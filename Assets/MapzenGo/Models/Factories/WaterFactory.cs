@@ -80,7 +80,7 @@ namespace Assets.Models.Factories
             if (!items.Any())
                 return null;
 
-            var go = new GameObject();
+            var go = new GameObject("Water");
             var mesh = go.AddComponent<MeshFilter>().mesh;
             go.AddComponent<MeshRenderer>();
             var verts = new List<Vector3>();
