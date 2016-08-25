@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Assets;
 using Assets.Helpers;
 using Assets.Models;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using System.Collections;
 using Assets.Models.Factories;
@@ -13,18 +12,18 @@ public class World : MonoBehaviour
     [SerializeField] private Settings _settings;
     private TileManager _tileManager;
 
-    private List<Factory> Factories;
+    private List<Factory> _factories;
 
     void Start ()
     {
-        Factories = new List<Factory>();
+        _factories = new List<Factory>();
         foreach (var factory in GetComponentsInChildren<Factory>())
         {
-            Factories.Add(factory);
+            _factories.Add(factory);
         }
 
         _tileManager = GetComponent<TileManager>();
-        _tileManager.Init(Factories, _settings);
+        _tileManager.Init(_factories, _settings);
 	}
 
     [Serializable]
