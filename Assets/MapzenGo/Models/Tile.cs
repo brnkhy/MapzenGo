@@ -91,9 +91,12 @@ namespace Assets
                 else
                 {
                     var fac = factory;
-                    foreach (var entity in mapData[factory.XmlTag]["features"].list.SelectMany(geo => fac.Create(_settings.TileCenter, geo)))
+                    foreach (var entity in mapData[factory.XmlTag]["features"].list.Where(x => fac.Query(x)).SelectMany(geo => fac.Create(_settings.TileCenter, geo)))
                     {
-                        entity.transform.SetParent(transform, false);
+                        if (entity != null)
+                        {
+                            entity.transform.SetParent(transform, false);
+                        }
                         //I'm not keeping these anywhere for now but you can always create a list or something here and save them
                     }
                 }

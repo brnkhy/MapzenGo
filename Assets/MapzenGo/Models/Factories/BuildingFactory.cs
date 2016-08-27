@@ -18,6 +18,11 @@ namespace Assets.Models.Factories
         [SerializeField]
         private Building.Settings _settings;
 
+        public override void Start()
+        {
+            Query = (geo) => geo["geometry"]["type"].str == "Polygon";
+        }
+
         public override IEnumerable<MonoBehaviour> Create(Vector2 tileMercPos, JSONObject geo)
         {
             var key = geo["properties"]["id"].ToString();

@@ -13,6 +13,11 @@ namespace Assets.Models.Factories
         public override string XmlTag { get { return "roads"; } }
         [SerializeField] private Road.Settings _settings;
 
+        public override void Start()
+        {
+            Query = (geo) => geo["geometry"]["type"].str == "LineString" || geo["geometry"]["type"].str == "MultiLineString";
+        }
+
         public override IEnumerable<MonoBehaviour> Create(Vector2 tileMercPos, JSONObject geo)
         {
             if (geo["geometry"]["type"].str == "LineString")

@@ -17,6 +17,11 @@ namespace Assets.Models.Factories
         [SerializeField]
         private Building.Settings _settings;
 
+        public override void Start()
+        {
+            Query = (geo) => geo["geometry"]["type"].str == "Polygon" || geo["geometry"]["type"].str == "MultiPolygon";
+        }
+
         public override IEnumerable<MonoBehaviour> Create(Vector2 tileMercPos, JSONObject geo)
         {
             if (geo["properties"]["kind"].str == "park")
@@ -24,6 +29,10 @@ namespace Assets.Models.Factories
                 var buildingCorners = new List<Vector3>();
                 Building building = null;
                 var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
+                if (bb == null ||bb.list == null)
+                {
+                    int x = 5;
+                }
                 for (int i = 0; i < bb.list.Count - 1; i++)
                 {
                     var c = bb.list[i];
@@ -32,32 +41,35 @@ namespace Assets.Models.Factories
                     buildingCorners.Add(localMercPos.ToVector3xz());
                 }
 
-                try
+                if (buildingCorners.Any())
                 {
-                    building = new GameObject("Parks").AddComponent<Building>();
-                    var verts = new List<Vector3>();
-                    var indices = new List<int>();
-                    var mesh = building.GetComponent<MeshFilter>().mesh;
-
-                    var buildingCenter = buildingCorners.Aggregate((acc, cur) => acc + cur) / buildingCorners.Count;
-                    for (int i = 0; i < buildingCorners.Count; i++)
+                    try
                     {
-                        //using corner position relative to building center
-                        buildingCorners[i] = buildingCorners[i] - buildingCenter;
+                        building = new GameObject("Parks").AddComponent<Building>();
+                        var verts = new List<Vector3>();
+                        var indices = new List<int>();
+                        var mesh = building.GetComponent<MeshFilter>().mesh;
+
+                        var buildingCenter = buildingCorners.Aggregate((acc, cur) => acc + cur)/buildingCorners.Count;
+                        for (int i = 0; i < buildingCorners.Count; i++)
+                        {
+                            //using corner position relative to building center
+                            buildingCorners[i] = buildingCorners[i] - buildingCenter;
+                        }
+
+                        building.transform.localPosition = buildingCenter;
+                        SetProperties(geo, building);
+                        CreateMesh(buildingCorners, _settings, ref verts, ref indices);
+
+                        mesh.vertices = verts.ToArray();
+                        mesh.triangles = indices.ToArray();
+                        mesh.RecalculateNormals();
+                        mesh.RecalculateBounds();
                     }
-
-                    building.transform.localPosition = buildingCenter;
-                    SetProperties(geo, building);
-                    CreateMesh(buildingCorners, _settings, ref verts, ref indices);
-
-                    mesh.vertices = verts.ToArray();
-                    mesh.triangles = indices.ToArray();
-                    mesh.RecalculateNormals();
-                    mesh.RecalculateBounds();
-                }
-                catch (Exception ex)
-                {
-                    Debug.Log(ex);
+                    catch (Exception ex)
+                    {
+                        Debug.Log(ex);
+                    }
                 }
 
                 yield return building;
