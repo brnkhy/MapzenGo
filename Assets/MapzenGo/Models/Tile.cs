@@ -53,12 +53,11 @@ namespace Assets
                 go.localPosition = Vector3.zero;
                 go.localPosition -= new Vector3(0, 1, 0);
                 var rend = go.GetComponent<Renderer>();
-                rend.material = Resources.Load<Material>("Ground");
-                rend.material.mainTexture = new Texture2D(512, 512, TextureFormat.DXT5, false);
-                rend.material.color = new Color(.1f, .1f, .1f, 1f);
-
+                rend.material = _settings.Material;
+                
                 if (_settings.LoadImages)
                 {
+                    rend.material.mainTexture = new Texture2D(512, 512, TextureFormat.DXT5, false);
                     rend.material.color = new Color(1f, 1f, 1f, 1f);
                     url = MapImageUrlBase + _settings.Zoom + "/" + _settings.TileTms.x + "/" + _settings.TileTms.y + ".png";
                     ObservableWWW.GetWWW(url).Subscribe(x =>
@@ -102,7 +101,7 @@ namespace Assets
                 }
             }
         }
-        
+
         public class Settings
         {
             public int Zoom { get; set; }
@@ -110,6 +109,7 @@ namespace Assets
             public Vector3 TileCenter { get; set; }
             public bool LoadImages { get; set; }
             public bool UseLayers { get; set; }
+            public Material Material { get; set; }
         }
     }
 }
