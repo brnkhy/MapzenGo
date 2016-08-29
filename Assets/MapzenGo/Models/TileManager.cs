@@ -17,6 +17,8 @@ namespace Assets
         private readonly string _mapzenUrl = "https://vector.mapzen.com/osm/{0}/{1}/{2}/{3}.{4}?api_key={5}";
         [SerializeField] private string _key = "vector-tiles-5sBcqh6"; //try getting your own key if this doesn't work
         [SerializeField] private string _mapzenLayers = "buildings,roads,landuse,water";
+        [SerializeField] private Material MapMaterial;
+
         private readonly string _mapzenFormat = "json";
 
         private List<Factory> _factories;
@@ -35,6 +37,9 @@ namespace Assets
         public virtual void Init(List<Factory> factories, World.Settings settings)
         {
             _factories = factories;
+            if (MapMaterial == null)
+                MapMaterial = Resources.Load<Material>("Ground");
+
             var v2 = GM.LatLonToMeters(settings.Lat, settings.Long);
             var tile = GM.MetersToTile(v2, settings.DetailLevel);
 
@@ -82,7 +87,8 @@ namespace Assets
                           TileTms = tileTms,
                           TileCenter = rect.center,
                           LoadImages = LoadImages,
-                          UseLayers = UseLayers
+                          UseLayers = UseLayers,
+                          Material = MapMaterial
                       });
             Tiles.Add(tileTms, tile);
             tile.transform.position = (rect.center - centerInMercator).ToVector3xz();
