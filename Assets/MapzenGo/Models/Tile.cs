@@ -54,23 +54,24 @@ namespace Assets
                 go.localPosition -= new Vector3(0, 1, 0);
                 var rend = go.GetComponent<Renderer>();
                 rend.material = _settings.Material;
-                
+
                 if (_settings.LoadImages)
                 {
-                    rend.material.mainTexture = new Texture2D(512, 512, TextureFormat.DXT5, false);
-                    rend.material.color = new Color(1f, 1f, 1f, 1f);
                     url = MapImageUrlBase + _settings.Zoom + "/" + _settings.TileTms.x + "/" + _settings.TileTms.y + ".png";
-                    ObservableWWW.GetWWW(url).Subscribe(x =>
-                    {
-                        x.LoadImageIntoTexture((Texture2D)rend.material.mainTexture);
-                    });
+                    ObservableWWW.GetWWW(url).Subscribe(
+                        success =>
+                        {
+                            rend.material.mainTexture = new Texture2D(512, 512, TextureFormat.DXT5, false);
+                            rend.material.color = new Color(1f, 1f, 1f, 1f);
+                            success.LoadImageIntoTexture((Texture2D)rend.material.mainTexture);
+                        },
+                        error =>
+                        {
+                            Debug.Log(error);
+                        });
                 }
 
                 RunFactories(mapData);
-
-                //StartCoroutine(CreateBuildings(mapData["buildings"], _settings.TileCenter));
-                //StartCoroutine(CreateRoads(mapData["roads"], _settings.TileCenter));
-                //StartCoroutine(CreateWater(mapData["water"], _settings.TileCenter));
             });
         }
 
@@ -84,7 +85,7 @@ namespace Assets
                         continue;
 
                     var b = factory.CreateLayer(_settings.TileCenter, mapData[factory.XmlTag]["features"].list);
-                    if(b) //getting a weird error without this, no idea really
+                    if (b) //getting a weird error without this, no idea really
                         b.transform.SetParent(transform, false);
                 }
                 else

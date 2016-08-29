@@ -14,12 +14,12 @@ namespace Assets
 {
     public class TileManager : MonoBehaviour
     {
-        private readonly string _mapzenUrl = "https://vector.mapzen.com/osm/{0}/{1}/{2}/{3}.{4}?api_key={5}";
-        [SerializeField] private string _key = "vector-tiles-5sBcqh6"; //try getting your own key if this doesn't work
-        [SerializeField] private string _mapzenLayers = "buildings,roads,landuse,water";
-        [SerializeField] private Material MapMaterial;
-
-        private readonly string _mapzenFormat = "json";
+        
+        protected readonly string _mapzenUrl = "https://vector.mapzen.com/osm/{0}/{1}/{2}/{3}.{4}?api_key={5}";
+        [SerializeField] protected string _key = "vector-tiles-5sBcqh6"; //try getting your own key if this doesn't work
+        [SerializeField] protected string _mapzenLayers = "buildings,roads,landuse,water";
+        [SerializeField] protected Material MapMaterial;
+        protected readonly string _mapzenFormat = "json";
 
         private List<Factory> _factories;
         protected Transform TileHost;
@@ -37,7 +37,9 @@ namespace Assets
         public virtual void Init(List<Factory> factories, World.Settings settings)
         {
             _factories = factories;
-            if (MapMaterial == null)
+            
+
+                if (MapMaterial == null)
                 MapMaterial = Resources.Load<Material>("Ground");
 
             var v2 = GM.LatLonToMeters(settings.Lat, settings.Long);
@@ -70,7 +72,7 @@ namespace Assets
                     var v = new Vector2(tms.x + i, tms.y + j);
                     if (Tiles.ContainsKey(v))
                         continue;
-                    MainThreadDispatcher.StartUpdateMicroCoroutine(CreateTile(v, center));
+                    StartCoroutine(CreateTile(v, center));
                 }
             }
         }
@@ -94,11 +96,10 @@ namespace Assets
             tile.transform.position = (rect.center - centerInMercator).ToVector3xz();
             tile.transform.SetParent(TileHost, false);
             LoadTile(tileTms, tile);
-
             yield return null;
         }
 
-        private void LoadTile(Vector2 tileTms, Tile tile)
+        protected virtual void LoadTile(Vector2 tileTms, Tile tile)
         {
             var url = string.Format(_mapzenUrl, _mapzenLayers, Zoom, tileTms.x, tileTms.y, _mapzenFormat, _key);
             //Debug.Log(url);
