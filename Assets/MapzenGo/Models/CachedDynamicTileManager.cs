@@ -29,13 +29,11 @@ namespace Assets.Models
         protected override void LoadTile(Vector2 tileTms, Tile tile)
         {
             var url = string.Format(_mapzenUrl, _mapzenLayers, Zoom, tileTms.x, tileTms.y, _mapzenFormat, _key);
-
             var tilePath = Path.Combine(CacheFolderPath, Zoom + "_" + tileTms.x + "_" + tileTms.y);
-            string mapData;
             if (File.Exists(tilePath))
             {
                 var r = new StreamReader(tilePath, Encoding.Default);
-                mapData = r.ReadToEnd();
+                var mapData = r.ReadToEnd();
                 tile.ConstructTile(mapData);
             }
             else
