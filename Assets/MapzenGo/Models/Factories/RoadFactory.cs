@@ -20,6 +20,11 @@ namespace Assets.Models.Factories
 
         public override IEnumerable<MonoBehaviour> Create(Vector2 tileMercPos, JSONObject geo)
         {
+            var kind = geo["properties"]["kind"].str.ToRoadType();
+            var settings = _settings.GetSettingsFor(kind);
+            if (!settings.Enabled)
+                yield break;
+
             if (geo["geometry"]["type"].str == "LineString")
             {
                 var road = new GameObject("road").AddComponent<Road>();
@@ -27,7 +32,7 @@ namespace Assets.Models.Factories
                 var roadEnds = new List<Vector3>();
                 var verts = new List<Vector3>();
                 var indices = new List<int>();
-                var kind = geo["properties"]["kind"].str.ToRoadType();
+                
                 for (var i = 0; i < geo["geometry"]["coordinates"].list.Count; i++)
                 {
                     var c = geo["geometry"]["coordinates"][i];
@@ -35,11 +40,12 @@ namespace Assets.Models.Factories
                     var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
                     roadEnds.Add(localMercPos.ToVector3xz());
                 }
-                CreateMesh(roadEnds, kind, ref verts, ref indices);
+                CreateMesh(roadEnds, settings, ref verts, ref indices);
                 mesh.vertices = verts.ToArray();
                 mesh.triangles = indices.ToArray();
                 mesh.RecalculateNormals();
                 mesh.RecalculateBounds();
+                road.GetComponent<MeshRenderer>().material = settings.Material;
                 road.Initialize(geo, roadEnds, _settings);
                 yield return road;
             }
@@ -52,7 +58,6 @@ namespace Assets.Models.Factories
                     var roadEnds = new List<Vector3>();
                     var verts = new List<Vector3>();
                     var indices = new List<int>();
-                    var kind = geo["properties"]["kind"].str.ToRoadType();
 
                     roadEnds.Clear();
                     var c = geo["geometry"]["coordinates"][i];
@@ -63,11 +68,12 @@ namespace Assets.Models.Factories
                         var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
                         roadEnds.Add(localMercPos.ToVector3xz());
                     }
-                    CreateMesh(roadEnds, kind, ref verts, ref indices);
+                    CreateMesh(roadEnds, settings, ref verts, ref indices);
                     mesh.vertices = verts.ToArray();
                     mesh.triangles = indices.ToArray();
                     mesh.RecalculateNormals();
                     mesh.RecalculateBounds();
+                    road.GetComponent<MeshRenderer>().material = settings.Material;
                     road.Initialize(geo, roadEnds, _settings);
                     yield return road;
                 }
@@ -98,6 +104,7 @@ namespace Assets.Models.Factories
                 x => x["geometry"]["type"].str == "LineString" || x["geometry"]["type"].str == "MultiLineString"))
             {
                 var kind = geo["properties"]["kind"].str.ToRoadType();
+                var settings = _settings.GetSettingsFor(kind);
                 var roadEnds = new List<Vector3>();
                 if (geo["geometry"]["type"].str == "LineString")
                 {
@@ -108,7 +115,7 @@ namespace Assets.Models.Factories
                         var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
                         roadEnds.Add(localMercPos.ToVector3xz());
                     }
-                    CreateMesh(roadEnds, kind, ref verts, ref indices);
+                    CreateMesh(roadEnds, settings, ref verts, ref indices);
                     //yield return CreateRoadSegment(geo, roadEnds);
                 }
                 else if (geo["geometry"]["type"].str == "MultiLineString")
@@ -124,14 +131,13 @@ namespace Assets.Models.Factories
                             var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
                             roadEnds.Add(localMercPos.ToVector3xz());
                         }
-                        CreateMesh(roadEnds, kind, ref verts, ref indices);
-                        //yield return CreateRoadSegment(geo, roadEnds);
+                        CreateMesh(roadEnds, settings, ref verts, ref indices);
                     }
                 }
             }
         }
 
-        private void CreateMesh(List<Vector3> list, RoadType kind, ref List<Vector3> verts, ref List<int> indices)
+        private void CreateMesh(List<Vector3> list, Road.RoadSettings settings, ref List<Vector3> verts, ref List<int> indices)
         {
             var vertsStartCount = verts.Count;
             Vector3 lastPos = Vector3.zero;
@@ -147,13 +153,13 @@ namespace Assets.Models.Factories
                 if (lastPos == Vector3.zero)
                 {
                     lastPos = Vector3.Lerp(p1, p2, 0f);
-                    norm = GetNormal(p1, lastPos, p2) * RoadWidth(kind);
+                    norm = GetNormal(p1, lastPos, p2) * settings.Width;
                     verts.Add(lastPos + norm);
                     verts.Add(lastPos - norm);
                 }
 
                 lastPos = Vector3.Lerp(p1, p2, 1f);
-                norm = GetNormal(p1, lastPos, p3) * RoadWidth(kind);
+                norm = GetNormal(p1, lastPos, p3) * settings.Width;
                 verts.Add(lastPos + norm);
                 verts.Add(lastPos - norm);
             }
