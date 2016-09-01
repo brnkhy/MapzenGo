@@ -7,6 +7,7 @@ using Assets.Helpers;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Models.Factories
 {
@@ -57,7 +58,13 @@ namespace Assets.Models.Factories
 
                     building.transform.localPosition = buildingCenter;
                     SetProperties(geo, building);
-                    CreateMesh(buildingCorners, _settings, ref verts, ref indices);
+                    var height = 0f;
+                    if (_settings.IsVolumetric)
+                    {
+                        height = geo["properties"].HasField("height") ? geo["properties"]["height"].f : Random.Range(_settings.MinimumBuildingHeight, _settings.MaximumBuildingHeight);
+                    }
+
+                    CreateMesh(buildingCorners, height, _settings, ref verts, ref indices);
 
                     mesh.vertices = verts.ToArray();
                     mesh.triangles = indices.ToArray();
@@ -88,7 +95,7 @@ namespace Assets.Models.Factories
 
             building.Id = geo["properties"]["id"].ToString();
             building.Type = geo["type"].str;
-            building.SortKey = (int) geo["properties"]["sort_key"].f;
+            building.SortKey = (int)geo["properties"]["sort_key"].f;
             building.Kind = kind;
             building.LanduseKind = kind;
         }
@@ -142,8 +149,13 @@ namespace Assets.Models.Factories
                         //    //using corner position relative to building center
                         //    buildingCorners[i] = buildingCorners[i] - buildingCenter;
                         //}
+                        var height = 0f;
+                        if (_settings.IsVolumetric)
+                        {
+                            height = geo["properties"].HasField("height") ? geo["properties"]["height"].f : Random.Range(_settings.MinimumBuildingHeight, _settings.MaximumBuildingHeight);
+                        }
 
-                        CreateMesh(buildingCorners, _settings, ref verts, ref indices);
+                        CreateMesh(buildingCorners, height, _settings, ref verts, ref indices);
                         _active.Add(key);
                     }
                     catch (Exception ex)
@@ -156,10 +168,8 @@ namespace Assets.Models.Factories
             }
         }
 
-        public void CreateMesh(List<Vector3> corners, Building.Settings settings, ref List<Vector3> verts, ref List<int> indices)
+        public void CreateMesh(List<Vector3> corners, float height, Building.Settings settings, ref List<Vector3> verts, ref List<int> indices)
         {
-            var rnd = new System.Random();
-            var height = settings.IsVolumetric ? rnd.Next(settings.MinimumBuildingHeight, settings.MaximumBuildingHeight) : 0;
             var tris = new Triangulator(corners);
 
             var vertsStartCount = verts.Count;
@@ -185,7 +195,7 @@ namespace Assets.Models.Factories
                     indices.Add(ind);
                     indices.Add(ind + 2);
                     indices.Add(ind + 1);
-                                
+
                     indices.Add(ind + 1);
                     indices.Add(ind + 2);
                     indices.Add(ind + 3);
@@ -202,7 +212,7 @@ namespace Assets.Models.Factories
                 indices.Add(ind);
                 indices.Add(ind + 1);
                 indices.Add(ind + 2);
-                            
+
                 indices.Add(ind + 1);
                 indices.Add(ind + 3);
                 indices.Add(ind + 2);
