@@ -17,7 +17,7 @@ namespace Assets
     }
 
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-    internal class Road : MonoBehaviour
+    public class Road : MonoBehaviour
     {
         public string Id;
         public string Kind;
@@ -48,32 +48,22 @@ namespace Assets
         public class Settings
         {
             public RoadSettings Default;
-            public RoadSettings Path;
-            public RoadSettings MinorRoad;
-            public RoadSettings MajorRoad;
-            public RoadSettings Highway;
+            public List<RoadSettings> AllSettings;
 
             public RoadSettings GetSettingsFor(RoadType type)
             {
-                if (type == RoadType.Path)
-                    return Path;
-                if (type == RoadType.MajorRoad)
-                    return MajorRoad;
-                if (type == RoadType.MinorRoad)
-                    return MinorRoad;
-                if (type == RoadType.Highway)
-                    return Highway;
-
-                return Default;
+                var f = AllSettings.FirstOrDefault(x => x.Type == type);
+                return f ?? Default;
             }
         }
 
         [Serializable]
         public class RoadSettings
         {
-            public bool Enabled;
+            public RoadType Type;
+            public bool Enabled = true;
             public Material Material;
-            public float Width;
+            public float Width = 6;
         }
     }
 }
