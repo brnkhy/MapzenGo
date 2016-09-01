@@ -26,7 +26,7 @@ namespace Assets
 
         public void Initialize(JSONObject geo, List<Vector3> list, Settings settings)
         {
-            GetComponent<MeshRenderer>().material = Resources.Load<Material>("Road");
+            //GetComponent<MeshRenderer>().material = Resources.Load<Material>("Road");
             try
             {
                 Id = geo["properties"]["id"].ToString();
@@ -47,7 +47,33 @@ namespace Assets
         [Serializable]
         public class Settings
         {
+            public RoadSettings Default;
+            public RoadSettings Path;
+            public RoadSettings MinorRoad;
+            public RoadSettings MajorRoad;
+            public RoadSettings Highway;
 
+            public RoadSettings GetSettingsFor(RoadType type)
+            {
+                if (type == RoadType.Path)
+                    return Path;
+                if (type == RoadType.MajorRoad)
+                    return MajorRoad;
+                if (type == RoadType.MinorRoad)
+                    return MinorRoad;
+                if (type == RoadType.Highway)
+                    return Highway;
+
+                return Default;
+            }
+        }
+
+        [Serializable]
+        public class RoadSettings
+        {
+            public bool Enabled;
+            public Material Material;
+            public float Width;
         }
     }
 }
