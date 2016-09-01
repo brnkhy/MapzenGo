@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using Assets.Helpers;
-using Assets.Models.Factories;
-using UniRx;
 using UnityEngine;
 
 namespace Assets.Models
@@ -24,8 +21,11 @@ namespace Assets.Models
             _removeAfter = Math.Max(_removeAfter, Range * 2 + 1);
             var rect = new Vector2(settings.TileSize, settings.TileSize);
             _centerCollider = new Rect(Vector2.zero - rect / 2 , rect);
+        }
 
-            Observable.Interval(TimeSpan.FromSeconds(2)).Subscribe(x => { UpdateTiles(); });
+        void Update()
+        {
+            UpdateTiles();
         }
 
         private void UpdateTiles()
