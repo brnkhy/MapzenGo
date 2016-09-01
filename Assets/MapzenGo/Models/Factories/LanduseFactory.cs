@@ -29,49 +29,50 @@ namespace Assets.Models.Factories
                 var buildingCorners = new List<Vector3>();
                 Building building = null;
                 var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
-                if (bb == null ||bb.list == null)
+                if (bb == null || bb.list == null)
                 {
-                    int x = 5;
-                }
-                for (int i = 0; i < bb.list.Count - 1; i++)
-                {
-                    var c = bb.list[i];
-                    var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                    var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
-                    buildingCorners.Add(localMercPos.ToVector3xz());
-                }
 
-                if (buildingCorners.Any())
-                {
-                    try
+
+                    for (int i = 0; i < bb.list.Count - 1; i++)
                     {
-                        building = new GameObject("Parks").AddComponent<Building>();
-                        var verts = new List<Vector3>();
-                        var indices = new List<int>();
-                        var mesh = building.GetComponent<MeshFilter>().mesh;
+                        var c = bb.list[i];
+                        var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
+                        var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
+                        buildingCorners.Add(localMercPos.ToVector3xz());
+                    }
 
-                        var buildingCenter = buildingCorners.Aggregate((acc, cur) => acc + cur)/buildingCorners.Count;
-                        for (int i = 0; i < buildingCorners.Count; i++)
+                    if (buildingCorners.Any())
+                    {
+                        try
                         {
-                            //using corner position relative to building center
-                            buildingCorners[i] = buildingCorners[i] - buildingCenter;
+                            building = new GameObject("Parks").AddComponent<Building>();
+                            var verts = new List<Vector3>();
+                            var indices = new List<int>();
+                            var mesh = building.GetComponent<MeshFilter>().mesh;
+
+                            var buildingCenter = buildingCorners.Aggregate((acc, cur) => acc + cur)/
+                                                 buildingCorners.Count;
+                            for (int i = 0; i < buildingCorners.Count; i++)
+                            {
+                                //using corner position relative to building center
+                                buildingCorners[i] = buildingCorners[i] - buildingCenter;
+                            }
+
+                            building.transform.localPosition = buildingCenter;
+                            SetProperties(geo, building);
+                            CreateMesh(buildingCorners, _settings, ref verts, ref indices);
+
+                            mesh.vertices = verts.ToArray();
+                            mesh.triangles = indices.ToArray();
+                            mesh.RecalculateNormals();
+                            mesh.RecalculateBounds();
                         }
-
-                        building.transform.localPosition = buildingCenter;
-                        SetProperties(geo, building);
-                        CreateMesh(buildingCorners, _settings, ref verts, ref indices);
-
-                        mesh.vertices = verts.ToArray();
-                        mesh.triangles = indices.ToArray();
-                        mesh.RecalculateNormals();
-                        mesh.RecalculateBounds();
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.Log(ex);
+                        catch (Exception ex)
+                        {
+                            Debug.Log(ex);
+                        }
                     }
                 }
-
                 yield return building;
             }
         }
