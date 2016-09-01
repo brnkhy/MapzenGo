@@ -53,7 +53,7 @@ namespace Assets.Helpers
                     return RoadType.Highway;
                 case "major_road":
                     return RoadType.MajorRoad;
-                case "minor":
+                case "minor_road":
                     return RoadType.MinorRoad;
                 case "rail":
                     return RoadType.Rail;
