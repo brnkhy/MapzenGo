@@ -16,11 +16,12 @@ namespace Assets.Models
 {
     public class CachedDynamicTileManager : DynamicTileManager
     {
+        public string RelativeCachePath = "../MapzenGo/CachedTileData/";
         protected string CacheFolderPath;
 
         public override void Init(List<Factory> factories, World.Settings settings)
         {
-            CacheFolderPath = Path.Combine(Application.dataPath, "MapzenGo/CachedTileData/");
+            CacheFolderPath = Path.Combine(Application.dataPath, RelativeCachePath);
             if (!Directory.Exists(CacheFolderPath))
                 Directory.CreateDirectory(CacheFolderPath);
             base.Init(factories, settings);
