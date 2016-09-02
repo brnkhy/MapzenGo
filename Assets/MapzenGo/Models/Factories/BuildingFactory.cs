@@ -24,7 +24,7 @@ namespace Assets.Models.Factories
             Query = (geo) => geo["geometry"]["type"].str == "Polygon";
         }
 
-        public override IEnumerable<MonoBehaviour> Create(Vector2 tileMercPos, JSONObject geo)
+        public override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
         {
             var key = geo["properties"]["id"].ToString();
             if (!_active.Contains(key))
@@ -38,8 +38,8 @@ namespace Assets.Models.Factories
                 {
                     var c = bb.list[i];
                     var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                    var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
-                    buildingCorners.Add(localMercPos.ToVector3xz());
+                    var localMercPos = dotMerc - tileMercPos;
+                    buildingCorners.Add(localMercPos.ToVector3());
                 }
 
                 try
@@ -100,7 +100,7 @@ namespace Assets.Models.Factories
             building.LanduseKind = kind;
         }
 
-        public override GameObject CreateLayer(Vector2 tileMercPos, List<JSONObject> geoList)
+        public override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList)
         {
             var items = geoList.Where(x => x["geometry"]["type"].str == "Polygon");
             if (!items.Any())
@@ -122,7 +122,7 @@ namespace Assets.Models.Factories
             return go;
         }
 
-        private void GetVertices(Vector2 tileMercPos, IEnumerable<JSONObject> items, List<Vector3> verts, List<int> indices)
+        private void GetVertices(Vector2d tileMercPos, IEnumerable<JSONObject> items, List<Vector3> verts, List<int> indices)
         {
             foreach (var geo in items)
             {
@@ -137,7 +137,7 @@ namespace Assets.Models.Factories
                     {
                         var c = bb.list[i];
                         var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                        var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
+                        var localMercPos = new Vector2((float) (dotMerc.x - tileMercPos.x), (float) (dotMerc.y - tileMercPos.y));
                         buildingCorners.Add(localMercPos.ToVector3xz());
                     }
 

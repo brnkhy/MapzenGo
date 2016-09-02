@@ -17,7 +17,7 @@ namespace Assets
         public string MapImageUrlBase = "http://b.tile.openstreetmap.org/";
 
         [SerializeField]
-        public Rect Rect;
+        public RectD Rect;
 
         private List<Factory> _factories;
         private Settings _settings;
@@ -48,7 +48,7 @@ namespace Assets
                 var go = GameObject.CreatePrimitive(PrimitiveType.Quad).transform;
                 go.name = "map";
                 go.SetParent(transform, true);
-                go.localScale = new Vector3(Rect.width, Rect.width, 1);
+                go.localScale = new Vector3((float) Rect.Width, (float)Rect.Width, 1);
                 go.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
                 go.localPosition = Vector3.zero;
                 go.localPosition -= new Vector3(0, 1, 0);
@@ -106,8 +106,8 @@ namespace Assets
         public class Settings
         {
             public int Zoom { get; set; }
-            public Vector2 TileTms { get; set; }
-            public Vector3 TileCenter { get; set; }
+            public Vector2d TileTms { get; set; }
+            public Vector3d TileCenter { get; set; }
             public bool LoadImages { get; set; }
             public bool UseLayers { get; set; }
             public Material Material { get; set; }

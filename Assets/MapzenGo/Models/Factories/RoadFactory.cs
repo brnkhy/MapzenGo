@@ -18,7 +18,7 @@ namespace Assets.Models.Factories
             Query = (geo) => geo["geometry"]["type"].str == "LineString" || geo["geometry"]["type"].str == "MultiLineString";
         }
 
-        public override IEnumerable<MonoBehaviour> Create(Vector2 tileMercPos, JSONObject geo)
+        public override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
         {
             var kind = geo["properties"]["kind"].str.ToRoadType();
             var settings = _settings.GetSettingsFor(kind);
@@ -37,8 +37,8 @@ namespace Assets.Models.Factories
                 {
                     var c = geo["geometry"]["coordinates"][i];
                     var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                    var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
-                    roadEnds.Add(localMercPos.ToVector3xz());
+                    var localMercPos = dotMerc - tileMercPos;
+                    roadEnds.Add(localMercPos.ToVector3());
                 }
                 CreateMesh(roadEnds, settings, ref verts, ref indices);
                 mesh.vertices = verts.ToArray();
@@ -65,8 +65,8 @@ namespace Assets.Models.Factories
                     {
                         var seg = c[j];
                         var dotMerc = GM.LatLonToMeters(seg[1].f, seg[0].f);
-                        var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
-                        roadEnds.Add(localMercPos.ToVector3xz());
+                        var localMercPos = dotMerc - tileMercPos;
+                        roadEnds.Add(localMercPos.ToVector3());
                     }
                     CreateMesh(roadEnds, settings, ref verts, ref indices);
                     mesh.vertices = verts.ToArray();
@@ -80,7 +80,7 @@ namespace Assets.Models.Factories
             }
         }
 
-        public override GameObject CreateLayer(Vector2 tileMercPos, List<JSONObject> geoList)
+        public override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList)
         {
             var go = new GameObject("Roads");
             var mesh = go.AddComponent<MeshFilter>().mesh;
@@ -98,7 +98,7 @@ namespace Assets.Models.Factories
             return go;
         }
 
-        private void GetVertices(Vector2 tileMercPos, List<JSONObject> geoList, ref List<Vector3> verts, ref List<int> indices)
+        private void GetVertices(Vector2d tileMercPos, List<JSONObject> geoList, ref List<Vector3> verts, ref List<int> indices)
         {
             foreach (var geo in geoList.Where(
                 x => x["geometry"]["type"].str == "LineString" || x["geometry"]["type"].str == "MultiLineString"))
@@ -112,8 +112,8 @@ namespace Assets.Models.Factories
                     {
                         var c = geo["geometry"]["coordinates"][i];
                         var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                        var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
-                        roadEnds.Add(localMercPos.ToVector3xz());
+                        var localMercPos = dotMerc - tileMercPos;
+                        roadEnds.Add(localMercPos.ToVector3());
                     }
                     CreateMesh(roadEnds, settings, ref verts, ref indices);
                     //yield return CreateRoadSegment(geo, roadEnds);
@@ -128,8 +128,8 @@ namespace Assets.Models.Factories
                         {
                             var seg = c[j];
                             var dotMerc = GM.LatLonToMeters(seg[1].f, seg[0].f);
-                            var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
-                            roadEnds.Add(localMercPos.ToVector3xz());
+                            var localMercPos = dotMerc - tileMercPos;
+                            roadEnds.Add(localMercPos.ToVector3());
                         }
                         CreateMesh(roadEnds, settings, ref verts, ref indices);
                     }

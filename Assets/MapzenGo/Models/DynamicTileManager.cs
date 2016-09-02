@@ -48,18 +48,18 @@ namespace Assets.Models
             //move everything to keep current tile at 0,0
             foreach (var tile in Tiles.Values)
             {
-                tile.transform.position -= new Vector3(tileDif.x * TileSize, 0, -tileDif.y * TileSize);
+                tile.transform.position -= new Vector3((float) (tileDif.x * TileSize), 0, (float) (-tileDif.y * TileSize));
             }
-            CenterTms += tileDif;
-            CenterInMercator = GM.TileBounds(CenterTms, Zoom).center;
-            var difInUnity = new Vector3(tileDif.x * TileSize, 0, -tileDif.y * TileSize);
+            CenterTms += tileDif.ToVector2d();
+            CenterInMercator = GM.TileBounds(CenterTms, Zoom).Center;
+            var difInUnity = new Vector3((float) (tileDif.x * TileSize), 0, (float) (-tileDif.y * TileSize));
             _player.position -= difInUnity;
             Camera.main.transform.position -= difInUnity;
         }
 
-        private void UnloadTiles(Vector2 currentTms)
+        private void UnloadTiles(Vector2d currentTms)
         {
-            var rem = new List<Vector2>();
+            var rem = new List<Vector2d>();
             foreach (var key in Tiles.Keys.Where(x => x.ManhattanTo(currentTms) > _removeAfter))
             {
                 rem.Add(key);

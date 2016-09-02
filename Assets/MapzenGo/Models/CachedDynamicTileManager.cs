@@ -26,7 +26,7 @@ namespace Assets.Models
             base.Init(factories, settings);
         }
 
-        protected override void LoadTile(Vector2 tileTms, Tile tile)
+        protected override void LoadTile(Vector2d tileTms, Tile tile)
         {
             var url = string.Format(_mapzenUrl, _mapzenLayers, Zoom, tileTms.x, tileTms.y, _mapzenFormat, _key);
             var tilePath = Path.Combine(CacheFolderPath, Zoom + "_" + tileTms.x + "_" + tileTms.y);

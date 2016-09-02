@@ -30,9 +30,9 @@ namespace Assets
         protected int Range = 1;
         protected bool UseLayers = true;
 
-        protected Dictionary<Vector2, Tile> Tiles; //will use this later on
-        protected Vector2 CenterTms; //tms tile coordinate
-        protected Vector2 CenterInMercator; //this is like distance (meters) in mercator 
+        protected Dictionary<Vector2d, Tile> Tiles; //will use this later on
+        protected Vector2d CenterTms; //tms tile coordinate
+        protected Vector2d CenterInMercator; //this is like distance (meters) in mercator 
 
         public virtual void Init(List<Factory> factories, World.Settings settings)
         {
@@ -51,25 +51,25 @@ namespace Assets
             Zoom = settings.DetailLevel;
             TileSize = settings.TileSize;
             UseLayers = settings.UseLayers;
-            Tiles = new Dictionary<Vector2, Tile>();
+            Tiles = new Dictionary<Vector2d, Tile>();
             CenterTms = tile;
-            CenterInMercator = GM.TileBounds(CenterTms, Zoom).center;
+            CenterInMercator = GM.TileBounds(CenterTms, Zoom).Center;
             Range = settings.Range;
             LoadImages = settings.LoadImages;
 
             LoadTiles(CenterTms, CenterInMercator);
 
             var rect = GM.TileBounds(CenterTms, Zoom);
-            transform.localScale = Vector3.one * (TileSize / rect.width);
+            transform.localScale = Vector3.one * (float) (TileSize / rect.Width);
         }
 
-        protected void LoadTiles(Vector2 tms, Vector2 center)
+        protected void LoadTiles(Vector2d tms, Vector2d center)
         {
             for (int i = -Range; i <= Range; i++)
             {
                 for (int j = -Range; j <= Range; j++)
                 {
-                    var v = new Vector2(tms.x + i, tms.y + j);
+                    var v = new Vector2d(tms.x + i, tms.y + j);
                     if (Tiles.ContainsKey(v))
                         continue;
                     StartCoroutine(CreateTile(v, center));
@@ -77,7 +77,7 @@ namespace Assets
             }
         }
 
-        protected virtual IEnumerator CreateTile(Vector2 tileTms, Vector2 centerInMercator)
+        protected virtual IEnumerator CreateTile(Vector2d tileTms, Vector2d centerInMercator)
         {
             var rect = GM.TileBounds(tileTms, Zoom);
             var tile = new GameObject("tile " + tileTms.x + "-" + tileTms.y)
@@ -87,19 +87,19 @@ namespace Assets
                       {
                           Zoom = Zoom,
                           TileTms = tileTms,
-                          TileCenter = rect.center,
+                          TileCenter = rect.Center,
                           LoadImages = LoadImages,
                           UseLayers = UseLayers,
                           Material = MapMaterial
                       });
             Tiles.Add(tileTms, tile);
-            tile.transform.position = (rect.center - centerInMercator).ToVector3xz();
+            tile.transform.position = (rect.Center - centerInMercator).ToVector3();
             tile.transform.SetParent(TileHost, false);
             LoadTile(tileTms, tile);
             yield return null;
         }
 
-        protected virtual void LoadTile(Vector2 tileTms, Tile tile)
+        protected virtual void LoadTile(Vector2d tileTms, Tile tile)
         {
             var url = string.Format(_mapzenUrl, _mapzenLayers, Zoom, tileTms.x, tileTms.y, _mapzenFormat, _key);
             //Debug.Log(url);
