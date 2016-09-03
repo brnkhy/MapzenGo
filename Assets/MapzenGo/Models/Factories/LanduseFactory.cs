@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using Assets.Helpers;
+using Assets.MapzenGo.Models.Enums;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
@@ -14,88 +15,61 @@ namespace Assets.Models.Factories
     {
         public override string XmlTag { get { return "landuse"; } }
 
-        [SerializeField]
-        private Building.Settings _settings;
+        [SerializeField] private Landuse.Settings _settings;
 
         public override void Start()
         {
             Query = (geo) => geo["geometry"]["type"].str == "Polygon" || geo["geometry"]["type"].str == "MultiPolygon";
         }
 
-        public override IEnumerable<MonoBehaviour> Create(Vector2 tileMercPos, JSONObject geo)
+        public override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
         {
-            if (geo["properties"]["kind"].str == "park")
+            var kind = geo["properties"]["kind"].str.ConvertToEnum<LanduseKind>();
+            if (kind != LanduseKind.Unknown && _settings.AllSettings.Any(x => x.Type == kind))
             {
-                var buildingCorners = new List<Vector3>();
-                Building building = null;
+                var landuseCorners = new List<Vector3>();
                 var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
                 if (bb == null || bb.list == null)
+                    yield break;
+
+                for (var i = 0; i < bb.list.Count - 1; i++)
                 {
-
-
-                    for (int i = 0; i < bb.list.Count - 1; i++)
-                    {
-                        var c = bb.list[i];
-                        var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                        var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
-                        buildingCorners.Add(localMercPos.ToVector3xz());
-                    }
-
-                    if (buildingCorners.Any())
-                    {
-                        try
-                        {
-                            building = new GameObject("Parks").AddComponent<Building>();
-                            var verts = new List<Vector3>();
-                            var indices = new List<int>();
-                            var mesh = building.GetComponent<MeshFilter>().mesh;
-
-                            var buildingCenter = buildingCorners.Aggregate((acc, cur) => acc + cur)/
-                                                 buildingCorners.Count;
-                            for (int i = 0; i < buildingCorners.Count; i++)
-                            {
-                                //using corner position relative to building center
-                                buildingCorners[i] = buildingCorners[i] - buildingCenter;
-                            }
-
-                            building.transform.localPosition = buildingCenter;
-                            SetProperties(geo, building);
-                            CreateMesh(buildingCorners, _settings, ref verts, ref indices);
-
-                            mesh.vertices = verts.ToArray();
-                            mesh.triangles = indices.ToArray();
-                            mesh.RecalculateNormals();
-                            mesh.RecalculateBounds();
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.Log(ex);
-                        }
-                    }
+                    var c = bb.list[i];
+                    var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
+                    var localMercPos = dotMerc - tileMercPos;
+                    landuseCorners.Add(localMercPos.ToVector3());
                 }
-                yield return building;
+
+                if (!landuseCorners.Any())
+                    yield break;
+
+                var landuse = new GameObject("Landuse").AddComponent<Landuse>();
+                var verts = new List<Vector3>();
+                var indices = new List<int>();
+                var mesh = landuse.GetComponent<MeshFilter>().mesh;
+
+                //I want object center to be in the middle of object, not at the corner of the tile
+                var landuseCenter = ChangeToRelativePositions(landuseCorners);
+                landuse.transform.localPosition = landuseCenter;
+
+                SetProperties(geo, landuse, kind);
+                CreateMesh(landuseCorners, ref verts, ref indices);
+                
+                mesh.vertices = verts.ToArray();
+                mesh.triangles = indices.ToArray();
+                mesh.RecalculateNormals();
+
+                yield return landuse;
             }
         }
-
-        private static void SetProperties(JSONObject geo, Building building)
+        
+        public override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList)
         {
-            building.name = "landuse " + geo["properties"]["id"].ToString();
-            var kind = "";
-            if (geo["properties"].HasField("kind"))
-                kind = geo["properties"]["kind"].str;
-            if (geo["properties"].HasField("name"))
-                building.Name = geo["properties"]["name"].str;
-
-            building.Id = geo["properties"]["id"].ToString();
-            building.Type = geo["type"].str;
-            building.SortKey = (int)geo["properties"]["sort_key"].f;
-            building.Kind = kind;
-            building.LanduseKind = kind;
-        }
-
-        public override GameObject CreateLayer(Vector2 tileMercPos, List<JSONObject> geoList)
-        {
-            var items = geoList.Where(x => x["geometry"]["type"].str == "Polygon" && x["properties"]["kind"].str == "park");
+            var items = geoList.Where(x =>
+            {
+                var kind = x["properties"]["kind"].str.ConvertToEnum<LanduseKind>();
+                return kind != LanduseKind.Unknown && _settings.AllSettings.Any(a => a.Type == kind) && Query(x);
+            });
             if (!items.Any())
                 return null;
 
@@ -109,30 +83,52 @@ namespace Assets.Models.Factories
             mesh.vertices = verts.ToArray();
             mesh.triangles = indices.ToArray();
             mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
-            go.GetComponent<MeshRenderer>().material = BaseMaterial;
-            go.transform.position += Vector3.up*Order;
+            go.GetComponent<MeshRenderer>().material = _settings.Default.Material;
+            go.transform.position += Vector3.up * Order;
             return go;
         }
 
-        private void GetVertices(Vector2 tileMercPos, IEnumerable<JSONObject> items, List<Vector3> verts, List<int> indices)
+        private static Vector3 ChangeToRelativePositions(List<Vector3> landuseCorners)
+        {
+            var landuseCenter = landuseCorners.Aggregate((acc, cur) => acc + cur) / landuseCorners.Count;
+            for (int i = 0; i < landuseCorners.Count; i++)
+            {
+                //using corner position relative to landuse center
+                landuseCorners[i] = landuseCorners[i] - landuseCenter;
+            }
+            return landuseCenter;
+        }
+
+        private void SetProperties(JSONObject geo, Landuse landuse, LanduseKind kind)
+        {
+            landuse.name = "landuse " + geo["properties"]["id"].ToString();
+            if (geo["properties"].HasField("name"))
+                landuse.Name = geo["properties"]["name"].str;
+            landuse.Id = geo["properties"]["id"].ToString();
+            landuse.Type = geo["type"].str;
+            landuse.SortKey = (int)geo["properties"]["sort_key"].f;
+            landuse.Kind = kind;
+            landuse.GetComponent<MeshRenderer>().material = _settings.GetSettingsFor(kind).Material;
+        }
+
+        private void GetVertices(Vector2d tileMercPos, IEnumerable<JSONObject> items, List<Vector3> verts, List<int> indices)
         {
             foreach (var geo in items)
             {
-                var buildingCorners = new List<Vector3>();
+                var landuseCorners = new List<Vector3>();
                 var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
                 for (int i = 0; i < bb.list.Count - 1; i++)
                 {
                     var c = bb.list[i];
                     var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                    var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
-                    buildingCorners.Add(localMercPos.ToVector3xz());
+                    var localMercPos = dotMerc - tileMercPos;
+                    landuseCorners.Add(localMercPos.ToVector3());
                 }
-                CreateMesh(buildingCorners, _settings, ref verts, ref indices);
+                CreateMesh(landuseCorners, ref verts, ref indices);
             }
         }
 
-        public void CreateMesh(List<Vector3> corners, Building.Settings settings, ref List<Vector3> verts, ref List<int> indices)
+        public void CreateMesh(List<Vector3> corners, ref List<Vector3> verts, ref List<int> indices)
         {
             var tris = new Triangulator(corners);
             var vertsStartCount = verts.Count;

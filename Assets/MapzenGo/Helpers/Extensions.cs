@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.MapzenGo.Models.Enums;
 using Assets.Models;
 using UnityEngine;
 
@@ -14,6 +15,11 @@ namespace Assets.Helpers
             return (int)Math.Abs(v.x - t.x) + (int)Math.Abs(v.y - t.y);
         }
 
+        public static int ManhattanTo(this Vector2d v, Vector2d t)
+        {
+            return (int)Math.Abs(v.x - t.x) + (int)Math.Abs(v.y - t.y);
+        }
+
         public static Vector2 ToVector2xz(this Vector3 v)
         {
             return new Vector2(v.x, v.z);
@@ -22,6 +28,36 @@ namespace Assets.Helpers
         public static Vector3 ToVector3xz(this Vector2 v)
         {
             return new Vector3(v.x, 0, v.y);
+        }
+
+        public static Vector2d ToVector2xz(this Vector3d v)
+        {
+            return new Vector2d(v.x, v.z);
+        }
+
+        public static Vector3d ToVector3xz(this Vector2d v)
+        {
+            return new Vector3d(v.x, 0, v.y);
+        }
+
+        public static Vector2 ToVector2(this Vector3d v)
+        {
+            return new Vector2((float) v.x, (float)v.z);
+        }
+
+        public static Vector2 ToVector2(this Vector2d v)
+        {
+            return new Vector2((float)v.x, (float)v.y);
+        }
+
+        public static Vector2d ToVector2d(this Vector2 v)
+        {
+            return new Vector2d(v.x, v.y);
+        }
+
+        public static Vector3 ToVector3(this Vector2d v)
+        {
+            return new Vector3((float)v.x, 0, (float)v.y);
         }
 
         public static Vector2 LatLonToTile(this Vector2 v, int zoom)
@@ -44,43 +80,21 @@ namespace Assets.Helpers
 
             return p;
         }
-
-        public static RoadType ToRoadType(this string s)
+        
+        public static T ConvertToEnum<T>(this string value) where T : new()
         {
-            switch (s)
+            if (!typeof(T).IsEnum)
+                throw new NotSupportedException("T must be an Enum");
+
+            try
             {
-                case "highway":
-                    return RoadType.Highway;
-                case "major_road":
-                    return RoadType.MajorRoad;
-                case "minor_road":
-                    return RoadType.MinorRoad;
-                case "rail":
-                    return RoadType.Rail;
-                case "path":
-                    return RoadType.Path;
+                return (T)Enum.Parse(typeof(T), value, true);
             }
-
-            return RoadType.Path;
-        }
-
-        public static float ToWidthFloat(this RoadType s)
-        {
-            switch (s)
+            catch
             {
-                case RoadType.Highway:
-                    return 10;
-                case RoadType.MajorRoad:
-                    return 5;
-                case RoadType.MinorRoad:
-                    return 3;
-                case RoadType.Rail:
-                    return 3;
-                case RoadType.Path:
-                    return 2;
+                return default(T); // equivalent to (T)0
+                                   //return (T)Enum.Parse(typeof(T), "Unknown"));
             }
-
-            return 2;
         }
     }
 }

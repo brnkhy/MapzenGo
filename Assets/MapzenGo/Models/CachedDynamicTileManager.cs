@@ -16,17 +16,18 @@ namespace Assets.Models
 {
     public class CachedDynamicTileManager : DynamicTileManager
     {
+        public string RelativeCachePath = "../MapzenGo/CachedTileData/";
         protected string CacheFolderPath;
 
         public override void Init(List<Factory> factories, World.Settings settings)
         {
-            CacheFolderPath = Path.Combine(Application.dataPath, "MapzenGo/CachedTileData/");
+            CacheFolderPath = Path.Combine(Application.dataPath, RelativeCachePath);
             if (!Directory.Exists(CacheFolderPath))
                 Directory.CreateDirectory(CacheFolderPath);
             base.Init(factories, settings);
         }
 
-        protected override void LoadTile(Vector2 tileTms, Tile tile)
+        protected override void LoadTile(Vector2d tileTms, Tile tile)
         {
             var url = string.Format(_mapzenUrl, _mapzenLayers, Zoom, tileTms.x, tileTms.y, _mapzenFormat, _key);
             var tilePath = Path.Combine(CacheFolderPath, Zoom + "_" + tileTms.x + "_" + tileTms.y);

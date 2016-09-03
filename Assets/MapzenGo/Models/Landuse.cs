@@ -9,31 +9,34 @@ using UnityEngine;
 namespace Assets.Models
 {
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-    public class Water : MonoBehaviour
+    public class Landuse : MonoBehaviour
     {
         public string Id;
         public string Type;
-        public string Kind;
+        public LanduseKind Kind;
         public string Name;
         public int SortKey;
         
         [Serializable]
         public class Settings
         {
-            public WaterSettings Default = new WaterSettings();
-            public List<WaterSettings> AllSettings;
+            public LanduseSettings Default;
+            public List<LanduseSettings> AllSettings;
 
-            public WaterSettings GetSettingsFor(WaterType type)
+            public LanduseSettings GetSettingsFor(LanduseKind type)
             {
-                return AllSettings.FirstOrDefault(x => x.Type == type) ?? Default;
+                var f = AllSettings.FirstOrDefault(x => x.Type == type);
+                return f ?? Default;
             }
         }
 
         [Serializable]
-        public class WaterSettings
+        public class LanduseSettings
         {
-            public WaterType Type;
+            public LanduseKind Type;
             public Material Material;
         }
+
     }
+
 }

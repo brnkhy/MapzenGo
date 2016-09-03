@@ -3,19 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assets.Helpers;
+using Assets.MapzenGo.Models.Enums;
 using UnityEngine;
 
 namespace Assets
 {
-    public enum RoadType
-    {
-        Path,
-        Rail,
-        MinorRoad,
-        MajorRoad,
-        Highway,
-    }
-
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class Road : MonoBehaviour
     {
@@ -23,6 +15,7 @@ namespace Assets
         public string Kind;
         public string Type;
         public string Name;
+        public int SortKey;
 
         public void Initialize(JSONObject geo, List<Vector3> list, Settings settings)
         {
@@ -32,6 +25,7 @@ namespace Assets
                 Id = geo["properties"]["id"].ToString();
                 Type = geo["type"].str;
                 Kind = geo["properties"]["kind"].str;
+                SortKey = (int)geo["properties"]["sort_key"].f;
                 if (geo["properties"].HasField("name"))
                     Name = geo["properties"]["name"].str;
                 //road.Type = geo["properties"]["kind"].str;
@@ -61,7 +55,6 @@ namespace Assets
         public class RoadSettings
         {
             public RoadType Type;
-            public bool Enabled = true;
             public Material Material;
             public float Width = 6;
         }

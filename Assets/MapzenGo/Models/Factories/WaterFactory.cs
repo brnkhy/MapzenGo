@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assets.Helpers;
+using Assets.MapzenGo.Models.Enums;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
@@ -20,8 +21,11 @@ namespace Assets.Models.Factories
             Query = (geo) => geo["geometry"]["type"].str == "Polygon" || geo["geometry"]["type"].str == "MultiPolygon";
         }
 
-        public override IEnumerable<MonoBehaviour> Create(Vector2 tileMercPos, JSONObject geo)
+        public override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
         {
+            var kind = geo["properties"]["kind"].str.ConvertToEnum<WaterType>();
+            var typeSettings = _settings.GetSettingsFor(kind);
+
             var go = new GameObject("water");
             var water = go.AddComponent<Water>();
             var mesh = water.GetComponent<MeshFilter>().mesh;
@@ -32,8 +36,8 @@ namespace Assets.Models.Factories
             water.Name = "water";
             water.Type = geo["type"].str;
             water.Kind = geo["properties"]["kind"].str;
-
-            water.Init();
+            water.SortKey = (int)geo["properties"]["sort_key"].f;
+            water.GetComponent<MeshRenderer>().material = typeSettings.Material;
             water.name = "water";
 
             foreach (var bb in geo["geometry"]["coordinates"].list)
@@ -45,8 +49,8 @@ namespace Assets.Models.Factories
                 {
                     var c = jo.list[i];
                     var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                    var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
-                    waterCorners.Add(localMercPos.ToVector3xz());
+                    var localMercPos = dotMerc - tileMercPos;
+                    waterCorners.Add(localMercPos.ToVector3());
                 }
 
                 try
@@ -72,11 +76,11 @@ namespace Assets.Models.Factories
             mesh.vertices = verts.ToArray();
             mesh.triangles = indices.ToArray();
             mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
+
             yield return water;
         }
 
-        public override GameObject CreateLayer(Vector2 tileMercPos, List<JSONObject> geoList)
+        public override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList)
         {
             var items = geoList.Where(x => x["geometry"]["type"].str == "Polygon" || x["geometry"]["type"].str == "MultiPolygon");
             if (!items.Any())
@@ -93,12 +97,12 @@ namespace Assets.Models.Factories
             mesh.triangles = indices.ToArray();
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            go.GetComponent<MeshRenderer>().material = BaseMaterial;
+            go.GetComponent<MeshRenderer>().material = _settings.Default.Material;
             go.transform.position += Vector3.up * Order;
             return go;
         }
 
-        private static void CalculateVertices(Vector2 tileMercPos, IEnumerable<JSONObject> items, List<Vector3> verts, List<int> indices)
+        private static void CalculateVertices(Vector2d tileMercPos, IEnumerable<JSONObject> items, List<Vector3> verts, List<int> indices)
         {
             foreach (var geo in items)
             {
@@ -111,8 +115,8 @@ namespace Assets.Models.Factories
                     {
                         var c = jo.list[i];
                         var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                        var localMercPos = new Vector2(dotMerc.x - tileMercPos.x, dotMerc.y - tileMercPos.y);
-                        waterCorners.Add(localMercPos.ToVector3xz());
+                        var localMercPos = dotMerc - tileMercPos;
+                        waterCorners.Add(localMercPos.ToVector3());
                     }
 
                     try

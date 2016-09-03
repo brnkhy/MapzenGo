@@ -6,7 +6,6 @@ using System.Collections.Generic;
 public class Factory : MonoBehaviour
 {
     public float Order = 1;
-    public Material BaseMaterial;
     public virtual string XmlTag {get { return ""; } }
     public virtual Func<JSONObject, bool> Query { get; set; }
 
@@ -15,12 +14,12 @@ public class Factory : MonoBehaviour
         Query = (geo) => true;
     }
 
-    public virtual IEnumerable<MonoBehaviour> Create(Vector2 tileMercPos, JSONObject geo)
+    public virtual IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
     {
         return null;
     }
 
-    public virtual GameObject CreateLayer(Vector2 tileMercPos, List<JSONObject> toList)
+    public virtual GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> toList)
     {
         return null;
     }
