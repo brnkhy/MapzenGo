@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.MapzenGo.Models.Enums;
 using Assets.Models;
 using UnityEngine;
 
@@ -79,45 +80,7 @@ namespace Assets.Helpers
 
             return p;
         }
-
-        public static RoadType ToRoadType(this string s)
-        {
-            switch (s)
-            {
-                case "highway":
-                    return RoadType.Highway;
-                case "major_road":
-                    return RoadType.MajorRoad;
-                case "minor_road":
-                    return RoadType.MinorRoad;
-                case "rail":
-                    return RoadType.Rail;
-                case "path":
-                    return RoadType.Path;
-            }
-
-            return RoadType.Path;
-        }
-
-        public static float ToWidthFloat(this RoadType s)
-        {
-            switch (s)
-            {
-                case RoadType.Highway:
-                    return 10;
-                case RoadType.MajorRoad:
-                    return 5;
-                case RoadType.MinorRoad:
-                    return 3;
-                case RoadType.Rail:
-                    return 3;
-                case RoadType.Path:
-                    return 2;
-            }
-
-            return 2;
-        }
-
+        
         public static T ConvertToEnum<T>(this string value) where T : new()
         {
             if (!typeof(T).IsEnum)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assets.Helpers;
+using Assets.MapzenGo.Models.Enums;
 using UniRx;
 using UnityEngine;
 
@@ -20,62 +21,65 @@ namespace Assets.Models.Factories
 
         public override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
         {
-            var kind = geo["properties"]["kind"].str.ToRoadType();
-            var settings = _settings.GetSettingsFor(kind);
-            if (!settings.Enabled)
-                yield break;
+            var kind = geo["properties"]["kind"].str.ConvertToEnum<RoadType>();
+            if (_settings.AllSettings.Any(x => x.Type == kind))
+            {
+                var typeSettings = _settings.GetSettingsFor(kind);
 
-            if (geo["geometry"]["type"].str == "LineString")
-            {
-                var road = new GameObject("road").AddComponent<Road>();
-                var mesh = road.GetComponent<MeshFilter>().mesh;
-                var roadEnds = new List<Vector3>();
-                var verts = new List<Vector3>();
-                var indices = new List<int>();
-                
-                for (var i = 0; i < geo["geometry"]["coordinates"].list.Count; i++)
+                if (geo["geometry"]["type"].str == "LineString")
                 {
-                    var c = geo["geometry"]["coordinates"][i];
-                    var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                    var localMercPos = dotMerc - tileMercPos;
-                    roadEnds.Add(localMercPos.ToVector3());
-                }
-                CreateMesh(roadEnds, settings, ref verts, ref indices);
-                mesh.vertices = verts.ToArray();
-                mesh.triangles = indices.ToArray();
-                mesh.RecalculateNormals();
-                mesh.RecalculateBounds();
-                road.GetComponent<MeshRenderer>().material = settings.Material;
-                road.Initialize(geo, roadEnds, _settings);
-                yield return road;
-            }
-            else if (geo["geometry"]["type"].str == "MultiLineString")
-            {
-                for (var i = 0; i < geo["geometry"]["coordinates"].list.Count; i++)
-                {
-                    var road = new GameObject("Roads").AddComponent<Road>();
+                    var road = new GameObject("road").AddComponent<Road>();
                     var mesh = road.GetComponent<MeshFilter>().mesh;
                     var roadEnds = new List<Vector3>();
                     var verts = new List<Vector3>();
                     var indices = new List<int>();
 
-                    roadEnds.Clear();
-                    var c = geo["geometry"]["coordinates"][i];
-                    for (var j = 0; j < c.list.Count; j++)
+                    for (var i = 0; i < geo["geometry"]["coordinates"].list.Count; i++)
                     {
-                        var seg = c[j];
-                        var dotMerc = GM.LatLonToMeters(seg[1].f, seg[0].f);
+                        var c = geo["geometry"]["coordinates"][i];
+                        var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
                         var localMercPos = dotMerc - tileMercPos;
                         roadEnds.Add(localMercPos.ToVector3());
                     }
-                    CreateMesh(roadEnds, settings, ref verts, ref indices);
+                    CreateMesh(roadEnds, typeSettings, ref verts, ref indices);
                     mesh.vertices = verts.ToArray();
                     mesh.triangles = indices.ToArray();
                     mesh.RecalculateNormals();
                     mesh.RecalculateBounds();
-                    road.GetComponent<MeshRenderer>().material = settings.Material;
+                    road.GetComponent<MeshRenderer>().material = typeSettings.Material;
                     road.Initialize(geo, roadEnds, _settings);
+                    road.transform.position += Vector3.up*road.SortKey/100;
                     yield return road;
+                }
+                else if (geo["geometry"]["type"].str == "MultiLineString")
+                {
+                    for (var i = 0; i < geo["geometry"]["coordinates"].list.Count; i++)
+                    {
+                        var road = new GameObject("Roads").AddComponent<Road>();
+                        var mesh = road.GetComponent<MeshFilter>().mesh;
+                        var roadEnds = new List<Vector3>();
+                        var verts = new List<Vector3>();
+                        var indices = new List<int>();
+
+                        roadEnds.Clear();
+                        var c = geo["geometry"]["coordinates"][i];
+                        for (var j = 0; j < c.list.Count; j++)
+                        {
+                            var seg = c[j];
+                            var dotMerc = GM.LatLonToMeters(seg[1].f, seg[0].f);
+                            var localMercPos = dotMerc - tileMercPos;
+                            roadEnds.Add(localMercPos.ToVector3());
+                        }
+                        CreateMesh(roadEnds, typeSettings, ref verts, ref indices);
+                        mesh.vertices = verts.ToArray();
+                        mesh.triangles = indices.ToArray();
+                        mesh.RecalculateNormals();
+                        mesh.RecalculateBounds();
+                        road.GetComponent<MeshRenderer>().material = typeSettings.Material;
+                        road.Initialize(geo, roadEnds, _settings);
+                        road.transform.position += Vector3.up*road.SortKey/100;
+                        yield return road;
+                    }
                 }
             }
         }
@@ -103,7 +107,7 @@ namespace Assets.Models.Factories
             foreach (var geo in geoList.Where(
                 x => x["geometry"]["type"].str == "LineString" || x["geometry"]["type"].str == "MultiLineString"))
             {
-                var kind = geo["properties"]["kind"].str.ToRoadType();
+                var kind = geo["properties"]["kind"].str.ConvertToEnum<RoadType>();
                 var settings = _settings.GetSettingsFor(kind);
                 var roadEnds = new List<Vector3>();
                 if (geo["geometry"]["type"].str == "LineString")
