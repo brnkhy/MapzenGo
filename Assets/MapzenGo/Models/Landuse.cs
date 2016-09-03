@@ -20,11 +20,13 @@ namespace Assets.Models
         [Serializable]
         public class Settings
         {
+            public LanduseSettings Default;
             public List<LanduseSettings> AllSettings;
 
             public LanduseSettings GetSettingsFor(LanduseKind type)
             {
-                return AllSettings.FirstOrDefault(x => x.Type == type);
+                var f = AllSettings.FirstOrDefault(x => x.Type == type);
+                return f ?? Default;
             }
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assets.Helpers;
+using Assets.MapzenGo.Models.Enums;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
@@ -22,6 +23,9 @@ namespace Assets.Models.Factories
 
         public override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
         {
+            var kind = geo["properties"]["kind"].str.ConvertToEnum<WaterType>();
+            var typeSettings = _settings.GetSettingsFor(kind);
+
             var go = new GameObject("water");
             var water = go.AddComponent<Water>();
             var mesh = water.GetComponent<MeshFilter>().mesh;
@@ -33,8 +37,7 @@ namespace Assets.Models.Factories
             water.Type = geo["type"].str;
             water.Kind = geo["properties"]["kind"].str;
             water.SortKey = (int)geo["properties"]["sort_key"].f;
-
-            water.Init();
+            water.GetComponent<MeshRenderer>().material = typeSettings.Material;
             water.name = "water";
 
             foreach (var bb in geo["geometry"]["coordinates"].list)
@@ -46,7 +49,7 @@ namespace Assets.Models.Factories
                 {
                     var c = jo.list[i];
                     var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                    var localMercPos = dotMerc  - tileMercPos;
+                    var localMercPos = dotMerc - tileMercPos;
                     waterCorners.Add(localMercPos.ToVector3());
                 }
 
@@ -73,7 +76,7 @@ namespace Assets.Models.Factories
             mesh.vertices = verts.ToArray();
             mesh.triangles = indices.ToArray();
             mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
+
             yield return water;
         }
 
@@ -94,7 +97,7 @@ namespace Assets.Models.Factories
             mesh.triangles = indices.ToArray();
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            go.GetComponent<MeshRenderer>().material = BaseMaterial;
+            go.GetComponent<MeshRenderer>().material = _settings.Default.Material;
             go.transform.position += Vector3.up * Order;
             return go;
         }

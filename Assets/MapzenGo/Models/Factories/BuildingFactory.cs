@@ -81,9 +81,6 @@ namespace Assets.Models.Factories
             var items = geoList.Where(x =>
             {
                 var key = x["properties"]["id"].ToString();
-                var kind = x["properties"].HasField("landuse_kind")
-                    ? x["properties"]["landuse_kind"].str.ConvertToEnum<LanduseKind>()
-                    : LanduseKind.Unknown;
                 var ret = !_active.Contains(key) && Query(x);
                 if(ret)
                     _active.Add(key);
@@ -103,7 +100,7 @@ namespace Assets.Models.Factories
             mesh.triangles = indices.ToArray();
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            go.GetComponent<MeshRenderer>().material = BaseMaterial;
+            go.GetComponent<MeshRenderer>().material = _settings.Default.Material;
             go.transform.position += Vector3.up * Order;
             return go;
         }
