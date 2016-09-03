@@ -14,6 +14,7 @@ namespace Assets.Models
         public string Type;
         public string Kind;
         public string Name;
+        public int SortKey;
 
         public void Init()
         {

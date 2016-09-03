@@ -32,6 +32,7 @@ namespace Assets.Models.Factories
             water.Name = "water";
             water.Type = geo["type"].str;
             water.Kind = geo["properties"]["kind"].str;
+            water.SortKey = (int)geo["properties"]["sort_key"].f;
 
             water.Init();
             water.name = "water";
