@@ -14,6 +14,8 @@ namespace Assets.Models
         private Transform _player;
         [SerializeField]
         private int _removeAfter;
+        [SerializeField]
+        private bool _keepCentralized;
 
         public override void Init(List<Factory> factories, World.Settings settings)
         {
@@ -46,15 +48,24 @@ namespace Assets.Models
         private void Centralize(Vector2 tileDif)
         {
             //move everything to keep current tile at 0,0
-            foreach (var tile in Tiles.Values)
-            {
-                tile.transform.position -= new Vector3((float) (tileDif.x * TileSize), 0, (float) (-tileDif.y * TileSize));
-            }
             CenterTms += tileDif.ToVector2d();
-            CenterInMercator = GM.TileBounds(CenterTms, Zoom).Center;
-            var difInUnity = new Vector3((float) (tileDif.x * TileSize), 0, (float) (-tileDif.y * TileSize));
-            _player.position -= difInUnity;
-            Camera.main.transform.position -= difInUnity;
+            if (_keepCentralized)
+            {
+                foreach (var tile in Tiles.Values)
+                {
+                    tile.transform.position -= new Vector3((float) (tileDif.x*TileSize), 0, (float) (-tileDif.y*TileSize));
+                }
+
+                CenterInMercator = GM.TileBounds(CenterTms, Zoom).Center;
+                var difInUnity = new Vector3((float) (tileDif.x*TileSize), 0, (float) (-tileDif.y*TileSize));
+                _player.position -= difInUnity;
+                Camera.main.transform.position -= difInUnity;
+            }
+            else
+            {
+                var difInUnity = new Vector2(tileDif.x*TileSize, -tileDif.y*TileSize);
+                _centerCollider.position += difInUnity;
+            }
         }
 
         private void UnloadTiles(Vector2d currentTms)
