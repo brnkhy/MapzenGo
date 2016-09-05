@@ -14,7 +14,15 @@ namespace Assets
 {
     public class TileManager : MonoBehaviour
     {
-        
+        private List<Vector2d> _customObjects = new List<Vector2d>()
+        {
+            new Vector2d(40.753176, -73.982229),
+            new Vector2d(40.769759, -73.975537),
+            new Vector2d(40.740304, -73.972425),
+            new Vector2d(40.728664, -74.032011),
+        };
+
+
         protected readonly string _mapzenUrl = "https://vector.mapzen.com/osm/{0}/{1}/{2}/{3}.{4}?api_key={5}";
         [SerializeField] protected string _key = "vector-tiles-5sBcqh6"; //try getting your own key if this doesn't work
         [SerializeField] protected string _mapzenLayers = "buildings,roads,landuse,water";
@@ -96,6 +104,23 @@ namespace Assets
             tile.transform.position = (rect.Center - centerInMercator).ToVector3();
             tile.transform.SetParent(TileHost, false);
             LoadTile(tileTms, tile);
+            
+            foreach (var pos in _customObjects)
+            {
+                var meters = GM.LatLonToMeters(pos.x, pos.y);
+                var tileCoord = GM.MetersToTile(meters, Zoom);
+
+                if (Math.Abs(tileTms.x - tileCoord.x) < 0.2d && Math.Abs(tileTms.y - tileCoord.y) < .2d)
+                {
+                    var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    go.transform.position = (meters - rect.Center).ToVector3();
+                    go.transform.localScale = Vector3.one*1000;
+                    go.transform.SetParent(tile.transform, false);
+                }
+            }
+
+
+
             yield return null;
         }
 
