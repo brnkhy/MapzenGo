@@ -95,7 +95,7 @@ namespace Assets.Models.Factories
             var verts = new List<Vector3>();
             var indices = new List<int>();
 
-            GetVertices(tileMercPos, _settings.AllSettings[0], items, verts, indices);
+            GetVertices(tileMercPos, _settings.Default, items, verts, indices);
             mesh.vertices = verts.ToArray();
             mesh.triangles = indices.ToArray();
             mesh.RecalculateNormals();
