@@ -33,4 +33,10 @@ public class RectD
         Min = min;
         Size = size;
     }
+
+    public bool Contains(Vector2d point)
+    {
+        bool flag = Width < 0.0 && point.x <= Min.x && point.x > (Min.x + Size.x) || Width >= 0.0 && point.x >= Min.x && point.x < (Min.x + Size.x);
+        return flag && (Height < 0.0 && point.y <= Min.y && point.y > (Min.y + Size.y) || Height >= 0.0 && point.y >= Min.y && point.y < (Min.y + Size.y));
+    }
 }
