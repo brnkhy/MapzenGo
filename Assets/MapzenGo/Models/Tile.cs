@@ -14,13 +14,13 @@ namespace Assets
 {
     public class Tile : MonoBehaviour
     {
-        public string MapImageUrlBase = "http://b.tile.openstreetmap.org/";
+        
 
         [SerializeField]
         public RectD Rect;
 
         private List<Factory> _factories;
-        private Settings _settings;
+        public Settings _settings;
 
         public Tile Initialize(List<Factory> factory, Settings settings)
         {
@@ -44,33 +44,7 @@ namespace Assets
             {
                 if (!this) // checks if tile still exists and haven't destroyed yet
                     return;
-
-                var go = GameObject.CreatePrimitive(PrimitiveType.Quad).transform;
-                go.name = "map";
-                go.SetParent(transform, true);
-                go.localScale = new Vector3((float) Rect.Width, (float)Rect.Width, 1);
-                go.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
-                go.localPosition = Vector3.zero;
-                go.localPosition -= new Vector3(0, 1, 0);
-                var rend = go.GetComponent<Renderer>();
-                rend.material = _settings.Material;
-
-                if (_settings.LoadImages)
-                {
-                    url = MapImageUrlBase + _settings.Zoom + "/" + _settings.TileTms.x + "/" + _settings.TileTms.y + ".png";
-                    ObservableWWW.GetWWW(url).Subscribe(
-                        success =>
-                        {
-                            rend.material.mainTexture = new Texture2D(512, 512, TextureFormat.DXT5, false);
-                            rend.material.color = new Color(1f, 1f, 1f, 1f);
-                            success.LoadImageIntoTexture((Texture2D)rend.material.mainTexture);
-                        },
-                        error =>
-                        {
-                            Debug.Log(error);
-                        });
-                }
-
+                
                 RunFactories(mapData);
             });
         }
