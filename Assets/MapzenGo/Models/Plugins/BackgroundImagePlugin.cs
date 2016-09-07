@@ -24,21 +24,19 @@ namespace Assets.MapzenGo.Models.Plugins
             var rend = go.GetComponent<Renderer>();
             rend.material = tile._settings.Material;
 
-            if (tile._settings.LoadImages)
-            {
-                var url = MapImageUrlBase + tile._settings.Zoom + "/" + tile._settings.TileTms.x + "/" + tile._settings.TileTms.y + ".png";
-                ObservableWWW.GetWWW(url).Subscribe(
-                    success =>
-                    {
-                        rend.material.mainTexture = new Texture2D(512, 512, TextureFormat.DXT5, false);
-                        rend.material.color = new Color(1f, 1f, 1f, 1f);
-                        success.LoadImageIntoTexture((Texture2D)rend.material.mainTexture);
-                    },
-                    error =>
-                    {
-                        Debug.Log(error);
-                    });
-            }
+            var url = MapImageUrlBase + tile._settings.Zoom + "/" + tile._settings.TileTms.x + "/" + tile._settings.TileTms.y + ".png";
+            ObservableWWW.GetWWW(url).Subscribe(
+                success =>
+                {
+                    rend.material.mainTexture = new Texture2D(512, 512, TextureFormat.DXT5, false);
+                    rend.material.color = new Color(1f, 1f, 1f, 1f);
+                    success.LoadImageIntoTexture((Texture2D)rend.material.mainTexture);
+                },
+                error =>
+                {
+                    Debug.Log(error);
+                });
+
         }
     }
 }
