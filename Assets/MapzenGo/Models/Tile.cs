@@ -37,7 +37,6 @@ namespace Assets
 
         private void ConstructAsync(string text)
         {
-            string url;
             var heavyMethod = Observable.Start(() => new JSONObject(text));
 
             heavyMethod.ObserveOnMainThread().Subscribe(mapData =>
