@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Models.Factories
+namespace MapzenGo.Models.Factories
 {
     public class Factory : MonoBehaviour
     {

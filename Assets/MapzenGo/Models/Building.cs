@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Assets.Helpers;
-using Assets.MapzenGo.Models.Enums;
+using MapzenGo.Models.Enums;
 using UnityEngine;
 
-namespace Assets.Models
+namespace MapzenGo.Models
 {
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class Building : MonoBehaviour
@@ -37,7 +35,7 @@ namespace Assets.Models
 
             public BuildingSettings GetSettingsFor(LanduseKind type)
             {
-                if (type == MapzenGo.Models.Enums.LanduseKind.Unknown)
+                if (type == Enums.LanduseKind.Unknown)
                     return Default;
                 return AllSettings.FirstOrDefault(x => x.Type == type) ?? Default;
             }

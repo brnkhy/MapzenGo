@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Assets.Helpers;
+using MapzenGo.Helpers;
 using MapzenGo.Models;
 using UnityEngine;
 
-namespace Assets.MapzenGo.Models.Plugins
+namespace MapzenGo.Models.Plugins
 {
     public class CustomObjectPlugin : TilePlugin
     {

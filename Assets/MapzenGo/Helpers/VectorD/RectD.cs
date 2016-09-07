@@ -1,42 +1,44 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class RectD
+namespace MapzenGo.Helpers.VectorD
 {
-    public Vector2d Min { get; private set; }
-    public Vector2d Size { get; private set; }
-
-    public Vector2d Center
+    public class RectD
     {
-        get
+        public Vector2d Min { get; private set; }
+        public Vector2d Size { get; private set; }
+
+        public Vector2d Center
         {
-            return new Vector2d(Min.x + Size.x / 2, Min.y + Size.y / 2);
+            get
+            {
+                return new Vector2d(Min.x + Size.x / 2, Min.y + Size.y / 2);
+            }
+            set
+            {
+                Min = new Vector2d(value.x - Size.x / 2, value.x - Size.y / 2);
+            }
         }
-        set
+
+        public double Height
         {
-            Min = new Vector2d(value.x - Size.x / 2, value.x - Size.y / 2);
+            get { return Size.y; }
         }
-    }
 
-    public double Height
-    {
-        get { return Size.y; }
-    }
+        public double Width
+        {
+            get { return Size.x; }
+        }
 
-    public double Width
-    {
-        get { return Size.x; }
-    }
+        public RectD(Vector2d min, Vector2d size)
+        {
+            Min = min;
+            Size = size;
+        }
 
-    public RectD(Vector2d min, Vector2d size)
-    {
-        Min = min;
-        Size = size;
-    }
-
-    public bool Contains(Vector2d point)
-    {
-        bool flag = Width < 0.0 && point.x <= Min.x && point.x > (Min.x + Size.x) || Width >= 0.0 && point.x >= Min.x && point.x < (Min.x + Size.x);
-        return flag && (Height < 0.0 && point.y <= Min.y && point.y > (Min.y + Size.y) || Height >= 0.0 && point.y >= Min.y && point.y < (Min.y + Size.y));
+        public bool Contains(Vector2d point)
+        {
+            bool flag = Width < 0.0 && point.x <= Min.x && point.x > (Min.x + Size.x) || Width >= 0.0 && point.x >= Min.x && point.x < (Min.x + Size.x);
+            return flag && (Height < 0.0 && point.y <= Min.y && point.y > (Min.y + Size.y) || Height >= 0.0 && point.y >= Min.y && point.y < (Min.y + Size.y));
+        }
     }
 }

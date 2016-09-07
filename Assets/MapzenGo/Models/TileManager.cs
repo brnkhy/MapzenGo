@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Helpers;
-using Assets.MapzenGo.Models.Plugins;
-using Assets.Models.Factories;
+using MapzenGo.Helpers;
+using MapzenGo.Models.Factories;
 using MapzenGo.Models.Plugins;
 using UniRx;
 using UnityEngine;
@@ -104,7 +103,7 @@ namespace MapzenGo.Models
             tile.transform.SetParent(TileHost, false);
             LoadTile(tileTms, tile);
 
-            foreach (var plugin in GetComponents<TilePlugin>())
+            foreach (var plugin in _plugins)
             {
                 plugin.Run(tile);
             }

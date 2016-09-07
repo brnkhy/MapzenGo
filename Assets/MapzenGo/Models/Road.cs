@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Assets.Helpers;
-using Assets.MapzenGo.Models.Enums;
+using MapzenGo.Models.Enums;
 using UnityEngine;
 
-namespace Assets
+namespace MapzenGo.Models
 {
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class Road : MonoBehaviour

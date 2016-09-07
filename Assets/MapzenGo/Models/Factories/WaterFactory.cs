@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Assets.Helpers;
-using Assets.MapzenGo.Models.Enums;
-using UniRx;
-using UniRx.Triggers;
+using MapzenGo.Models.Enums;
+using MapzenGo.Helpers;
 using UnityEngine;
 
-namespace Assets.Models.Factories
+namespace MapzenGo.Models.Factories
 {
     public class WaterFactory : Factory
     {

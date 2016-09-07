@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Assets.Helpers;
-using Assets.MapzenGo.Models.Enums;
+using MapzenGo.Helpers;
+using MapzenGo.Models.Enums;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Assets.Models.Factories
+namespace MapzenGo.Models.Factories
 {
     public class BuildingFactory : Factory
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets.MapzenGo.Models.Enums
+namespace MapzenGo.Models.Enums
 {
     public enum LanduseKind
     {

@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Assets.MapzenGo.Models.Enums;
-using Assets.Models;
 using UnityEngine;
 
-namespace Assets.Helpers
+namespace MapzenGo.Helpers
 {
     public static class Extensions
     {

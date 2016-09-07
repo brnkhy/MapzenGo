@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Assets.Helpers;
-using MapzenGo.Models;
+﻿using MapzenGo.Models.Plugins;
 using UniRx;
 using UnityEngine;
 
-namespace Assets.MapzenGo.Models.Plugins
+namespace MapzenGo.Models.Plugins
 {
     public class BackgroundImagePlugin : TilePlugin
     {

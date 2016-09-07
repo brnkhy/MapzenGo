@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MapzenGo.Helpers.VectorD;
 using UnityEngine;
 
 
-namespace Assets.Helpers
+namespace MapzenGo.Helpers
 {
     //SOURCE: http://stackoverflow.com/questions/12896139/geographic-coordinates-converter
     public static class GM
