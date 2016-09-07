@@ -1,26 +1,29 @@
 ﻿using System;
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class Factory : MonoBehaviour
+namespace Assets.Models.Factories
 {
-    public float Order = 1;
-    public virtual string XmlTag {get { return ""; } }
-    public virtual Func<JSONObject, bool> Query { get; set; }
-
-    public virtual void Start()
+    public class Factory : MonoBehaviour
     {
-        Query = (geo) => true;
-    }
+        public bool MergeMeshes;
+        public float Order = 1;
+        public virtual string XmlTag {get { return ""; } }
+        public virtual Func<JSONObject, bool> Query { get; set; }
 
-    public virtual IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
-    {
-        return null;
-    }
+        public virtual void Start()
+        {
+            Query = (geo) => true;
+        }
 
-    public virtual GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> toList)
-    {
-        return null;
+        public virtual IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
+        {
+            return null;
+        }
+
+        public virtual GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> toList)
+        {
+            return null;
+        }
     }
 }

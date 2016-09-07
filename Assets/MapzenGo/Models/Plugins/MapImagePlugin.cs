@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Assets.Helpers;
-using MapzenGo.Models;
+using Assets.MapzenGo.Models.Plugins;
 using UniRx;
 using UnityEngine;
 
-namespace Assets.MapzenGo.Models.Plugins
+namespace MapzenGo.Models.Plugins
 {
-    public class BackgroundImagePlugin : TilePlugin
+    public class MapImagePlugin : TilePlugin
     {
         public string MapImageUrlBase = "http://b.tile.openstreetmap.org/";
 

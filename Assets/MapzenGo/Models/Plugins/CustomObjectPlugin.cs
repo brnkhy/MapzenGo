@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets.Helpers;
+using MapzenGo.Models;
 using UnityEngine;
 
 namespace Assets.MapzenGo.Models.Plugins

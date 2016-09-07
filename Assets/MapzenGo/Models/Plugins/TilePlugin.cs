@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using MapzenGo.Models;
+using UnityEngine;
 
 namespace Assets.MapzenGo.Models.Plugins
 {

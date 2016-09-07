@@ -4,24 +4,20 @@ using System.Linq;
 using Assets.Helpers;
 using UnityEngine;
 
-namespace Assets.Models
+namespace MapzenGo.Models
 {
     public class DynamicTileManager : TileManager
     {
-        [SerializeField]
-        private Rect _centerCollider;
-        [SerializeField]
-        private Transform _player;
-        [SerializeField]
-        private int _removeAfter;
-        [SerializeField]
-        private bool _keepCentralized;
+        [SerializeField] private Rect _centerCollider;
+        [SerializeField] private Transform _player;
+        [SerializeField] private int _removeAfter;
+        [SerializeField] private bool _keepCentralized;
 
-        public override void Init(List<Factory> factories, World.Settings settings)
+        public override void Start()
         {
-            base.Init(factories, settings);
+            base.Start();
             _removeAfter = Math.Max(_removeAfter, Range * 2 + 1);
-            var rect = new Vector2(settings.TileSize, settings.TileSize);
+            var rect = new Vector2(TileSize, TileSize);
             _centerCollider = new Rect(Vector2.zero - rect / 2 , rect);
         }
 

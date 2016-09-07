@@ -1,30 +1,21 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Net;
+﻿using System.IO;
 using System.Text;
-using Assets.Helpers;
-using Assets.Models.Factories;
 using UniRx;
-using UniRx.Triggers;
 using UnityEngine;
 
-namespace Assets.Models
+namespace MapzenGo.Models
 {
     public class CachedDynamicTileManager : DynamicTileManager
     {
         public string RelativeCachePath = "../MapzenGo/CachedTileData/";
         protected string CacheFolderPath;
 
-        public override void Init(List<Factory> factories, World.Settings settings)
+        public override void Start()
         {
             CacheFolderPath = Path.Combine(Application.dataPath, RelativeCachePath);
             if (!Directory.Exists(CacheFolderPath))
                 Directory.CreateDirectory(CacheFolderPath);
-            base.Init(factories, settings);
+            base.Start();
         }
 
         protected override void LoadTile(Vector2d tileTms, Tile tile)
@@ -35,7 +26,7 @@ namespace Assets.Models
             {
                 var r = new StreamReader(tilePath, Encoding.Default);
                 var mapData = r.ReadToEnd();
-                tile.ConstructTile(mapData);
+                ConstructTile(mapData, tile);
             }
             else
             {
@@ -45,7 +36,7 @@ namespace Assets.Models
                         var sr = File.CreateText(tilePath);
                         sr.Write(success);
                         sr.Close();
-                        tile.ConstructTile(success);
+                        ConstructTile(success, tile);
                     },
                     error =>
                     {
