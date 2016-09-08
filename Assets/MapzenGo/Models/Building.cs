@@ -39,6 +39,11 @@ namespace MapzenGo.Models
                     return Default;
                 return AllSettings.FirstOrDefault(x => x.Type == type) ?? Default;
             }
+
+            public bool HasSettingsFor(LanduseKind type)
+            {
+                return AllSettings.Any(x => x.Type == type);
+            }
         }
 
         [Serializable]

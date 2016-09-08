@@ -59,7 +59,7 @@ namespace MapzenGo.Models.Factories
                     height = geo["properties"].HasField("height") ? geo["properties"]["height"].f : Random.Range(typeSettings.MinimumBuildingHeight, typeSettings.MaximumBuildingHeight);
                 }
 
-                CreateMesh(buildingCorners, height, typeSettings, ref verts, ref indices);
+                CreateMesh(buildingCorners, height, typeSettings, verts, indices);
                 
                 mesh.vertices = verts.ToArray();
                 mesh.triangles = indices.ToArray();
@@ -75,6 +75,7 @@ namespace MapzenGo.Models.Factories
 
         protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList)
         {
+            var main = new GameObject("Buildings Layer");
             var items = geoList.Where(x =>
             {
                 var key = x["properties"]["id"].ToString();
@@ -86,20 +87,79 @@ namespace MapzenGo.Models.Factories
             if (!items.Any())
                 return null;
 
-            var go = new GameObject("Buildings");
-            var mesh = go.AddComponent<MeshFilter>().mesh;
-            go.AddComponent<MeshRenderer>();
-            var verts = new List<Vector3>();
-            var indices = new List<int>();
+            var _meshes = new Dictionary<LanduseKind, Tuple<List<Vector3>, List<int>>>();
 
-            GetVertices(tileMercPos, _settings.Default, items, verts, indices);
-            mesh.vertices = verts.ToArray();
-            mesh.triangles = indices.ToArray();
-            mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
-            go.GetComponent<MeshRenderer>().material = _settings.Default.Material;
-            go.transform.position += Vector3.up * Order;
-            return go;
+            foreach (var geo in items)
+            {
+                var kind = geo["properties"].HasField("landuse_kind")
+                ? geo["properties"]["landuse_kind"].str.ConvertToEnum<LanduseKind>()
+                : LanduseKind.Unknown;
+                var typeSettings = _settings.GetSettingsFor(kind);
+
+                if(!_settings.HasSettingsFor(kind))
+                    kind = LanduseKind.Unknown;
+
+                if (!_meshes.ContainsKey(kind))
+                    _meshes.Add(kind, new Tuple<List<Vector3>, List<int>>(new List<Vector3>(), new List<int>()));
+
+                var buildingCorners = new List<Vector3>();
+                //foreach (var bb in geo["geometry"]["coordinates"].list)
+                //{
+                var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
+                for (int i = 0; i < bb.list.Count - 1; i++)
+                {
+                    var c = bb.list[i];
+                    var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
+                    var localMercPos = new Vector2((float)(dotMerc.x - tileMercPos.x), (float)(dotMerc.y - tileMercPos.y));
+                    buildingCorners.Add(localMercPos.ToVector3xz());
+                }
+
+                var height = 0f;
+                if (_settings.Default.IsVolumetric)
+                {
+                    height = geo["properties"].HasField("height") 
+                        ? geo["properties"]["height"].f 
+                        : Random.Range(typeSettings.MinimumBuildingHeight, typeSettings.MaximumBuildingHeight);
+                }
+
+                CreateMesh(buildingCorners, height, typeSettings, _meshes[kind].Item1, _meshes[kind].Item2);
+
+                if (_meshes[kind].Item1.Count > 64000 || _meshes[kind].Item2.Count > 64000)
+                {
+                    var go = new GameObject(kind + " Buildings");
+                    var mesh = go.AddComponent<MeshFilter>().mesh;
+                    go.AddComponent<MeshRenderer>();
+                    mesh.vertices = _meshes[kind].Item1.ToArray();
+                    mesh.triangles = _meshes[kind].Item2.ToArray();
+                    mesh.RecalculateNormals();
+
+                    go.GetComponent<MeshRenderer>().material = _settings.GetSettingsFor(kind).Material;
+                    go.transform.position += Vector3.up * Order;
+                    go.transform.SetParent(main.transform, true);
+                    _meshes[kind].Item1.Clear();
+                    _meshes[kind].Item2.Clear();
+                }
+
+                //}
+            }
+
+            
+
+            foreach (var group in _meshes)
+            {
+                var go = new GameObject(group.Key + " Buildings");
+                var mesh = go.AddComponent<MeshFilter>().mesh;
+                go.AddComponent<MeshRenderer>();
+                mesh.vertices = group.Value.Item1.ToArray();
+                mesh.triangles = group.Value.Item2.ToArray();
+                mesh.RecalculateNormals();
+                
+                go.GetComponent<MeshRenderer>().material = _settings.GetSettingsFor(group.Key).Material;
+                go.transform.position += Vector3.up * Order;
+                go.transform.SetParent(main.transform, true);
+            }
+            
+            return main;
         }
 
         private Vector3 ChangeToRelativePositions(List<Vector3> buildingCorners)
@@ -127,34 +187,12 @@ namespace MapzenGo.Models.Factories
             building.GetComponent<MeshRenderer>().material = typeSettings.Material;
         }
 
-        private void GetVertices(Vector2d tileMercPos, Building.BuildingSettings typeSettings, IEnumerable<JSONObject> items, List<Vector3> verts, List<int> indices)
-        {
-            foreach (var geo in items)
-            {
-                var buildingCorners = new List<Vector3>();
-                //foreach (var bb in geo["geometry"]["coordinates"].list)
-                //{
-                var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
-                for (int i = 0; i < bb.list.Count - 1; i++)
-                {
-                    var c = bb.list[i];
-                    var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                    var localMercPos = new Vector2((float)(dotMerc.x - tileMercPos.x), (float)(dotMerc.y - tileMercPos.y));
-                    buildingCorners.Add(localMercPos.ToVector3xz());
-                }
+        //private void GetVertices(Vector2d tileMercPos, Building.BuildingSettings typeSettings, IEnumerable<JSONObject> items, List<Vector3> verts, List<int> indices)
+        //{
+            
+        //}
 
-                var height = 0f;
-                if (typeSettings.IsVolumetric)
-                {
-                    height = geo["properties"].HasField("height") ? geo["properties"]["height"].f : Random.Range(typeSettings.MinimumBuildingHeight, typeSettings.MaximumBuildingHeight);
-                }
-
-                CreateMesh(buildingCorners, height, typeSettings, ref verts, ref indices);
-                //}
-            }
-        }
-
-        private void CreateMesh(List<Vector3> corners, float height, Building.BuildingSettings typeSettings, ref List<Vector3> verts, ref List<int> indices)
+        private void CreateMesh(List<Vector3> corners, float height, Building.BuildingSettings typeSettings, List<Vector3> verts, List<int> indices)
         {
 
             var tris = new Triangulator(corners);
