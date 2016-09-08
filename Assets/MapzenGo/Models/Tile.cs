@@ -5,6 +5,8 @@ namespace MapzenGo.Models
 {
     public class Tile : MonoBehaviour
     {
+        public JSONObject Data { get; set; }
+
         [SerializeField]
         public RectD Rect;
         public int Zoom { get; set; }

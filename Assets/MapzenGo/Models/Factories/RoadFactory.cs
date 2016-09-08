@@ -19,7 +19,7 @@ namespace MapzenGo.Models.Factories
             Query = (geo) => geo["geometry"]["type"].str == "LineString" || geo["geometry"]["type"].str == "MultiLineString";
         }
 
-        public override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
+        protected override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
         {
             var kind = geo["properties"]["kind"].str.ConvertToEnum<RoadType>();
             if (_settings.AllSettings.Any(x => x.Type == kind))
@@ -84,7 +84,7 @@ namespace MapzenGo.Models.Factories
             }
         }
 
-        public override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList)
+        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList)
         {
             var go = new GameObject("Roads");
             var mesh = go.AddComponent<MeshFilter>().mesh;

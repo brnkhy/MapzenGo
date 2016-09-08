@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Assets.MapzenGo.Models.Plugins;
 using MapzenGo.Helpers;
 using MapzenGo.Models;
 using UnityEngine;
 
 namespace MapzenGo.Models.Plugins
 {
-    public class CustomObjectPlugin : TilePlugin
+    public class CustomObjectPlugin : Plugin
     {
         private readonly List<Vector2d> _customObjects = new List<Vector2d>()
         {
@@ -16,9 +17,9 @@ namespace MapzenGo.Models.Plugins
             new Vector2d(40.728664, -74.032011),
         };
 
-        public override void Run(Tile tile)
+        public override void Create(Tile tile)
         {
-            base.Run(tile);
+            base.Create(tile);
 
             foreach (var pos in _customObjects)
             {

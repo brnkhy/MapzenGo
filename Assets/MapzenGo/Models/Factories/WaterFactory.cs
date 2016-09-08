@@ -18,7 +18,7 @@ namespace MapzenGo.Models.Factories
             Query = (geo) => geo["geometry"]["type"].str == "Polygon" || geo["geometry"]["type"].str == "MultiPolygon";
         }
 
-        public override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
+        protected override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
         {
             var kind = geo["properties"]["kind"].str.ConvertToEnum<WaterType>();
             var typeSettings = _settings.GetSettingsFor(kind);
@@ -77,7 +77,7 @@ namespace MapzenGo.Models.Factories
             yield return water;
         }
 
-        public override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList)
+        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList)
         {
             var items = geoList.Where(x => x["geometry"]["type"].str == "Polygon" || x["geometry"]["type"].str == "MultiPolygon");
             if (!items.Any())

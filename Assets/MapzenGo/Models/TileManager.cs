@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.MapzenGo.Models.Plugins;
 using MapzenGo.Helpers;
 using MapzenGo.Models.Factories;
 using MapzenGo.Models.Plugins;
@@ -24,8 +25,7 @@ namespace MapzenGo.Models
         protected readonly string _mapzenFormat = "json";
         protected Transform TileHost;
 
-        private List<Factory> _factories;
-        private List<TilePlugin> _plugins;
+        private List<Plugin> _plugins;
 
         protected Dictionary<Vector2d, Tile> Tiles; //will use this later on
         protected Vector2d CenterTms; //tms tile coordinate
@@ -37,7 +37,6 @@ namespace MapzenGo.Models
                 MapMaterial = Resources.Load<Material>("Ground");
 
             InitFactories();
-            InitPlugins();
 
             var v2 = GM.LatLonToMeters(Latitude, Longitude);
             var tile = GM.MetersToTile(v2, Zoom);
@@ -57,17 +56,8 @@ namespace MapzenGo.Models
 
         private void InitFactories()
         {
-            _factories = new List<Factory>();
-            foreach (var factory in GetComponentsInChildren<Factory>())
-            {
-                _factories.Add(factory);
-            }
-        }
-
-        private void InitPlugins()
-        {
-            _plugins = new List<TilePlugin>();
-            foreach (var plugin in GetComponentsInChildren<TilePlugin>())
+            _plugins = new List<Plugin>();
+            foreach (var plugin in GetComponentsInChildren<Plugin>())
             {
                 _plugins.Add(plugin);
             }
@@ -102,12 +92,7 @@ namespace MapzenGo.Models
             tile.transform.position = (rect.Center - centerInMercator).ToVector3();
             tile.transform.SetParent(TileHost, false);
             LoadTile(tileTms, tile);
-
-            foreach (var plugin in _plugins)
-            {
-                plugin.Run(tile);
-            }
-
+            
             yield return null;
         }
 
@@ -129,30 +114,11 @@ namespace MapzenGo.Models
             {
                 if (!tile) // checks if tile still exists and haven't destroyed yet
                     return;
+                tile.Data = mapData;
 
-                foreach (var factory in _factories)
+                foreach (var factory in _plugins)
                 {
-                    if (factory.MergeMeshes)
-                    {
-                        if (!mapData.HasField(factory.XmlTag))
-                            continue;
-
-                        var b = factory.CreateLayer(tile.TileCenter, mapData[factory.XmlTag]["features"].list);
-                        if (b) //getting a weird error without this, no idea really
-                            b.transform.SetParent(tile.transform, false);
-                    }
-                    else
-                    {
-                        var fac = factory;
-                        foreach (var entity in mapData[factory.XmlTag]["features"].list.Where(x => fac.Query(x)).SelectMany(geo => fac.Create(tile.TileCenter, geo)))
-                        {
-                            if (entity != null)
-                            {
-                                entity.transform.SetParent(tile.transform, false);
-                            }
-                            //I'm not keeping these anywhere for now but you can always create a list or something here and save them
-                        }
-                    }
+                    factory.Create(tile);
                 }
             });
         }

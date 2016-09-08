@@ -17,7 +17,7 @@ namespace MapzenGo.Models.Factories
             Query = (geo) => geo["geometry"]["type"].str == "Polygon" || geo["geometry"]["type"].str == "MultiPolygon";
         }
 
-        public override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
+        protected override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
         {
             var kind = geo["properties"]["kind"].str.ConvertToEnum<LanduseKind>();
             if (kind != LanduseKind.Unknown && _settings.AllSettings.Any(x => x.Type == kind))
@@ -57,8 +57,8 @@ namespace MapzenGo.Models.Factories
                 yield return landuse;
             }
         }
-        
-        public override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList)
+
+        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList)
         {
             var items = geoList.Where(x =>
             {
@@ -123,7 +123,7 @@ namespace MapzenGo.Models.Factories
             }
         }
 
-        public void CreateMesh(List<Vector3> corners, ref List<Vector3> verts, ref List<int> indices)
+        private void CreateMesh(List<Vector3> corners, ref List<Vector3> verts, ref List<int> indices)
         {
             var tris = new Triangulator(corners);
             var vertsStartCount = verts.Count;

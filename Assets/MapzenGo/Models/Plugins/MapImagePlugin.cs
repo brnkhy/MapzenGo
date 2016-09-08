@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using Assets.MapzenGo.Models.Plugins;
 using MapzenGo.Models.Plugins;
 using UniRx;
 using UnityEngine;
 
 namespace MapzenGo.Models.Plugins
 {
-    public class MapImagePlugin : TilePlugin
+    public class MapImagePlugin : Plugin
     {
         public string MapImageUrlBase = "http://b.tile.openstreetmap.org/";
 
-        public override void Run(Tile tile)
+        public override void Create(Tile tile)
         {
-            base.Run(tile);
+            base.Create(tile);
 
             var go = GameObject.CreatePrimitive(PrimitiveType.Quad).transform;
             go.name = "map";
