@@ -47,6 +47,11 @@ namespace MapzenGo.Models
                 var f = AllSettings.FirstOrDefault(x => x.Type == type);
                 return f ?? Default;
             }
+
+            public bool HasSettingsFor(RoadType type)
+            {
+                return AllSettings.Any(x => x.Type == type);
+            }
         }
 
         [Serializable]

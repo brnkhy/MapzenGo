@@ -27,6 +27,11 @@ namespace MapzenGo.Models
             {
                 return AllSettings.FirstOrDefault(x => x.Type == type) ?? Default;
             }
+
+            public bool HasSettingsFor(WaterType type)
+            {
+                return AllSettings.Any(x => x.Type == type);
+            }
         }
 
         [Serializable]
