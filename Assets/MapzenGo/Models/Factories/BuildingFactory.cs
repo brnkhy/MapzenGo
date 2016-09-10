@@ -1,14 +1,30 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using MapzenGo.Helpers;
 using MapzenGo.Models.Enums;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 namespace MapzenGo.Models.Factories
 {
+    public class TileBuilding
+    {
+        public TileBuilding(LanduseKind kind)
+        {
+            Kind = kind;
+            Vertices = new List<Vector3>();
+            Indices = new List<int>();
+        }
+
+        public LanduseKind Kind { get; set; }
+        public List<Vector3> Vertices { get; set; }
+        public List<int> Indices { get; set; }
+    }
+
     public class BuildingFactory : Factory
     {
         public override string XmlTag { get { return "buildings"; } }
@@ -60,7 +76,7 @@ namespace MapzenGo.Models.Factories
                 }
 
                 CreateMesh(buildingCorners, height, typeSettings, verts, indices);
-                
+
                 mesh.vertices = verts.ToArray();
                 mesh.triangles = indices.ToArray();
                 mesh.RecalculateNormals();
@@ -73,37 +89,39 @@ namespace MapzenGo.Models.Factories
             }
         }
 
-        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList)
+        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> items, Transform t)
         {
+            
             var main = new GameObject("Buildings Layer");
-            var items = geoList.Where(x =>
-            {
-                var key = x["properties"]["id"].ToString();
-                var ret = !_active.Contains(key) && Query(x);
-                if(ret)
-                    _active.Add(key);
-                return ret;
-            });
-            if (!items.Any())
-                return null;
+            main.transform.SetParent(t, false);
 
-            var _meshes = new Dictionary<LanduseKind, Tuple<List<Vector3>, List<int>>>();
-
-            foreach (var geo in items)
+            var finalList = new List<TileBuilding>();
+            var openList = new Dictionary<LanduseKind, Tuple<List<Vector3>, List<int>>>();
+            
+            foreach (var geo in items.Where(x => Query(x)))
             {
+                var key = geo["properties"]["id"].ToString();
+                if (_active.Contains(key))
+                    continue;
+
+                //to prevent duplicate buildings
+                _active.Add(key);
+
                 var kind = geo["properties"].HasField("landuse_kind")
                 ? geo["properties"]["landuse_kind"].str.ConvertToEnum<LanduseKind>()
                 : LanduseKind.Unknown;
+
                 var typeSettings = _settings.GetSettingsFor(kind);
 
-                if(!_settings.HasSettingsFor(kind))
+                //if we dont have a setting defined for that, it'Ll be merged to "unknown" 
+                if (!_settings.HasSettingsFor(kind))
                     kind = LanduseKind.Unknown;
 
-                if (!_meshes.ContainsKey(kind))
-                    _meshes.Add(kind, new Tuple<List<Vector3>, List<int>>(new List<Vector3>(), new List<int>()));
+                if (!openList.ContainsKey(kind))
+                    openList.Add(kind, new Tuple<List<Vector3>, List<int>>(new List<Vector3>(), new List<int>()));
 
                 var buildingCorners = new List<Vector3>();
-                //foreach (var bb in geo["geometry"]["coordinates"].list)
+                //foreach (var bb in geo["geometry"]["coordinates"].list)z
                 //{
                 var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
                 for (int i = 0; i < bb.list.Count - 1; i++)
@@ -114,52 +132,52 @@ namespace MapzenGo.Models.Factories
                     buildingCorners.Add(localMercPos.ToVector3xz());
                 }
 
-                var height = 0f;
-                if (_settings.Default.IsVolumetric)
+                //returns random height if real value not available
+                var height = GetHeights(geo, typeSettings.MinimumBuildingHeight, typeSettings.MaximumBuildingHeight);
+
+                //create mesh, actually just to get vertice&indices
+                //filling last two parameters, horrible call yea
+                CreateMesh(buildingCorners, height, typeSettings, openList[kind].Item1, openList[kind].Item2);
+
+                //unity cant handle more than 65k on single mesh
+                //so we'll finish current and start a new one
+                if (openList[kind].Item1.Count > 64000 || openList[kind].Item2.Count > 64000)
                 {
-                    height = geo["properties"].HasField("height") 
-                        ? geo["properties"]["height"].f 
-                        : Random.Range(typeSettings.MinimumBuildingHeight, typeSettings.MaximumBuildingHeight);
+                    var tb = new TileBuilding(kind);
+                    tb.Vertices.AddRange(openList[kind].Item1);
+                    tb.Indices.AddRange(openList[kind].Item2);
+                    finalList.Add(tb);
+                    openList[kind].Item1.Clear();
+                    openList[kind].Item2.Clear();
                 }
-
-                CreateMesh(buildingCorners, height, typeSettings, _meshes[kind].Item1, _meshes[kind].Item2);
-
-                if (_meshes[kind].Item1.Count > 64000 || _meshes[kind].Item2.Count > 64000)
-                {
-                    var go = new GameObject(kind + " Buildings");
-                    var mesh = go.AddComponent<MeshFilter>().mesh;
-                    go.AddComponent<MeshRenderer>();
-                    mesh.vertices = _meshes[kind].Item1.ToArray();
-                    mesh.triangles = _meshes[kind].Item2.ToArray();
-                    mesh.RecalculateNormals();
-
-                    go.GetComponent<MeshRenderer>().material = _settings.GetSettingsFor(kind).Material;
-                    go.transform.position += Vector3.up * Order;
-                    go.transform.SetParent(main.transform, true);
-                    _meshes[kind].Item1.Clear();
-                    _meshes[kind].Item2.Clear();
-                }
-
                 //}
             }
 
-            
-
-            foreach (var group in _meshes)
+            foreach (var tuple in openList)
             {
-                var go = new GameObject(group.Key + " Buildings");
-                var mesh = go.AddComponent<MeshFilter>().mesh;
-                go.AddComponent<MeshRenderer>();
-                mesh.vertices = group.Value.Item1.ToArray();
-                mesh.triangles = group.Value.Item2.ToArray();
-                mesh.RecalculateNormals();
-                
-                go.GetComponent<MeshRenderer>().material = _settings.GetSettingsFor(group.Key).Material;
-                go.transform.position += Vector3.up * Order;
-                go.transform.SetParent(main.transform, true);
+                var tb = new TileBuilding(tuple.Key);
+                tb.Vertices.AddRange(tuple.Value.Item1);
+                tb.Indices.AddRange(tuple.Value.Item2);
+                finalList.Add(tb);
             }
-            
+
+            foreach (var group in finalList)
+            {
+                CreateGameObject(group.Kind, group.Vertices, group.Indices, main);
+            }
             return main;
+        }
+
+        private float GetHeights(JSONObject geo, float min, float max)
+        {
+            var height = 0f;
+            if (_settings.Default.IsVolumetric)
+            {
+                height = geo["properties"].HasField("height")
+                    ? geo["properties"]["height"].f
+                    : UnityEngine.Random.Range(min, max);
+            }
+            return height;
         }
 
         private Vector3 ChangeToRelativePositions(List<Vector3> buildingCorners)
@@ -186,15 +204,8 @@ namespace MapzenGo.Models.Factories
             building.LanduseKind = typeSettings.Type.ToString();
             building.GetComponent<MeshRenderer>().material = typeSettings.Material;
         }
-
-        //private void GetVertices(Vector2d tileMercPos, Building.BuildingSettings typeSettings, IEnumerable<JSONObject> items, List<Vector3> verts, List<int> indices)
-        //{
-            
-        //}
-
         private void CreateMesh(List<Vector3> corners, float height, Building.BuildingSettings typeSettings, List<Vector3> verts, List<int> indices)
         {
-
             var tris = new Triangulator(corners);
             var vertsStartCount = verts.Count;
             verts.AddRange(corners.Select(x => new Vector3(x.x, height, x.z)).ToList());
@@ -241,6 +252,18 @@ namespace MapzenGo.Models.Factories
                 indices.Add(ind + 3);
                 indices.Add(ind + 2);
             }
+        }
+        private void CreateGameObject(LanduseKind kind, List<Vector3> vertices, List<int> indices, GameObject main)
+        {
+            var go = new GameObject(kind + " Buildings");
+            var mesh = go.AddComponent<MeshFilter>().mesh;
+            go.AddComponent<MeshRenderer>();
+            mesh.vertices = vertices.ToArray();
+            mesh.triangles = indices.ToArray();
+            mesh.RecalculateNormals();
+            go.GetComponent<MeshRenderer>().material = _settings.GetSettingsFor(kind).Material;
+            go.transform.position += Vector3.up * Order;
+            go.transform.SetParent(main.transform, false);
         }
     }
 }

@@ -84,7 +84,7 @@ namespace MapzenGo.Models.Factories
             }
         }
 
-        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList)
+        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList, Transform t)
         {
             var go = new GameObject("Roads");
             var mesh = go.AddComponent<MeshFilter>().mesh;
@@ -104,12 +104,15 @@ namespace MapzenGo.Models.Factories
 
         private void GetVertices(Vector2d tileMercPos, List<JSONObject> geoList, ref List<Vector3> verts, ref List<int> indices)
         {
-            foreach (var geo in geoList.Where(
-                x => x["geometry"]["type"].str == "LineString" || x["geometry"]["type"].str == "MultiLineString"))
+            foreach (var geo in geoList.Where(x => Query(x)))
             {
                 var kind = geo["properties"]["kind"].str.ConvertToEnum<RoadType>();
+                if (!_settings.HasSettingsFor(kind))
+                    continue;
+
                 var settings = _settings.GetSettingsFor(kind);
                 var roadEnds = new List<Vector3>();
+
                 if (geo["geometry"]["type"].str == "LineString")
                 {
                     for (var i = 0; i < geo["geometry"]["coordinates"].list.Count; i++)
