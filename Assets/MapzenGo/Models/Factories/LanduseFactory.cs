@@ -59,7 +59,7 @@ namespace MapzenGo.Models.Factories
             }
         }
 
-        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> items, Transform t)
+        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> items)
         {
             var main = new GameObject("Landuse Layer");
             

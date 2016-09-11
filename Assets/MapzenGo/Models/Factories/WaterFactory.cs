@@ -78,7 +78,7 @@ namespace MapzenGo.Models.Factories
             yield return water;
         }
 
-        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> items, Transform t)
+        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> items)
         {
             var main = new GameObject("Buildings Layer");
             var meshes = new Dictionary<WaterType, Tuple<List<Vector3>, List<int>>>();

@@ -84,7 +84,7 @@ namespace MapzenGo.Models.Factories
             }
         }
 
-        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList, Transform t)
+        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList)
         {
             var go = new GameObject("Roads");
             var mesh = go.AddComponent<MeshFilter>().mesh;

@@ -89,11 +89,10 @@ namespace MapzenGo.Models.Factories
             }
         }
 
-        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> items, Transform t)
+        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> items)
         {
             
             var main = new GameObject("Buildings Layer");
-            main.transform.SetParent(t, false);
 
             var finalList = new List<TileBuilding>();
             var openList = new Dictionary<LanduseKind, Tuple<List<Vector3>, List<int>>>();
