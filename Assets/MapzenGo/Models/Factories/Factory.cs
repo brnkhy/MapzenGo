@@ -33,6 +33,9 @@ namespace MapzenGo.Models.Factories
             }
             else
             {
+                if (!(tile.Data.HasField(XmlTag) && tile.Data[XmlTag].HasField("features")))
+                    return;
+
                 foreach (var entity in tile.Data[XmlTag]["features"].list.Where(x => Query(x)).SelectMany(geo => Create(tile.TileCenter, geo)))
                 {
                     if (entity != null)
