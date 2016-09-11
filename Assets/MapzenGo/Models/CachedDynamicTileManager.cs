@@ -8,7 +8,7 @@ namespace MapzenGo.Models
 {
     public class CachedDynamicTileManager : DynamicTileManager
     {
-        public string RelativeCachePath = "../MapzenGo/CachedTileData/{0}/";
+        public string RelativeCachePath = "../CachedTileData/{0}/";
         protected string CacheFolderPath;
 
         public override void Start()
