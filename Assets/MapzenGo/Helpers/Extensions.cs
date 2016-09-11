@@ -94,5 +94,10 @@ namespace MapzenGo.Helpers
                                    //return (T)Enum.Parse(typeof(T), "Unknown"));
             }
         }
+
+        public static string Format(this string s, params object[] args)
+        {
+            return string.Format(s, args);
+        }
     }
 }
