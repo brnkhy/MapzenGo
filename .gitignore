@@ -1,5 +1,8 @@
 ProjecSettings
 Library
+Temp
 
 *.asset
+*.sln
+*.csproj
 ProjectSettings/ProjectVersion.txt
