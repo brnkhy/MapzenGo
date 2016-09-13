@@ -82,7 +82,10 @@ namespace MapzenGo.Models.Factories
                 mesh.RecalculateNormals();
 
                 _active.Add(building.Id);
-                building.OnDestroyAsObservable().Subscribe(x => { _active.Remove(building.Id); });
+                building.OnDisableAsObservable().Subscribe(x =>
+                {
+                    _active.Remove(building.Id);
+                });
 
                 yield return building;
                 //}
@@ -100,11 +103,11 @@ namespace MapzenGo.Models.Factories
             foreach (var geo in items.Where(x => Query(x)))
             {
                 var key = geo["properties"]["id"].ToString();
-                if (_active.Contains(key))
-                    continue;
+                //if (_active.Contains(key))
+                //    continue;
 
                 //to prevent duplicate buildings
-                _active.Add(key);
+                //_active.Add(key);
 
                 var kind = geo["properties"].HasField("landuse_kind")
                 ? geo["properties"]["landuse_kind"].str.ConvertToEnum<LanduseKind>()
