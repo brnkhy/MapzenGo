@@ -11,10 +11,9 @@ namespace MapzenGo.Models.Factories
     {
         public override string XmlTag { get { return "landuse"; } }
 
-        [SerializeField] private Landuse.Settings _settings;
-
         public override void Start()
         {
+            base.Start();
             Query = (geo) => geo["geometry"]["type"].str == "Polygon" || geo["geometry"]["type"].str == "MultiPolygon";
         }
 

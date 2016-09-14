@@ -16,29 +16,5 @@ namespace MapzenGo.Models
         public string Kind;
         public string Name;
         public int SortKey;
-        
-        [Serializable]
-        public class Settings
-        {
-            public WaterSettings Default = new WaterSettings();
-            public List<WaterSettings> AllSettings;
-
-            public WaterSettings GetSettingsFor(WaterType type)
-            {
-                return AllSettings.FirstOrDefault(x => x.Type == type) ?? Default;
-            }
-
-            public bool HasSettingsFor(WaterType type)
-            {
-                return AllSettings.Any(x => x.Type == type);
-            }
-        }
-
-        [Serializable]
-        public class WaterSettings
-        {
-            public WaterType Type;
-            public Material Material;
-        }
     }
 }

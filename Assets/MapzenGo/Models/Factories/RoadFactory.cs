@@ -12,17 +12,17 @@ namespace MapzenGo.Models.Factories
     public class RoadFactory : Factory
     {
         public override string XmlTag { get { return "roads"; } }
-        [SerializeField] private Road.Settings _settings;
 
         public override void Start()
         {
+            base.Start();
             Query = (geo) => geo["geometry"]["type"].str == "LineString" || geo["geometry"]["type"].str == "MultiLineString";
         }
 
         protected override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
         {
             var kind = geo["properties"]["kind"].str.ConvertToEnum<RoadType>();
-            if (_settings.AllSettings.Any(x => x.Type == kind))
+            if (_settings.HasSettingsFor(kind))
             {
                 var typeSettings = _settings.GetSettingsFor(kind);
 
@@ -47,7 +47,14 @@ namespace MapzenGo.Models.Factories
                     mesh.RecalculateNormals();
                     mesh.RecalculateBounds();
                     road.GetComponent<MeshRenderer>().material = typeSettings.Material;
-                    road.Initialize(geo, roadEnds, _settings);
+
+                    road.Id = geo["properties"]["id"].ToString();
+                    road.Type = geo["type"].str;
+                    road.Kind = geo["properties"]["kind"].str;
+                    road.SortKey = (int)geo["properties"]["sort_key"].f;
+                    if (geo["properties"].HasField("name"))
+                        road.Name = geo["properties"]["name"].str;
+
                     road.transform.position += Vector3.up*road.SortKey/100;
                     yield return road;
                 }
@@ -76,7 +83,14 @@ namespace MapzenGo.Models.Factories
                         mesh.RecalculateNormals();
                         mesh.RecalculateBounds();
                         road.GetComponent<MeshRenderer>().material = typeSettings.Material;
-                        road.Initialize(geo, roadEnds, _settings);
+
+                        road.Id = geo["properties"]["id"].ToString();
+                        road.Type = geo["type"].str;
+                        road.Kind = geo["properties"]["kind"].str;
+                        road.SortKey = (int)geo["properties"]["sort_key"].f;
+                        if (geo["properties"].HasField("name"))
+                            road.Name = geo["properties"]["name"].str;
+
                         road.transform.position += Vector3.up*road.SortKey/100;
                         yield return road;
                     }
@@ -97,7 +111,7 @@ namespace MapzenGo.Models.Factories
             mesh.triangles = indices.ToArray();
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            go.GetComponent<MeshRenderer>().material = _settings.Default.Material;
+            go.GetComponent<MeshRenderer>().material = _settings.DefaultRoad.Material;
             go.transform.position += Vector3.up * Order;
             return go;
         }
@@ -144,7 +158,7 @@ namespace MapzenGo.Models.Factories
             }
         }
 
-        private void CreateMesh(List<Vector3> list, Road.RoadSettings settings, ref List<Vector3> verts, ref List<int> indices)
+        private void CreateMesh(List<Vector3> list, SettingsLayers.RoadSettings settings, ref List<Vector3> verts, ref List<int> indices)
         {
             var vertsStartCount = verts.Count;
             Vector3 lastPos = Vector3.zero;
