@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.MapzenGo.Models.Plugins;
 using MapzenGo.Helpers;
 using MapzenGo.Models.Factories;
 using MapzenGo.Models.Plugins;
@@ -20,7 +19,7 @@ namespace MapzenGo.Models
 
         protected readonly string _mapzenUrl = "https://vector.mapzen.com/osm/{0}/{1}/{2}/{3}.{4}?api_key={5}";
         [SerializeField] protected string _key = "vector-tiles-5sBcqh6"; //try getting your own key if this doesn't work
-        [SerializeField] protected readonly string _mapzenLayers = "buildings,roads,landuse,water";
+        [SerializeField] protected readonly string _mapzenLayers = "buildings,roads,landuse,water,boundaries";
         [SerializeField] protected Material MapMaterial;
         protected readonly string _mapzenFormat = "json";
         protected Transform TileHost;

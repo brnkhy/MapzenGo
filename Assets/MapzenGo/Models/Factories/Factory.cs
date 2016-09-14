@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.MapzenGo.Models.Plugins;
+using MapzenGo.Models.Plugins;
 using UnityEngine;
 
 namespace MapzenGo.Models.Factories
