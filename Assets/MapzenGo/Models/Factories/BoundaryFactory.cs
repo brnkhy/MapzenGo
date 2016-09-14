@@ -12,18 +12,17 @@ namespace MapzenGo.Models.Factories
     public class BoundaryFactory : Factory
     {
         public override string XmlTag { get { return "boundaries"; } }
-        [SerializeField]
-        private Boundary.Settings _settings;
 
         public override void Start()
         {
+            base.Start();
             Query = (geo) => geo["geometry"]["type"].str == "LineString" || geo["geometry"]["type"].str == "MultiLineString";
         }
 
         protected override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
         {
             var kind = geo["properties"]["kind"].str.ConvertToEnum<BoundaryType>();
-            if (_settings.AllSettings.Any(x => x.Type == kind))
+            if (_settings.HasSettingsFor(kind))
             {
                 var typeSettings = _settings.GetSettingsFor(kind);
 
@@ -98,7 +97,7 @@ namespace MapzenGo.Models.Factories
             mesh.triangles = indices.ToArray();
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            go.GetComponent<MeshRenderer>().material = _settings.Default.Material;
+            go.GetComponent<MeshRenderer>().material = _settings.DefaultBoundary.Material;
             go.transform.position += Vector3.up * Order;
             return go;
         }
@@ -145,7 +144,7 @@ namespace MapzenGo.Models.Factories
             }
         }
 
-        private void CreateMesh(List<Vector3> list, Boundary.BoundarySettings settings, ref List<Vector3> verts, ref List<int> indices)
+        private void CreateMesh(List<Vector3> list, SettingsLayers.BoundarySettings settings, ref List<Vector3> verts, ref List<int> indices)
         {
             var vertsStartCount = verts.Count;
             Vector3 lastPos = Vector3.zero;
@@ -199,7 +198,7 @@ namespace MapzenGo.Models.Factories
             }
         }
 
-        private static void SetProperties(JSONObject geo, Boundary boundary, Boundary.BoundarySettings typeSettings)
+        private static void SetProperties(JSONObject geo, Boundary boundary, SettingsLayers.BoundarySettings typeSettings)
         {
             boundary.name = "boundary " + geo["properties"]["id"].ToString();
             if (geo["properties"].HasField("name"))
