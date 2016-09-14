@@ -5,7 +5,7 @@ using System.Text;
 using MapzenGo.Models;
 using UnityEngine;
 
-namespace Assets.MapzenGo.Models.Plugins
+namespace MapzenGo.Models.Plugins
 {
     public class Plugin : MonoBehaviour
     {
