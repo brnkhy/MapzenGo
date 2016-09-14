@@ -2,6 +2,8 @@
 using System.Linq;
 using MapzenGo.Models.Enums;
 using MapzenGo.Helpers;
+using TriangleNet;
+using TriangleNet.Geometry;
 using UniRx;
 using UnityEngine;
 
@@ -22,36 +24,38 @@ namespace MapzenGo.Models.Factories
             var kind = geo["properties"]["kind"].str.ConvertToEnum<LanduseKind>();
             if (kind != LanduseKind.Unknown && _settings.HasSettingsFor(kind))
             {
-                var landuseCorners = new List<Vector3>();
                 var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
                 if (bb == null || bb.list == null)
                     yield break;
 
-                for (var i = 0; i < bb.list.Count - 1; i++)
+                var count = bb.list.Count - 1;
+                if (count < 3)
+                    yield break;
+
+                var inp = new InputGeometry(count);
+                for (var i = 0; i < count; i++)
                 {
                     var c = bb.list[i];
                     var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
                     var localMercPos = dotMerc - tileMercPos;
-                    landuseCorners.Add(localMercPos.ToVector3());
+                    inp.AddPoint(localMercPos.x, localMercPos.y);
+                    inp.AddSegment(i, (i + 1) % count);
                 }
 
-                if (!landuseCorners.Any())
-                    yield break;
-
                 var landuse = new GameObject("Landuse").AddComponent<Landuse>();
-                var verts = new List<Vector3>();
-                var indices = new List<int>();
+                var md = new MeshData();
                 var mesh = landuse.GetComponent<MeshFilter>().mesh;
 
-                //I want object center to be in the middle of object, not at the corner of the tile
-                var landuseCenter = ChangeToRelativePositions(landuseCorners);
-                landuse.transform.localPosition = landuseCenter;
-
                 SetProperties(geo, landuse, kind);
-                CreateMesh(landuseCorners, verts, indices);
+                CreateMesh(inp, md);
+
+                //I want object center to be in the middle of object, not at the corner of the tile
+                var landuseCenter = ChangeToRelativePositions(md.Vertices);
+                landuse.transform.localPosition = landuseCenter;
                 
-                mesh.vertices = verts.ToArray();
-                mesh.triangles = indices.ToArray();
+                mesh.vertices = md.Vertices.ToArray();
+                mesh.triangles = md.Indices.ToArray();
+                mesh.SetUVs(0, md.UV);
                 mesh.RecalculateNormals();
 
                 yield return landuse;
@@ -62,7 +66,7 @@ namespace MapzenGo.Models.Factories
         {
             var main = new GameObject("Landuse Layer");
             
-            var _meshes = new Dictionary<LanduseKind, Tuple<List<Vector3>, List<int>>>();
+            var _meshes = new Dictionary<LanduseKind, MeshData>();
             foreach (var geo in items.Where(x => Query(x)))
             {
                 var kind = geo["properties"]["kind"].str.ConvertToEnum<LanduseKind>();
@@ -71,40 +75,46 @@ namespace MapzenGo.Models.Factories
 
                 var typeSettings = _settings.GetSettingsFor(kind);
                 if (!_meshes.ContainsKey(kind))
-                    _meshes.Add(kind, new Tuple<List<Vector3>, List<int>>(new List<Vector3>(), new List<int>()));
+                    _meshes.Add(kind, new MeshData());
 
-                var buildingCorners = new List<Vector3>();
                 //foreach (var bb in geo["geometry"]["coordinates"].list)
                 //{
                 var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
-                for (int i = 0; i < bb.list.Count - 1; i++)
+                var count = bb.list.Count -1;
+
+                if (count < 3)
+                    continue;
+
+                var inp = new InputGeometry(count);
+
+                for (int i = 0; i < count; i++)
                 {
                     var c = bb.list[i];
                     var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                    var localMercPos = new Vector2((float)(dotMerc.x - tileMercPos.x), (float)(dotMerc.y - tileMercPos.y));
-                    buildingCorners.Add(localMercPos.ToVector3xz());
+                    var localMercPos = dotMerc - tileMercPos;
+                    inp.AddPoint(localMercPos.x, localMercPos.y);
+                    inp.AddSegment(i, (i + 1) % count);
                 }
 
-                CreateMesh(buildingCorners, _meshes[kind].Item1, _meshes[kind].Item2);
+                CreateMesh(inp, _meshes[kind]);
 
-                if (_meshes[kind].Item1.Count > 64000 || _meshes[kind].Item2.Count > 64000)
+                if (_meshes[kind].Vertices.Count > 64000)
                 {
-                    CreateGameObject(kind, _meshes[kind].Item1, _meshes[kind].Item2, main);
-                    _meshes[kind].Item1.Clear();
-                    _meshes[kind].Item2.Clear();
+                    CreateGameObject(kind, _meshes[kind], main.transform);
+                    _meshes[kind] = new MeshData();
                 }
                 //}
             }
 
             foreach (var group in _meshes)
             {
-                CreateGameObject(group.Key, group.Value.Item1, group.Value.Item2, main);
+                CreateGameObject(group.Key, group.Value, main.transform);
             }
 
             return main;
         }
         
-        private static Vector3 ChangeToRelativePositions(List<Vector3> landuseCorners)
+        private Vector3 ChangeToRelativePositions(List<Vector3> landuseCorners)
         {
             var landuseCenter = landuseCorners.Aggregate((acc, cur) => acc + cur) / landuseCorners.Count;
             for (int i = 0; i < landuseCorners.Count; i++)
@@ -126,26 +136,36 @@ namespace MapzenGo.Models.Factories
             landuse.Kind = kind;
             landuse.GetComponent<MeshRenderer>().material = _settings.GetSettingsFor(kind).Material;
         }
-        
-        private void CreateMesh(List<Vector3> corners, List<Vector3> verts, List<int> indices)
+
+        private void CreateMesh(InputGeometry corners, MeshData meshdata)
         {
-            var tris = new Triangulator(corners);
-            var vertsStartCount = verts.Count;
-            verts.AddRange(corners.Select(x => new Vector3(x.x, 0, x.z)).ToList());
-            indices.AddRange(tris.Triangulate().Select(x => vertsStartCount + x));
+            var mesh = new TriangleNet.Mesh();
+            mesh.Behavior.Algorithm = TriangulationAlgorithm.SweepLine;
+            mesh.Behavior.Quality = true;
+            mesh.Triangulate(corners);
+
+            var vertsStartCount = meshdata.Vertices.Count;
+            meshdata.Vertices.AddRange(corners.Points.Select(x => new Vector3((float)x.X, 0, (float)x.Y)).ToList());
+
+            foreach (var tri in mesh.Triangles)
+            {
+                meshdata.Indices.Add(vertsStartCount + tri.P1);
+                meshdata.Indices.Add(vertsStartCount + tri.P0);
+                meshdata.Indices.Add(vertsStartCount + tri.P2);
+            }
         }
 
-        private void CreateGameObject(LanduseKind kind, List<Vector3> vertices, List<int> indices, GameObject main)
+        private void CreateGameObject(LanduseKind kind, MeshData meshdata, Transform parent)
         {
-            var go = new GameObject(kind + " Buildings");
+            var go = new GameObject(kind + " Landuse");
             var mesh = go.AddComponent<MeshFilter>().mesh;
             go.AddComponent<MeshRenderer>();
-            mesh.vertices = vertices.ToArray();
-            mesh.triangles = indices.ToArray();
+            mesh.vertices = meshdata.Vertices.ToArray();
+            mesh.triangles = meshdata.Indices.ToArray();
             mesh.RecalculateNormals();
             go.GetComponent<MeshRenderer>().material = _settings.GetSettingsFor(kind).Material;
             go.transform.position += Vector3.up * Order;
-            go.transform.SetParent(main.transform, true);
+            go.transform.SetParent(parent, true);
         }
     }
 }

@@ -31,8 +31,7 @@ namespace MapzenGo.Models.Factories
                     var boundary = new GameObject("boundary").AddComponent<Boundary>();
                     var mesh = boundary.GetComponent<MeshFilter>().mesh;
                     var boundarEnds = new List<Vector3>();
-                    var verts = new List<Vector3>();
-                    var indices = new List<int>();
+                    var md = new MeshData();
 
                     for (var i = 0; i < geo["geometry"]["coordinates"].list.Count; i++)
                     {
@@ -42,11 +41,12 @@ namespace MapzenGo.Models.Factories
                         boundarEnds.Add(localMercPos.ToVector3());
                     }
                     SetProperties(geo, boundary, typeSettings);
-                    CreateMesh(boundarEnds, typeSettings, ref verts, ref indices);
-                    mesh.vertices = verts.ToArray();
-                    mesh.triangles = indices.ToArray();
+                    CreateMesh(boundarEnds, typeSettings, md);
+                    mesh.vertices = md.Vertices.ToArray();
+                    mesh.triangles = md.Indices.ToArray();
+                    mesh.SetUVs(0, md.UV);
                     mesh.RecalculateNormals();
-                    mesh.RecalculateBounds();
+                    
                     boundary.GetComponent<MeshRenderer>().material = typeSettings.Material;
                     boundary.transform.position += Vector3.up * Order;
                     yield return boundary;
@@ -58,8 +58,7 @@ namespace MapzenGo.Models.Factories
                         var boundary = new GameObject("Boundary").AddComponent<Boundary>();
                         var mesh = boundary.GetComponent<MeshFilter>().mesh;
                         var roadEnds = new List<Vector3>();
-                        var verts = new List<Vector3>();
-                        var indices = new List<int>();
+                        var md = new MeshData();
 
                         roadEnds.Clear();
                         var c = geo["geometry"]["coordinates"][i];
@@ -70,11 +69,12 @@ namespace MapzenGo.Models.Factories
                             var localMercPos = dotMerc - tileMercPos;
                             roadEnds.Add(localMercPos.ToVector3());
                         }
-                        CreateMesh(roadEnds, typeSettings, ref verts, ref indices);
-                        mesh.vertices = verts.ToArray();
-                        mesh.triangles = indices.ToArray();
+                        CreateMesh(roadEnds, typeSettings, md);
+                        mesh.vertices = md.Vertices.ToArray();
+                        mesh.triangles = md.Indices.ToArray();
+                        mesh.SetUVs(0, md.UV);
                         mesh.RecalculateNormals();
-                        mesh.RecalculateBounds();
+                        
                         boundary.GetComponent<MeshRenderer>().material = typeSettings.Material;
                         //road.Initialize(geo, roadEnds, _settings);
                         boundary.transform.position += Vector3.up * Order;
@@ -89,20 +89,20 @@ namespace MapzenGo.Models.Factories
             var go = new GameObject("Boundary");
             var mesh = go.AddComponent<MeshFilter>().mesh;
             go.AddComponent<MeshRenderer>();
-            var verts = new List<Vector3>();
-            var indices = new List<int>();
+            var md = new MeshData();
 
-            GetVertices(tileMercPos, geoList, ref verts, ref indices);
-            mesh.vertices = verts.ToArray();
-            mesh.triangles = indices.ToArray();
+            GetVertices(tileMercPos, geoList, md);
+            mesh.vertices = md.Vertices.ToArray();
+            mesh.triangles = md.Indices.ToArray();
+            mesh.SetUVs(0, md.UV);
             mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
+            
             go.GetComponent<MeshRenderer>().material = _settings.DefaultBoundary.Material;
             go.transform.position += Vector3.up * Order;
             return go;
         }
 
-        private void GetVertices(Vector2d tileMercPos, List<JSONObject> geoList, ref List<Vector3> verts, ref List<int> indices)
+        private void GetVertices(Vector2d tileMercPos, List<JSONObject> geoList, MeshData md)
         {
             foreach (var geo in geoList.Where(x => Query(x)))
             {
@@ -122,7 +122,7 @@ namespace MapzenGo.Models.Factories
                         var localMercPos = dotMerc - tileMercPos;
                         roadEnds.Add(localMercPos.ToVector3());
                     }
-                    CreateMesh(roadEnds, settings, ref verts, ref indices);
+                    CreateMesh(roadEnds, settings, md);
                     //yield return CreateRoadSegment(geo, roadEnds);
                 }
                 else if (geo["geometry"]["type"].str == "MultiLineString")
@@ -138,15 +138,15 @@ namespace MapzenGo.Models.Factories
                             var localMercPos = dotMerc - tileMercPos;
                             roadEnds.Add(localMercPos.ToVector3());
                         }
-                        CreateMesh(roadEnds, settings, ref verts, ref indices);
+                        CreateMesh(roadEnds, settings, md);
                     }
                 }
             }
         }
 
-        private void CreateMesh(List<Vector3> list, SettingsLayers.BoundarySettings settings, ref List<Vector3> verts, ref List<int> indices)
+        private void CreateMesh(List<Vector3> list, SettingsLayers.BoundarySettings settings, MeshData md)
         {
-            var vertsStartCount = verts.Count;
+            var vertsStartCount = md.Vertices.Count;
             Vector3 lastPos = Vector3.zero;
             var norm = Vector3.zero;
             for (int i = 1; i < list.Count; i++)
@@ -161,39 +161,39 @@ namespace MapzenGo.Models.Factories
                 {
                     lastPos = Vector3.Lerp(p1, p2, 0f);
                     norm = GetNormal(p1, lastPos, p2) * settings.Width;
-                    verts.Add(lastPos + norm);
-                    verts.Add(lastPos - norm);
+                    md.Vertices.Add(lastPos + norm);
+                    md.Vertices.Add(lastPos - norm);
                 }
 
                 lastPos = Vector3.Lerp(p1, p2, 1f);
                 norm = GetNormal(p1, lastPos, p3) * settings.Width;
-                verts.Add(lastPos + norm);
-                verts.Add(lastPos - norm);
+                md.Vertices.Add(lastPos + norm);
+                md.Vertices.Add(lastPos - norm);
             }
 
 
-            for (int j = vertsStartCount; j <= verts.Count - 3; j += 2)
+            for (int j = vertsStartCount; j <= md.Vertices.Count - 3; j += 2)
             {
-                var clock = Vector3.Cross(verts[j + 1] - verts[j], verts[j + 2] - verts[j + 1]);
+                var clock = Vector3.Cross(md.Vertices[j + 1] - md.Vertices[j], md.Vertices[j + 2] - md.Vertices[j + 1]);
                 if (clock.y < 0)
                 {
-                    indices.Add(j);
-                    indices.Add(j + 2);
-                    indices.Add(j + 1);
+                    md.Indices.Add(j);
+                    md.Indices.Add(j + 2);
+                    md.Indices.Add(j + 1);
 
-                    indices.Add(j + 1);
-                    indices.Add(j + 2);
-                    indices.Add(j + 3);
+                    md.Indices.Add(j + 1);
+                    md.Indices.Add(j + 2);
+                    md.Indices.Add(j + 3);
                 }
                 else
                 {
-                    indices.Add(j + 1);
-                    indices.Add(j + 2);
-                    indices.Add(j);
+                    md.Indices.Add(j + 1);
+                    md.Indices.Add(j + 2);
+                    md.Indices.Add(j);
 
-                    indices.Add(j + 3);
-                    indices.Add(j + 2);
-                    indices.Add(j + 1);
+                    md.Indices.Add(j + 3);
+                    md.Indices.Add(j + 2);
+                    md.Indices.Add(j + 1);
                 }
             }
         }

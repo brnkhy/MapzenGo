@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using MapzenGo.Models.Enums;
 using MapzenGo.Helpers;
+using TriangleNet;
+using TriangleNet.Geometry;
 using UniRx;
 using UnityEngine;
 
@@ -26,61 +28,55 @@ namespace MapzenGo.Models.Factories
             var go = new GameObject("water");
             var water = go.AddComponent<Water>();
             var mesh = water.GetComponent<MeshFilter>().mesh;
-            var verts = new List<Vector3>();
-            var indices = new List<int>();
+            var md = new MeshData();
 
-            water.Id = geo["properties"]["id"].ToString();
-            water.Name = "water";
-            water.Type = geo["type"].str;
-            water.Kind = geo["properties"]["kind"].str;
-            water.SortKey = (int)geo["properties"]["sort_key"].f;
-            water.GetComponent<MeshRenderer>().material = typeSettings.Material;
-            water.name = "water";
+            SetProperties(geo, water, typeSettings);
 
             foreach (var bb in geo["geometry"]["coordinates"].list)
             {
-                var waterCorners = new List<Vector3>();
                 var jo = (bb.list[0].list[0].IsArray) ? bb.list[0] : bb;
+                var count = jo.list.Count - 1;
+                if (count < 3)
+                    continue;
 
-                for (int i = 0; i < jo.list.Count - 1; i++)
+                var inp = new InputGeometry(count);
+
+                for (int i = 0; i < count; i++)
                 {
                     var c = jo.list[i];
                     var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
                     var localMercPos = dotMerc - tileMercPos;
-                    waterCorners.Add(localMercPos.ToVector3());
+                    inp.AddPoint(localMercPos.x, localMercPos.y);
+                    inp.AddSegment(i, (i + 1) % count);
                 }
-
-                try
-                {
-                    var waterCenter = waterCorners.Aggregate((acc, cur) => acc + cur) / waterCorners.Count;
-
-                    for (int i = 0; i < waterCorners.Count; i++)
-                    {
-                        waterCorners[i] = waterCorners[i] - waterCenter;
-                    }
-
-                    var tris = new Triangulator(waterCorners);
-                    var c = verts.Count;
-                    verts.AddRange(waterCorners.Select(x => x + waterCenter));
-                    indices.AddRange(tris.Triangulate().Select(x => c + x));
-                }
-                catch (Exception ex)
-                {
-                    Debug.Log(ex);
-                }
+                
+                CreateMesh(inp, md);
             }
 
-            mesh.vertices = verts.ToArray();
-            mesh.triangles = indices.ToArray();
+            mesh.vertices = md.Vertices.ToArray();
+            mesh.triangles = md.Indices.ToArray();
+            mesh.SetUVs(0, md.UV);
             mesh.RecalculateNormals();
 
             yield return water;
         }
 
+        private static void SetProperties(JSONObject geo, Water water, SettingsLayers.WaterSettings typeSettings)
+        {
+            water.Id = geo["properties"]["id"].ToString();
+            if (geo["properties"].HasField("name"))
+                water.Name = geo["properties"]["name"].str;
+            water.Type = geo["type"].str;
+            water.Kind = geo["properties"]["kind"].str;
+            water.SortKey = (int) geo["properties"]["sort_key"].f;
+            water.GetComponent<MeshRenderer>().material = typeSettings.Material;
+            water.name = "water";
+        }
+
         protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> items)
         {
             var main = new GameObject("Water Layer");
-            var meshes = new Dictionary<WaterType, Tuple<List<Vector3>, List<int>>>();
+            var meshes = new Dictionary<WaterType, MeshData>();
             foreach (var geo in items.Where(x => Query(x)))
             {
                 var kind = geo["properties"].HasField("kind")
@@ -94,64 +90,77 @@ namespace MapzenGo.Models.Factories
                     kind = WaterType.Water;
 
                 if (!meshes.ContainsKey(kind))
-                    meshes.Add(kind, new Tuple<List<Vector3>, List<int>>(new List<Vector3>(), new List<int>()));
-
+                    meshes.Add(kind, new MeshData());
 
                 foreach (var bb in geo["geometry"]["coordinates"].list)
                 {
-                    var waterCorners = new List<Vector3>();
                     var jo = (bb.list[0].list[0].IsArray) ? bb.list[0] : bb;
+                    var count = jo.list.Count - 1;
+                    if (count < 3)
+                        continue;
 
-                    for (int i = 0; i < jo.list.Count - 1; i++)
+                    var inp = new InputGeometry(count);
+
+                    for (int i = 0; i < count; i++)
                     {
                         var c = jo.list[i];
                         var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
                         var localMercPos = dotMerc - tileMercPos;
-                        waterCorners.Add(localMercPos.ToVector3());
+                        inp.AddPoint(localMercPos.x, localMercPos.y);
+                        inp.AddSegment(i, (i + 1) % count);
                     }
-
+                    
                     //create mesh, actually just to get vertice&indices
                     //filling last two parameters, horrible call yea
-                    CreateMesh(waterCorners, meshes[kind].Item1, meshes[kind].Item2);
+                    CreateMesh(inp, meshes[kind]);
 
                     //unity cant handle more than 65k on single mesh
                     //so we'll finish current and start a new one
-                    if (meshes[kind].Item1.Count > 64000 || meshes[kind].Item2.Count > 64000)
+                    if (meshes[kind].Vertices.Count > 64000)
                     {
-                        CreateGameObject(kind, meshes[kind].Item1, meshes[kind].Item2, main);
-                        meshes[kind].Item1.Clear();
-                        meshes[kind].Item2.Clear();
+                        CreateGameObject(kind, meshes[kind], main.transform);
+                        meshes[kind] = new MeshData();
                     }
                 }
             }
 
             foreach (var group in meshes)
             {
-                CreateGameObject(group.Key, group.Value.Item1, group.Value.Item2, main);
+                CreateGameObject(group.Key, group.Value, main.transform);
             }
 
             return main;
         }
-
-        private void CreateMesh(List<Vector3> corners, List<Vector3> verts, List<int> indices)
+        
+        private void CreateMesh(InputGeometry corners, MeshData meshdata)
         {
-            var tris = new Triangulator(corners);
-            var vertsStartCount = verts.Count;
-            verts.AddRange(corners.Select(x => new Vector3(x.x, 0, x.z)).ToList());
-            indices.AddRange(tris.Triangulate().Select(x => vertsStartCount + x));
+            var mesh = new TriangleNet.Mesh();
+            mesh.Behavior.Algorithm = TriangulationAlgorithm.SweepLine;
+            mesh.Behavior.Quality = true;
+            mesh.Triangulate(corners);
+
+            var vertsStartCount = meshdata.Vertices.Count;
+            meshdata.Vertices.AddRange(corners.Points.Select(x => new Vector3((float)x.X, 0, (float)x.Y)).ToList());
+
+            foreach (var tri in mesh.Triangles)
+            {
+                meshdata.Indices.Add(vertsStartCount + tri.P1);
+                meshdata.Indices.Add(vertsStartCount + tri.P0);
+                meshdata.Indices.Add(vertsStartCount + tri.P2);
+            }
         }
 
-        private void CreateGameObject(WaterType kind, List<Vector3> vertices, List<int> indices, GameObject main)
+        private void CreateGameObject(WaterType kind, MeshData meshdata, Transform parent)
         {
             var go = new GameObject(kind + " Waters");
             var mesh = go.AddComponent<MeshFilter>().mesh;
             go.AddComponent<MeshRenderer>();
-            mesh.vertices = vertices.ToArray();
-            mesh.triangles = indices.ToArray();
+            mesh.vertices = meshdata.Vertices.ToArray();
+            mesh.triangles = meshdata.Indices.ToArray();
             mesh.RecalculateNormals();
             go.GetComponent<MeshRenderer>().material = _settings.GetSettingsFor(kind).Material;
             go.transform.position += Vector3.up * Order;
-            go.transform.SetParent(main.transform, true);
+            go.transform.SetParent(parent, true);
         }
     }
 }
