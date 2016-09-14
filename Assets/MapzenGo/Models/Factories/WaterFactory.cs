@@ -80,7 +80,7 @@ namespace MapzenGo.Models.Factories
 
         protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> items)
         {
-            var main = new GameObject("Buildings Layer");
+            var main = new GameObject("Water Layer");
             var meshes = new Dictionary<WaterType, Tuple<List<Vector3>, List<int>>>();
             foreach (var geo in items.Where(x => Query(x)))
             {
