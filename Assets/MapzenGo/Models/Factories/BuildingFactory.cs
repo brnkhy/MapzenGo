@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Linq;
 using MapzenGo.Helpers;
 using MapzenGo.Models.Enums;
+using TriangleNet;
+using TriangleNet.Geometry;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
@@ -11,30 +13,17 @@ using Random = UnityEngine.Random;
 
 namespace MapzenGo.Models.Factories
 {
-    public class TileBuilding
-    {
-        public TileBuilding(BuildingType kind)
-        {
-            Kind = kind;
-            Vertices = new List<Vector3>();
-            Indices = new List<int>();
-            UV = new List<Vector2>();
-        }
-
-        public BuildingType Kind { get; set; }
-        public List<Vector3> Vertices { get; set; }
-        public List<int> Indices { get; set; }
-        public List<Vector2> UV { get; set; }
-    }
-
     public class BuildingFactory : Factory
     {
         public override string XmlTag { get { return "buildings"; } }
         private HashSet<string> _active = new HashSet<string>();
 
+        private TriangleNet.Mesh _mesh; 
+
         public override void Start()
         {
             base.Start();
+            _mesh = new TriangleNet.Mesh();
             Query = (geo) => geo["geometry"]["type"].str == "Polygon";
         }
 
@@ -80,7 +69,7 @@ namespace MapzenGo.Models.Factories
                     height = geo["properties"].HasField("height") ? geo["properties"]["height"].f : Random.Range(typeSettings.MinimumBuildingHeight, typeSettings.MaximumBuildingHeight);
                 }
 
-                var tb = new TileBuilding(kind);
+                var tb = new MeshData();
                 CreateMesh(buildingCorners, height, typeSettings, tb, new Vector2(minx, miny), new Vector2(maxx - minx, maxy - miny));
 
                 mesh.vertices = tb.Vertices.ToArray();
@@ -104,8 +93,8 @@ namespace MapzenGo.Models.Factories
 
             var main = new GameObject("Buildings Layer");
 
-            var finalList = new List<TileBuilding>();
-            var openList = new Dictionary<BuildingType, TileBuilding>();
+            var finalList = new Dictionary<BuildingType, MeshData>();
+            var openList = new Dictionary<BuildingType, MeshData>();
 
             foreach (var geo in items.Where(x => Query(x)))
             {
@@ -127,7 +116,7 @@ namespace MapzenGo.Models.Factories
                     kind = BuildingType.Unknown;
 
                 if (!openList.ContainsKey(kind))
-                    openList.Add(kind, new TileBuilding(kind));
+                    openList.Add(kind, new MeshData());
 
                 var buildingCorners = new List<Vector3>();
                 //foreach (var bb in geo["geometry"]["coordinates"].list)z
@@ -160,28 +149,29 @@ namespace MapzenGo.Models.Factories
                 //so we'll finish current and start a new one
                 if (openList[kind].Vertices.Count > 64000)
                 {
-                    var tb = new TileBuilding(kind);
-                    tb.Vertices.AddRange(openList[kind].Vertices);
-                    tb.Indices.AddRange(openList[kind].Indices);
-                    tb.UV.AddRange(openList[kind].UV);
-                    finalList.Add(tb);
-                    openList[kind] = new TileBuilding(kind);
+                    //var tb = new MeshData();
+                    //tb.Vertices.AddRange(openList[kind].Vertices);
+                    //tb.Indices.AddRange(openList[kind].Indices);
+                    //tb.UV.AddRange(openList[kind].UV);
+                    //finalList.Add(kind, tb);
+                    CreateGameObject(kind, openList[kind], main);
+                    openList[kind] = new MeshData();
                 }
                 //}
             }
 
             foreach (var tuple in openList)
             {
-                var tb = new TileBuilding(tuple.Key);
+                var tb = new MeshData();
                 tb.Vertices.AddRange(tuple.Value.Vertices);
                 tb.Indices.AddRange(tuple.Value.Indices);
                 tb.UV.AddRange(tuple.Value.UV);
-                finalList.Add(tb);
+                finalList.Add(tuple.Key, tb);
             }
 
             foreach (var group in finalList)
             {
-                CreateGameObject(group.Kind, group, main);
+                CreateGameObject(group.Key, group.Value, main);
             }
             return main;
         }
@@ -222,12 +212,32 @@ namespace MapzenGo.Models.Factories
             building.Type = typeSettings.Type.ToString();
             building.GetComponent<MeshRenderer>().material = typeSettings.Material;
         }
-        private void CreateMesh(List<Vector3> corners, float height, SettingsLayers.BuildingSettings typeSettings, TileBuilding data, Vector2 min, Vector2 size)
+
+        private void CreateMesh(List<Vector3> corners, float height, SettingsLayers.BuildingSettings typeSettings, MeshData data, Vector2 min, Vector2 size)
         {
-            var tris = new Triangulator(corners);
+            _mesh = new TriangleNet.Mesh();
+
+            var inp = new InputGeometry(corners.Count);
+
+            for (int i = 0; i < corners.Count; i++)
+            {
+                var v = corners[i];
+                inp.AddPoint(v.x, v.z);
+                inp.AddSegment(i, (i + 1) % corners.Count);
+            }
+            _mesh.Behavior.Algorithm = TriangulationAlgorithm.SweepLine;
+            _mesh.Behavior.Quality = true;
+            _mesh.Triangulate(inp);
+
             var vertsStartCount = data.Vertices.Count;
             data.Vertices.AddRange(corners.Select(x => new Vector3(x.x, height, x.z)).ToList());
-            data.Indices.AddRange(tris.Triangulate().Select(x => vertsStartCount + x));
+
+            foreach (var tri in _mesh.Triangles)
+            {
+                data.Indices.Add(vertsStartCount + tri.P1);
+                data.Indices.Add(vertsStartCount + tri.P0);
+                data.Indices.Add(vertsStartCount + tri.P2);
+            }
 
             foreach (var c in corners)
             {
@@ -260,7 +270,7 @@ namespace MapzenGo.Models.Factories
                     data.Indices.Add(ind);
                     data.Indices.Add(ind + 2);
                     data.Indices.Add(ind + 1);
-                    
+
                     data.Indices.Add(ind + 1);
                     data.Indices.Add(ind + 2);
                     data.Indices.Add(ind + 3);
@@ -284,13 +294,14 @@ namespace MapzenGo.Models.Factories
                 data.Indices.Add(ind);
                 data.Indices.Add(ind + 1);
                 data.Indices.Add(ind + 2);
-                
+
                 data.Indices.Add(ind + 1);
                 data.Indices.Add(ind + 3);
                 data.Indices.Add(ind + 2);
             }
         }
-        private void CreateGameObject(BuildingType kind, TileBuilding data, GameObject main)
+
+        private void CreateGameObject(BuildingType kind, MeshData data, GameObject main)
         {
             var go = new GameObject(kind + " Buildings");
             var mesh = go.AddComponent<MeshFilter>().mesh;
