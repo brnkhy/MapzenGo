@@ -8,7 +8,24 @@ namespace MapzenGo.Models.Plugins
 {
     public class MapImagePlugin : Plugin
     {
-        public string MapImageUrlBase = "http://b.tile.openstreetmap.org/";
+        public enum TileServices
+        {
+            Default,
+            Satellite,
+            Terrain,
+            Toner,
+            Watercolor
+        }
+
+        public TileServices TileService = TileServices.Default;
+
+        private string[] TileServiceUrls = new string[] {
+            "http://b.tile.openstreetmap.org/",
+            "http://b.tile.openstreetmap.us/usgs_large_scale/",
+            "http://tile.stamen.com/terrain-background/",
+            "http://a.tile.stamen.com/toner/",
+            "https://stamen-tiles.a.ssl.fastly.net/watercolor/"
+        };
 
         public override void Create(Tile tile)
         {
@@ -24,7 +41,7 @@ namespace MapzenGo.Models.Plugins
             var rend = go.GetComponent<Renderer>();
             rend.material = tile.Material;
 
-            var url = MapImageUrlBase + tile.Zoom + "/" + tile.TileTms.x + "/" + tile.TileTms.y + ".png";
+            var url = TileServiceUrls[(int)TileService] + tile.Zoom + "/" + tile.TileTms.x + "/" + tile.TileTms.y + ".png";
             ObservableWWW.GetWWW(url).Subscribe(
                 success =>
                 {
