@@ -1,4 +1,5 @@
 ﻿using MapzenGo.Helpers;
+using MapzenGo.Models;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -12,8 +13,10 @@ public class dummy : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        GameObject.Find("inpLat").gameObject.GetComponent<InputField>().text = 33.8301f.ToString();
-        GameObject.Find("inpLon").gameObject.GetComponent<InputField>().text = (-84.265f).ToString();
+        TileManager tm = GetComponent<TileManager>();
+
+        GameObject.Find("inpLat").gameObject.GetComponent<InputField>().text = tm.Latitude.ToString();  //33.8301f.ToString();
+        GameObject.Find("inpLon").gameObject.GetComponent<InputField>().text = tm.Longitude.ToString(); //(-84.265f).ToString();
     }
 
     // Update is called once per frame

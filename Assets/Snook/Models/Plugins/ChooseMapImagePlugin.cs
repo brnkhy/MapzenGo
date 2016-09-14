@@ -1,15 +1,42 @@
 ﻿using Assets.MapzenGo.Models.Plugins;
+using MapzenGo.Models;
 using MapzenGo.Models.Plugins;
+
+using MapzenGo.Models.Plugins;
+
 using System;
 using System.Collections.Generic;
 using UniRx;
+using UnityEditor;
 using UnityEngine;
 
-namespace MapzenGo.Models.Plugins
+namespace Snook.Models.Plugins
 {
-    public class MapImagePlugin : Plugin
+    public class ChooseMapImagePlugin : Plugin
     {
-        public string MapImageUrlBase = "http://b.tile.openstreetmap.org/";
+        //public string MapImageUrlBase = "http://b.tile.openstreetmap.org/";
+        public enum TileServices
+        {
+            Default,
+            Satellite,
+            Terrain,
+            Toner,
+            Watercolor
+        }
+
+        public TileServices TileService = TileServices.Default;
+
+        private string[] TileServiceUrls = new string[] {
+            "http://b.tile.openstreetmap.org/",
+            "http://b.tile.openstreetmap.us/usgs_large_scale/",
+            "http://tile.stamen.com/terrain-background/",
+            "http://a.tile.stamen.com/toner/",
+            "https://stamen-tiles.a.ssl.fastly.net/watercolor/"
+        };
+
+        private void Start()
+        {
+        }
 
         public override void Create(Tile tile)
         {
@@ -21,11 +48,14 @@ namespace MapzenGo.Models.Plugins
             go.localScale = new Vector3((float)tile.Rect.Width, (float)tile.Rect.Width, 1);
             go.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
             go.localPosition = Vector3.zero;
+            //go.localPosition -= new Vector3(0, 1, 0);
             go.localPosition -= new Vector3(0, 0, 0);
             var rend = go.GetComponent<Renderer>();
             rend.material = tile.Material;
 
-            var url = MapImageUrlBase + tile.Zoom + "/" + tile.TileTms.x + "/" + tile.TileTms.y + ".png";
+            //var url = MapImageUrlBase + tile.Zoom + "/" + tile.TileTms.x + "/" + tile.TileTms.y + ".png";
+            var url = TileServiceUrls[(int)TileService] + tile.Zoom + "/" + tile.TileTms.x + "/" + tile.TileTms.y + ".png";
+
             ObservableWWW.GetWWW(url).Subscribe(
                 success =>
                 {
