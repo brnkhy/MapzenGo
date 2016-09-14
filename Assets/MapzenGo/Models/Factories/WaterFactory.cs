@@ -11,11 +11,10 @@ namespace MapzenGo.Models.Factories
     public class WaterFactory : Factory
     {
         public override string XmlTag { get { return "water"; } }
-        [SerializeField]
-        private Water.Settings _settings;
-
+        
         public override void Start()
         {
+            base.Start();
             Query = (geo) => geo["geometry"]["type"].str == "Polygon" || geo["geometry"]["type"].str == "MultiPolygon";
         }
 

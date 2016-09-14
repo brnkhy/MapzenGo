@@ -69,7 +69,7 @@ namespace MapzenGo.Models.Enums
         Prison,
         ProtectedArea,
         Quarry,
-        Railway,
+        RailwayType,
         RecreationGround,
         RecreationTrack,
         Residential,
