@@ -13,7 +13,7 @@ namespace MapzenGo.Models.Enums
         Ocean,
         Playa,
         Riverbank,
-        SwimmingPool,
+        Swimming_Pool,
         Water,
     }
 }
