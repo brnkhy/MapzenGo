@@ -1,0 +1,10 @@
+ProjecSettings
+Library
+Temp
+.vs
+
+*.asset
+ProjectSettings/ProjectVersion.txt
+MapzenGo.sln
+*.csproj
+*.meta
