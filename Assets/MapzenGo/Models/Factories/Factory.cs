@@ -9,6 +9,7 @@ namespace MapzenGo.Models.Factories
     public class Factory : Plugin
     {
         public bool MergeMeshes;
+        public bool JustDrawEverythingFam = false;
         public float Order = 1;
         public virtual string XmlTag {get { return ""; } }
         public virtual Func<JSONObject, bool> Query { get; set; }
