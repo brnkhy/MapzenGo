@@ -22,78 +22,78 @@ namespace MapzenGo.Models.Factories
         protected override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
         {
             var kind = geo["properties"]["kind"].str.ConvertToEnum<RoadType>();
-            if (_settings.HasSettingsFor(kind))
-            {
-                var typeSettings = _settings.GetSettingsFor(kind);
+            if (!_settings.HasSettingsFor(kind) && !JustDrawEverythingFam)
+                yield break;
 
-                if (geo["geometry"]["type"].str == "LineString")
+            var typeSettings = _settings.GetSettingsFor(kind);
+
+            if (geo["geometry"]["type"].str == "LineString")
+            {
+                var road = new GameObject("road").AddComponent<Road>();
+                var mesh = road.GetComponent<MeshFilter>().mesh;
+                var roadEnds = new List<Vector3>();
+                var md = new MeshData();
+
+                for (var i = 0; i < geo["geometry"]["coordinates"].list.Count; i++)
                 {
-                    var road = new GameObject("road").AddComponent<Road>();
+                    var c = geo["geometry"]["coordinates"][i];
+                    var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
+                    var localMercPos = dotMerc - tileMercPos;
+                    roadEnds.Add(localMercPos.ToVector3());
+                }
+
+                CreateMesh(roadEnds, typeSettings, md);
+
+                mesh.vertices = md.Vertices.ToArray();
+                mesh.triangles = md.Indices.ToArray();
+                mesh.SetUVs(0, md.UV);
+                mesh.RecalculateNormals();
+
+                road.GetComponent<MeshRenderer>().material = typeSettings.Material;
+
+                road.Id = geo["properties"]["id"].ToString();
+                road.Type = geo["type"].str;
+                road.Kind = geo["properties"]["kind"].str;
+                road.SortKey = (int)geo["properties"]["sort_key"].f;
+                if (geo["properties"].HasField("name"))
+                    road.Name = geo["properties"]["name"].str;
+
+                road.transform.position += Vector3.up * road.SortKey / 100;
+                yield return road;
+            }
+            else if (geo["geometry"]["type"].str == "MultiLineString")
+            {
+                for (var i = 0; i < geo["geometry"]["coordinates"].list.Count; i++)
+                {
+                    var road = new GameObject("Roads").AddComponent<Road>();
                     var mesh = road.GetComponent<MeshFilter>().mesh;
                     var roadEnds = new List<Vector3>();
                     var md = new MeshData();
 
-                    for (var i = 0; i < geo["geometry"]["coordinates"].list.Count; i++)
+                    roadEnds.Clear();
+                    var c = geo["geometry"]["coordinates"][i];
+                    for (var j = 0; j < c.list.Count; j++)
                     {
-                        var c = geo["geometry"]["coordinates"][i];
-                        var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
+                        var seg = c[j];
+                        var dotMerc = GM.LatLonToMeters(seg[1].f, seg[0].f);
                         var localMercPos = dotMerc - tileMercPos;
                         roadEnds.Add(localMercPos.ToVector3());
                     }
 
-                    CreateMesh(roadEnds, typeSettings, md);
+                    SetProperties(geo, road);
 
+                    CreateMesh(roadEnds, typeSettings, md);
                     mesh.vertices = md.Vertices.ToArray();
                     mesh.triangles = md.Indices.ToArray();
                     mesh.SetUVs(0, md.UV);
                     mesh.RecalculateNormals();
-                    
+
                     road.GetComponent<MeshRenderer>().material = typeSettings.Material;
 
-                    road.Id = geo["properties"]["id"].ToString();
-                    road.Type = geo["type"].str;
-                    road.Kind = geo["properties"]["kind"].str;
-                    road.SortKey = (int)geo["properties"]["sort_key"].f;
-                    if (geo["properties"].HasField("name"))
-                        road.Name = geo["properties"]["name"].str;
 
-                    road.transform.position += Vector3.up*road.SortKey/100;
+
+                    road.transform.position += Vector3.up * road.SortKey / 100;
                     yield return road;
-                }
-                else if (geo["geometry"]["type"].str == "MultiLineString")
-                {
-                    for (var i = 0; i < geo["geometry"]["coordinates"].list.Count; i++)
-                    {
-                        var road = new GameObject("Roads").AddComponent<Road>();
-                        var mesh = road.GetComponent<MeshFilter>().mesh;
-                        var roadEnds = new List<Vector3>();
-                        var md = new MeshData();
-
-                        roadEnds.Clear();
-                        var c = geo["geometry"]["coordinates"][i];
-                        for (var j = 0; j < c.list.Count; j++)
-                        {
-                            var seg = c[j];
-                            var dotMerc = GM.LatLonToMeters(seg[1].f, seg[0].f);
-                            var localMercPos = dotMerc - tileMercPos;
-                            roadEnds.Add(localMercPos.ToVector3());
-                        }
-
-                        SetProperties(geo, road);
-
-                        CreateMesh(roadEnds, typeSettings, md);
-                        mesh.vertices = md.Vertices.ToArray();
-                        mesh.triangles = md.Indices.ToArray();
-                        mesh.SetUVs(0, md.UV);
-                        mesh.RecalculateNormals();
-                        
-                        road.GetComponent<MeshRenderer>().material = typeSettings.Material;
-
-                        
-
-                        road.transform.position += Vector3.up*road.SortKey/100;
-                        yield return road;
-                    }
                 }
             }
         }
@@ -103,7 +103,7 @@ namespace MapzenGo.Models.Factories
             road.Id = geo["properties"]["id"].ToString();
             road.Type = geo["type"].str;
             road.Kind = geo["properties"]["kind"].str;
-            road.SortKey = (int) geo["properties"]["sort_key"].f;
+            road.SortKey = (int)geo["properties"]["sort_key"].f;
             if (geo["properties"].HasField("name"))
                 road.Name = geo["properties"]["name"].str;
         }
@@ -131,7 +131,7 @@ namespace MapzenGo.Models.Factories
             foreach (var geo in geoList.Where(x => Query(x)))
             {
                 var kind = geo["properties"]["kind"].str.ConvertToEnum<RoadType>();
-                if (!_settings.HasSettingsFor(kind))
+                if (!_settings.HasSettingsFor(kind) && JustDrawEverythingFam)
                     continue;
 
                 var settings = _settings.GetSettingsFor(kind);
@@ -204,17 +204,17 @@ namespace MapzenGo.Models.Factories
                     md.Indices.Add(j);
                     md.Indices.Add(j + 2);
                     md.Indices.Add(j + 1);
-                    
+
                     md.Indices.Add(j + 1);
                     md.Indices.Add(j + 2);
                     md.Indices.Add(j + 3);
-                }               
-                else            
-                {               
+                }
+                else
+                {
                     md.Indices.Add(j + 1);
                     md.Indices.Add(j + 2);
                     md.Indices.Add(j);
-                               
+
                     md.Indices.Add(j + 3);
                     md.Indices.Add(j + 2);
                     md.Indices.Add(j + 1);

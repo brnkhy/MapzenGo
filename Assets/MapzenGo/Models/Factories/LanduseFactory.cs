@@ -22,55 +22,56 @@ namespace MapzenGo.Models.Factories
         protected override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
         {
             var kind = geo["properties"]["kind"].str.ConvertToEnum<LanduseKind>();
-            if (kind != LanduseKind.Unknown && _settings.HasSettingsFor(kind))
+
+            if (!_settings.HasSettingsFor(kind) && !JustDrawEverythingFam)
+                yield break;
+
+            var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
+            if (bb == null || bb.list == null)
+                yield break;
+
+            var count = bb.list.Count - 1;
+            if (count < 3)
+                yield break;
+
+            var inp = new InputGeometry(count);
+            for (var i = 0; i < count; i++)
             {
-                var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
-                if (bb == null || bb.list == null)
-                    yield break;
-
-                var count = bb.list.Count - 1;
-                if (count < 3)
-                    yield break;
-
-                var inp = new InputGeometry(count);
-                for (var i = 0; i < count; i++)
-                {
-                    var c = bb.list[i];
-                    var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                    var localMercPos = dotMerc - tileMercPos;
-                    inp.AddPoint(localMercPos.x, localMercPos.y);
-                    inp.AddSegment(i, (i + 1) % count);
-                }
-
-                var landuse = new GameObject("Landuse").AddComponent<Landuse>();
-                var md = new MeshData();
-                var mesh = landuse.GetComponent<MeshFilter>().mesh;
-
-                SetProperties(geo, landuse, kind);
-                CreateMesh(inp, md);
-
-                //I want object center to be in the middle of object, not at the corner of the tile
-                var landuseCenter = ChangeToRelativePositions(md.Vertices);
-                landuse.transform.localPosition = landuseCenter;
-                
-                mesh.vertices = md.Vertices.ToArray();
-                mesh.triangles = md.Indices.ToArray();
-                mesh.SetUVs(0, md.UV);
-                mesh.RecalculateNormals();
-
-                yield return landuse;
+                var c = bb.list[i];
+                var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
+                var localMercPos = dotMerc - tileMercPos;
+                inp.AddPoint(localMercPos.x, localMercPos.y);
+                inp.AddSegment(i, (i + 1) % count);
             }
+
+            var landuse = new GameObject("Landuse").AddComponent<Landuse>();
+            var md = new MeshData();
+            var mesh = landuse.GetComponent<MeshFilter>().mesh;
+
+            SetProperties(geo, landuse, kind);
+            CreateMesh(inp, md);
+
+            //I want object center to be in the middle of object, not at the corner of the tile
+            var landuseCenter = ChangeToRelativePositions(md.Vertices);
+            landuse.transform.localPosition = landuseCenter;
+
+            mesh.vertices = md.Vertices.ToArray();
+            mesh.triangles = md.Indices.ToArray();
+            mesh.SetUVs(0, md.UV);
+            mesh.RecalculateNormals();
+
+            yield return landuse;
         }
 
         protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> items)
         {
             var main = new GameObject("Landuse Layer");
-            
+
             var _meshes = new Dictionary<LanduseKind, MeshData>();
             foreach (var geo in items.Where(x => Query(x)))
             {
                 var kind = geo["properties"]["kind"].str.ConvertToEnum<LanduseKind>();
-                if (!_settings.HasSettingsFor(kind))
+                if (!_settings.HasSettingsFor(kind) && JustDrawEverythingFam)
                     continue;
 
                 var typeSettings = _settings.GetSettingsFor(kind);
@@ -80,7 +81,7 @@ namespace MapzenGo.Models.Factories
                 //foreach (var bb in geo["geometry"]["coordinates"].list)
                 //{
                 var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
-                var count = bb.list.Count -1;
+                var count = bb.list.Count - 1;
 
                 if (count < 3)
                     continue;
@@ -113,7 +114,7 @@ namespace MapzenGo.Models.Factories
 
             return main;
         }
-        
+
         private Vector3 ChangeToRelativePositions(List<Vector3> landuseCorners)
         {
             var landuseCenter = landuseCorners.Aggregate((acc, cur) => acc + cur) / landuseCorners.Count;
