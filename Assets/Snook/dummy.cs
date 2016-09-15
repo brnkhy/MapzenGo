@@ -23,6 +23,14 @@ public class dummy : MonoBehaviour
     private void FixedUpdate()
     {
         // Run();
+        if (this._destination != null)
+        {
+            Rigidbody rgd = GameObject.Find("ThirdPersonController").gameObject.GetComponent<Rigidbody>();
+            var player = GameObject.Find("ThirdPersonController").gameObject.GetComponent<ThirdPersonCharacter>();
+            ////rgd.MovePosition(dest);
+            //player.Move(_destination, false, false);
+            rgd.position = Vector3.MoveTowards(rgd.position, _destination, Time.deltaTime * 100);
+        }
     }
 
     private void Update()
@@ -33,46 +41,56 @@ public class dummy : MonoBehaviour
             GameObject.Find("inpLat").gameObject.GetComponent<InputField>().text = gps.Lattitude.ToString();
             GameObject.Find("inpLon").gameObject.GetComponent<InputField>().text = gps.Longitude.ToString();
         }
-
-        if (this._destination != null)
-        {
-            //Rigidbody rgd = GameObject.Find("ThirdPersonController").gameObject.GetComponent<Rigidbody>();
-            ////rgd.MovePosition(dest);
-            //rgd.position = Vector3.MoveTowards(rgd.position, _destination, Time.deltaTime * 10);
-        }
     }
 
     public void Run()
     {
-        Rigidbody rgd = GameObject.Find("ThirdPersonController").gameObject.GetComponent<Rigidbody>();
-        //rgd.MovePosition(dest);
-        rgd.position = Vector3.MoveTowards(rgd.position, _destination, Time.deltaTime * 10);
+        //Rigidbody rgd = GameObject.Find("ThirdPersonController").gameObject.GetComponent<Rigidbody>();
+        //Rigidbody rgd = GameObject.Find("ThirdPersonController").gameObject.GetComponent<Rigidbody>();
+        ////rgd.MovePosition(dest);
+        //rgd.position = Vector3.MoveTowards(rgd.position, _destination, Time.deltaTime * 10);
     }
 
     public void Move()
     {
+        var tm = GameObject.Find("World").GetComponent<TileManager>();
+
+        int zoom = 18;
         float lat = float.Parse(GameObject.Find("inpLat").gameObject.GetComponent<InputField>().text);
         float lon = float.Parse(GameObject.Find("inpLon").gameObject.GetComponent<InputField>().text);
-        Vector2d destPost = GM.LatLonToMeters(lat, lon); //33.8301, -84.265
-        Vector2d tileMercPos = GM.MetersToTile(destPost, 19);
-        Vector2d temp;
-        try
-        {
-            Vector3 t = GameObject.Find("Tile " + (int)tileMercPos.x + "-" + (int)tileMercPos.y).gameObject.transform.position;
-            temp.x = t.x;
-            temp.y = t.z;
 
-            Vector2d pixels = GM.MetersToPixels(destPost - temp, 19);
-            _destination = pixels.ToVector3();
-            Debug.Log("_destination.x: " + _destination.x);
-            Debug.Log("_destination.y: " + _destination.y);
-            Debug.Log("_destination.z: " + _destination.z);
-        }
-        catch (NullReferenceException e)
-        {
-            Debug.Log(e.Message);
-            ///Debug.Break();
-        }
+        Vector2d startMerc = GM.LatLonToMeters(tm.Latitude, tm.Longitude);
+
+        Vector2d destMerc = GM.LatLonToMeters(lat, lon); //33.8301, -84.265
+        Vector2d localMerc = destMerc - startMerc;
+        _destination = localMerc.ToVector3();
+        Debug.Log("_destination.x: " + _destination.x);
+        Debug.Log("_destination.y: " + _destination.y);
+        Debug.Log("_destination.z: " + _destination.z);
+
+        //Vector2d destpixels = GM.MetersToPixels(startMerc - destMerc, zoom);
+
+        //Vector2d tileMercPos = GM.MetersToTile(destMerc, zoom);
+        //Vector2d temp;
+        //try
+        //{
+        //    string fu = "tile " + (int)tileMercPos.x + "-" + (int)tileMercPos.y;
+        //    GameObject go = GameObject.Find(fu);
+        //    Vector3 t = go.gameObject.transform.position;
+        //    temp.x = tileMercPos.x;
+        //    temp.y = tileMercPos.y;
+
+        //    Vector2d pixels = GM.MetersToPixels(destMerc - tileMercPos, zoom);
+        //    _destination = pixels.ToVector3();
+        //    Debug.Log("_destination.x: " + _destination.x);
+        //    Debug.Log("_destination.y: " + _destination.y);
+        //    Debug.Log("_destination.z: " + _destination.z);
+        //}
+        //catch (NullReferenceException e)
+        //{
+        //    Debug.Log(e.Message);
+        //    ///Debug.Break();
+        //}
         //var dotMerc = GM.LatLonToMeters(seg[1].f, seg[0].f);
         //var localMercPos = dotMerc - tileMercPos;
         //roadEnds.Add(localMercPos.ToVector3());
