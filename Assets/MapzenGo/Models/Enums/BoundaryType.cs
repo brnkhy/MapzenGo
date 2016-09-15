@@ -8,8 +8,8 @@ namespace MapzenGo.Models.Enums
     public enum BoundaryType
     {
         Unknown,
-        AboriginalLands,
-        CityWall,
+        Aboriginal_Lands,
+        City_Wall,
         Country,
         County,
         Dam,
@@ -17,13 +17,13 @@ namespace MapzenGo.Models.Enums
         Fence,
         Indefinite,
         Indeterminate,
-        LeaseLimit,
-        LineOfControl,
+        Lease_Limit,
+        Line_Of_Control,
         Macroregion,
         Municipality,
-        OverlayLimit,
-        RetainingWall,
-        SnowFence,
+        Overlay_Limit,
+        Retaining_Wall,
+        Snow_Fence,
         State
     }
 }
