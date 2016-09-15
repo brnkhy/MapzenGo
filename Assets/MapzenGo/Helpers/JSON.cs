@@ -4,6 +4,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 
 /*
  * http://www.opensource.org/licenses/lgpl-2.1.php
@@ -46,12 +47,14 @@ public class JSONObject
         }
     }
 #else
-	public double n;
-	public float f {
-		get {
-			return (float)n;
-		}
-	}
+    public double n;
+    public float f
+    {
+        get
+        {
+            return (float)n;
+        }
+    }
 #endif
     public bool b;
     public delegate void AddJSONConents(JSONObject self);
@@ -174,15 +177,21 @@ public class JSONObject
                     type = Type.NUMBER;
                     n = float.NaN;
 #else
-				} else if(str == INFINITY) {
-					type = Type.NUMBER;
-					n = double.PositiveInfinity;
-				} else if(str == NEGINFINITY) {
-					type = Type.NUMBER;
-					n = double.NegativeInfinity;
-				} else if(str == NaN) {
-					type = Type.NUMBER;
-					n = double.NaN;
+                }
+                else if (str == INFINITY)
+                {
+                    type = Type.NUMBER;
+                    n = double.PositiveInfinity;
+                }
+                else if (str == NEGINFINITY)
+                {
+                    type = Type.NUMBER;
+                    n = double.NegativeInfinity;
+                }
+                else if (str == NaN)
+                {
+                    type = Type.NUMBER;
+                    n = double.NaN;
 #endif
                 }
                 else if (str[0] == '"')
@@ -192,17 +201,24 @@ public class JSONObject
                 }
                 else
                 {
-                    try
-                    {
+
 #if USEFLOAT
-                        n = System.Convert.ToSingle(str);
+                        if (float.TryParse(str, , NumberStyles.Float, CultureInfo.InvariantCulture, out n))
+                        {
+                            type = Type.NUMBER;
+                        }
+                        else
+                        {                
 #else
-						n = System.Convert.ToDouble(str);				 
-#endif
+                    if (double.TryParse(str, NumberStyles.Float, CultureInfo.InvariantCulture, out n))
+                    {
                         type = Type.NUMBER;
                     }
-                    catch (System.FormatException)
+                    else
                     {
+
+#endif
+
                         int token_tmp = 1;
                         /*
                          * Checking for the following formatting (www.json.org)
@@ -389,7 +405,8 @@ public class JSONObject
     public bool GetField(ref float field, string name, float fallback)
     {
 #else
-	public bool GetField(ref double field, string name, double fallback) {
+    public bool GetField(ref double field, string name, double fallback)
+    {
 #endif
         if (GetField(ref field, name)) { return true; }
         field = fallback;
@@ -399,7 +416,8 @@ public class JSONObject
     public bool GetField(ref float field, string name, FieldNotFound fail = null)
     {
 #else
-	public bool GetField(ref double field, string name, FieldNotFound fail = null) {
+    public bool GetField(ref double field, string name, FieldNotFound fail = null)
+    {
 #endif
         if (type == Type.OBJECT)
         {
@@ -609,12 +627,12 @@ public class JSONObject
                 else if (float.IsNaN(n))
                     str = NaN;
 #else
-				if(double.IsInfinity(n))
-					str = INFINITY;
-				else if(double.IsNegativeInfinity(n))
-					str = NEGINFINITY;
-				else if(double.IsNaN(n))
-					str = NaN;
+                if (double.IsInfinity(n))
+                    str = INFINITY;
+                else if (double.IsNegativeInfinity(n))
+                    str = NEGINFINITY;
+                else if (double.IsNaN(n))
+                    str = NaN;
 #endif
                 else
                     str += n;
