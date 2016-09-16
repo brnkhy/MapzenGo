@@ -27,7 +27,7 @@ namespace MapzenGo.Models.Factories
             Query = (geo) => geo["geometry"]["type"].str == "Polygon";
         }
 
-        protected override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
+        protected override IEnumerable<MonoBehaviour> Create(Tile tile, JSONObject geo)
         {
             var key = geo["properties"]["id"].ToString();
             var kind = geo["properties"].HasField("landuse_kind")
@@ -35,6 +35,9 @@ namespace MapzenGo.Models.Factories
                 : BuildingType.Unknown;
             if (!_active.Contains(key))
             {
+                _active.Add(key);
+                tile.Destroyed += (s, e) => { _active.Remove(key); };
+
                 var typeSettings = _settings.GetSettingsFor(kind);
                 var buildingCorners = new List<Vector3>();
                 //foreach (var bb in geo["geometry"]["coordinates"].list)
@@ -45,7 +48,7 @@ namespace MapzenGo.Models.Factories
                 {
                     var c = bb.list[i];
                     var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                    var localMercPos = dotMerc - tileMercPos;
+                    var localMercPos = dotMerc - tile.Rect.Center;
 
                     if (localMercPos.x < minx) minx = (float) localMercPos.x;
                     if (localMercPos.y < miny) miny = (float) localMercPos.y;
@@ -77,33 +80,29 @@ namespace MapzenGo.Models.Factories
                 mesh.SetUVs(0, tb.UV);
                 mesh.RecalculateNormals();
 
-                _active.Add(building.Id);
-                building.OnDisableAsObservable().Subscribe(x =>
-                {
-                    _active.Remove(building.Id);
-                });
+                
 
                 yield return building;
                 //}
             }
         }
 
-        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> items)
+        protected override GameObject CreateLayer(Tile tile, List<JSONObject> items)
         {
 
             var main = new GameObject("Buildings Layer");
-
             var finalList = new Dictionary<BuildingType, MeshData>();
             var openList = new Dictionary<BuildingType, MeshData>();
 
             foreach (var geo in items.Where(x => Query(x)))
             {
                 var key = geo["properties"]["id"].ToString();
-                //if (_active.Contains(key))
-                //    continue;
+                if (_active.Contains(key))
+                    continue;
 
                 //to prevent duplicate buildings
-                //_active.Add(key);
+                _active.Add(key);
+                tile.Destroyed += (s, e) => { _active.Remove(key); };
 
                 var kind = geo["properties"].HasField("landuse_kind")
                 ? geo["properties"]["landuse_kind"].str.ConvertToEnum<BuildingType>()
@@ -128,7 +127,7 @@ namespace MapzenGo.Models.Factories
                 {
                     var c = bb.list[i];
                     var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                    var localMercPos = new Vector2((float)(dotMerc.x - tileMercPos.x), (float)(dotMerc.y - tileMercPos.y));
+                    var localMercPos = new Vector2((float)(dotMerc.x - tile.TileCenter.x), (float)(dotMerc.y - tile.TileCenter.y));
 
                     if (localMercPos.x < minx) minx = localMercPos.x;
                     if (localMercPos.y < miny) miny = localMercPos.y;

@@ -19,7 +19,7 @@ namespace MapzenGo.Models.Factories
             Query = (geo) => geo["geometry"]["type"].str == "LineString" || geo["geometry"]["type"].str == "MultiLineString";
         }
 
-        protected override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
+        protected override IEnumerable<MonoBehaviour> Create(Tile tile, JSONObject geo)
         {
             var kind = geo["properties"]["kind"].str.ConvertToEnum<BoundaryType>();
             if (_settings.HasSettingsFor(kind))
@@ -37,7 +37,7 @@ namespace MapzenGo.Models.Factories
                     {
                         var c = geo["geometry"]["coordinates"][i];
                         var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                        var localMercPos = dotMerc - tileMercPos;
+                        var localMercPos = dotMerc - tile.Rect.Center;
                         boundarEnds.Add(localMercPos.ToVector3());
                     }
                     SetProperties(geo, boundary, typeSettings);
@@ -66,7 +66,7 @@ namespace MapzenGo.Models.Factories
                         {
                             var seg = c[j];
                             var dotMerc = GM.LatLonToMeters(seg[1].f, seg[0].f);
-                            var localMercPos = dotMerc - tileMercPos;
+                            var localMercPos = dotMerc - tile.Rect.Center;
                             roadEnds.Add(localMercPos.ToVector3());
                         }
                         CreateMesh(roadEnds, typeSettings, md);
@@ -84,14 +84,14 @@ namespace MapzenGo.Models.Factories
             }
         }
 
-        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList)
+        protected override GameObject CreateLayer(Tile tile, List<JSONObject> geoList)
         {
             var go = new GameObject("Boundary");
             var mesh = go.AddComponent<MeshFilter>().mesh;
             go.AddComponent<MeshRenderer>();
             var md = new MeshData();
 
-            GetVertices(tileMercPos, geoList, md);
+            GetVertices(tile.Rect.Center, geoList, md);
             mesh.vertices = md.Vertices.ToArray();
             mesh.triangles = md.Indices.ToArray();
             mesh.SetUVs(0, md.UV);

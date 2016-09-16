@@ -19,7 +19,7 @@ namespace MapzenGo.Models.Factories
             Query = (geo) => geo["geometry"]["type"].str == "LineString" || geo["geometry"]["type"].str == "MultiLineString";
         }
 
-        protected override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
+        protected override IEnumerable<MonoBehaviour> Create(Tile tile, JSONObject geo)
         {
             var kind = geo["properties"]["kind"].str.ConvertToEnum<RoadType>();
             if (!_settings.HasSettingsFor(kind) && !JustDrawEverythingFam)
@@ -38,7 +38,7 @@ namespace MapzenGo.Models.Factories
                 {
                     var c = geo["geometry"]["coordinates"][i];
                     var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                    var localMercPos = dotMerc - tileMercPos;
+                    var localMercPos = dotMerc - tile.Rect.Center;
                     roadEnds.Add(localMercPos.ToVector3());
                 }
 
@@ -76,7 +76,7 @@ namespace MapzenGo.Models.Factories
                     {
                         var seg = c[j];
                         var dotMerc = GM.LatLonToMeters(seg[1].f, seg[0].f);
-                        var localMercPos = dotMerc - tileMercPos;
+                        var localMercPos = dotMerc - tile.Rect.Center;
                         roadEnds.Add(localMercPos.ToVector3());
                     }
 
@@ -108,7 +108,7 @@ namespace MapzenGo.Models.Factories
                 road.Name = geo["properties"]["name"].str;
         }
 
-        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList)
+        protected override GameObject CreateLayer(Tile tile, List<JSONObject> geoList)
         {
             var main = new GameObject("Roads");
             var _meshes = new Dictionary<RoadType, MeshData>();
@@ -131,7 +131,7 @@ namespace MapzenGo.Models.Factories
                     {
                         var c = geo["geometry"]["coordinates"][i];
                         var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                        var localMercPos = dotMerc - tileMercPos;
+                        var localMercPos = dotMerc - tile.Rect.Center;
                         roadEnds.Add(localMercPos.ToVector3());
                     }
                     CreateMesh(roadEnds, settings, _meshes[kind]);
@@ -147,7 +147,7 @@ namespace MapzenGo.Models.Factories
                         {
                             var seg = c[j];
                             var dotMerc = GM.LatLonToMeters(seg[1].f, seg[0].f);
-                            var localMercPos = dotMerc - tileMercPos;
+                            var localMercPos = dotMerc - tile.Rect.Center;
                             roadEnds.Add(localMercPos.ToVector3());
                         }
                         CreateMesh(roadEnds, settings, _meshes[kind]);
