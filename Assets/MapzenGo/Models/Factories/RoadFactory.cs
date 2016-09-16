@@ -110,29 +110,17 @@ namespace MapzenGo.Models.Factories
 
         protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> geoList)
         {
-            var go = new GameObject("Roads");
-            var mesh = go.AddComponent<MeshFilter>().mesh;
-            go.AddComponent<MeshRenderer>();
-            var md = new MeshData();
+            var main = new GameObject("Roads");
+            var _meshes = new Dictionary<RoadType, MeshData>();
 
-            GetVertices(tileMercPos, geoList, md);
-            mesh.vertices = md.Vertices.ToArray();
-            mesh.triangles = md.Indices.ToArray();
-            mesh.SetUVs(0, md.UV);
-            mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
-            go.GetComponent<MeshRenderer>().material = _settings.DefaultRoad.Material;
-            go.transform.position += Vector3.up * Order;
-            return go;
-        }
-
-        private void GetVertices(Vector2d tileMercPos, List<JSONObject> geoList, MeshData md)
-        {
             foreach (var geo in geoList.Where(x => Query(x)))
             {
                 var kind = geo["properties"]["kind"].str.ConvertToEnum<RoadType>();
-                if (!_settings.HasSettingsFor(kind) && JustDrawEverythingFam)
+                if (!_settings.HasSettingsFor(kind) && !JustDrawEverythingFam)
                     continue;
+
+                if (!_meshes.ContainsKey(kind))
+                    _meshes.Add(kind, new MeshData());
 
                 var settings = _settings.GetSettingsFor(kind);
                 var roadEnds = new List<Vector3>();
@@ -146,7 +134,7 @@ namespace MapzenGo.Models.Factories
                         var localMercPos = dotMerc - tileMercPos;
                         roadEnds.Add(localMercPos.ToVector3());
                     }
-                    CreateMesh(roadEnds, settings, md);
+                    CreateMesh(roadEnds, settings, _meshes[kind]);
                     //yield return CreateRoadSegment(geo, roadEnds);
                 }
                 else if (geo["geometry"]["type"].str == "MultiLineString")
@@ -162,10 +150,36 @@ namespace MapzenGo.Models.Factories
                             var localMercPos = dotMerc - tileMercPos;
                             roadEnds.Add(localMercPos.ToVector3());
                         }
-                        CreateMesh(roadEnds, settings, md);
+                        CreateMesh(roadEnds, settings, _meshes[kind]);
                     }
                 }
+
+                if (_meshes[kind].Vertices.Count > 64000)
+                {
+                    CreateGameObject(kind, _meshes[kind], main.transform);
+                    _meshes[kind] = new MeshData();
+                }
             }
+
+            foreach (var group in _meshes)
+            {
+                CreateGameObject(group.Key, group.Value, main.transform);
+            }
+
+            return main;
+        }
+
+        private void CreateGameObject(RoadType kind, MeshData meshdata, Transform parent)
+        {
+            var go = new GameObject(kind + " Road");
+            var mesh = go.AddComponent<MeshFilter>().mesh;
+            go.AddComponent<MeshRenderer>();
+            mesh.vertices = meshdata.Vertices.ToArray();
+            mesh.triangles = meshdata.Indices.ToArray();
+            mesh.RecalculateNormals();
+            go.GetComponent<MeshRenderer>().material = _settings.GetSettingsFor(kind).Material;
+            go.transform.position += Vector3.up * Order;
+            go.transform.SetParent(parent, true);
         }
 
         private void CreateMesh(List<Vector3> list, SettingsLayers.RoadSettings settings, MeshData md)
