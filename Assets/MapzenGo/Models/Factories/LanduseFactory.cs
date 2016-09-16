@@ -19,7 +19,7 @@ namespace MapzenGo.Models.Factories
             Query = (geo) => geo["geometry"]["type"].str == "Polygon" || geo["geometry"]["type"].str == "MultiPolygon";
         }
 
-        protected override IEnumerable<MonoBehaviour> Create(Vector2d tileMercPos, JSONObject geo)
+        protected override IEnumerable<MonoBehaviour> Create(Tile tile, JSONObject geo)
         {
             var kind = geo["properties"]["kind"].str.ConvertToEnum<LanduseKind>();
 
@@ -39,7 +39,7 @@ namespace MapzenGo.Models.Factories
             {
                 var c = bb.list[i];
                 var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                var localMercPos = dotMerc - tileMercPos;
+                var localMercPos = dotMerc - tile.Rect.Center;
                 inp.AddPoint(localMercPos.x, localMercPos.y);
                 inp.AddSegment(i, (i + 1) % count);
             }
@@ -63,7 +63,7 @@ namespace MapzenGo.Models.Factories
             yield return landuse;
         }
 
-        protected override GameObject CreateLayer(Vector2d tileMercPos, List<JSONObject> items)
+        protected override GameObject CreateLayer(Tile tile, List<JSONObject> items)
         {
             var main = new GameObject("Landuse Layer");
 
@@ -92,7 +92,7 @@ namespace MapzenGo.Models.Factories
                 {
                     var c = bb.list[i];
                     var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
-                    var localMercPos = dotMerc - tileMercPos;
+                    var localMercPos = dotMerc - tile.Rect.Center;
                     inp.AddPoint(localMercPos.x, localMercPos.y);
                     inp.AddSegment(i, (i + 1) % count);
                 }

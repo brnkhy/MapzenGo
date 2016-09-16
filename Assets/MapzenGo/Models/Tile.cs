@@ -1,10 +1,14 @@
-﻿using MapzenGo.Helpers.VectorD;
+﻿using System;
+using MapzenGo.Helpers.VectorD;
 using UnityEngine;
 
 namespace MapzenGo.Models
 {
     public class Tile : MonoBehaviour
     {
+        public delegate void DestroyedEventHandler(Tile sender, EventArgs e);
+        public event DestroyedEventHandler Destroyed;
+
         public JSONObject Data { get; set; }
 
         [SerializeField]
@@ -14,5 +18,16 @@ namespace MapzenGo.Models
         public Vector3d TileCenter { get; set; }
         public bool UseLayers { get; set; }
         public Material Material { get; set; }
+
+        public void OnDestroy()
+        {
+            if (Destroyed != null)
+            {
+                Destroyed(this, null);
+            }
+        }
+
+
+
     }
 }
