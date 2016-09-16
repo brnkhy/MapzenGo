@@ -71,7 +71,7 @@ namespace MapzenGo.Models.Factories
             foreach (var geo in items.Where(x => Query(x)))
             {
                 var kind = geo["properties"]["kind"].str.ConvertToEnum<LanduseKind>();
-                if (!_settings.HasSettingsFor(kind) && JustDrawEverythingFam)
+                if (!_settings.HasSettingsFor(kind) && !JustDrawEverythingFam)
                     continue;
 
                 var typeSettings = _settings.GetSettingsFor(kind);
