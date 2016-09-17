@@ -1,13 +1,6 @@
 ﻿using Assets.MapzenGo.Models.Plugins;
 using MapzenGo.Models;
-using MapzenGo.Models.Plugins;
-
-using MapzenGo.Models.Plugins;
-
-using System;
-using System.Collections.Generic;
 using UniRx;
-using UnityEditor;
 using UnityEngine;
 
 namespace Snook.Models.Plugins

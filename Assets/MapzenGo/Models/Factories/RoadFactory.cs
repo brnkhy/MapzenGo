@@ -1,9 +1,9 @@
-﻿using MapzenGo.Helpers;
-using MapzenGo.Models.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MapzenGo.Helpers;
+using MapzenGo.Models.Enums;
 using UniRx;
 using UnityEngine;
 
@@ -12,9 +12,7 @@ namespace MapzenGo.Models.Factories
     public class RoadFactory : Factory
     {
         public override string XmlTag { get { return "roads"; } }
-
-        [SerializeField]
-        protected Road.Settings _settings;
+        [SerializeField] private Road.Settings _settings;
 
         public override void Start()
         {
@@ -50,7 +48,7 @@ namespace MapzenGo.Models.Factories
                     mesh.RecalculateBounds();
                     road.GetComponent<MeshRenderer>().material = typeSettings.Material;
                     road.Initialize(geo, roadEnds, _settings);
-                    road.transform.position += Vector3.up * road.SortKey / 100;
+                    road.transform.position += Vector3.up*road.SortKey/100;
                     yield return road;
                 }
                 else if (geo["geometry"]["type"].str == "MultiLineString")
@@ -79,7 +77,7 @@ namespace MapzenGo.Models.Factories
                         mesh.RecalculateBounds();
                         road.GetComponent<MeshRenderer>().material = typeSettings.Material;
                         road.Initialize(geo, roadEnds, _settings);
-                        road.transform.position += Vector3.up * road.SortKey / 100;
+                        road.transform.position += Vector3.up*road.SortKey/100;
                         yield return road;
                     }
                 }
@@ -146,7 +144,7 @@ namespace MapzenGo.Models.Factories
             }
         }
 
-        protected void CreateMesh(List<Vector3> list, Road.RoadSettings settings, ref List<Vector3> verts, ref List<int> indices)
+        private void CreateMesh(List<Vector3> list, Road.RoadSettings settings, ref List<Vector3> verts, ref List<int> indices)
         {
             var vertsStartCount = verts.Count;
             Vector3 lastPos = Vector3.zero;
@@ -173,6 +171,7 @@ namespace MapzenGo.Models.Factories
                 verts.Add(lastPos - norm);
             }
 
+
             for (int j = vertsStartCount; j <= verts.Count - 3; j += 2)
             {
                 var clock = Vector3.Cross(verts[j + 1] - verts[j], verts[j + 2] - verts[j + 1]);
@@ -181,17 +180,17 @@ namespace MapzenGo.Models.Factories
                     indices.Add(j);
                     indices.Add(j + 2);
                     indices.Add(j + 1);
-
+                    
                     indices.Add(j + 1);
                     indices.Add(j + 2);
                     indices.Add(j + 3);
-                }
-                else
-                {
+                }               
+                else            
+                {               
                     indices.Add(j + 1);
                     indices.Add(j + 2);
                     indices.Add(j);
-
+                               
                     indices.Add(j + 3);
                     indices.Add(j + 2);
                     indices.Add(j + 1);
@@ -224,5 +223,6 @@ namespace MapzenGo.Models.Factories
 
             return new Vector3(-t.z, 0, t.x);
         }
+
     }
 }
