@@ -2,6 +2,7 @@ ProjecSettings
 Library
 Temp
 .vs
+MapzenGo/CachedTileData
 
 *.asset
 *.sln
