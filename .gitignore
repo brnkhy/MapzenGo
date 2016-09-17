@@ -4,6 +4,8 @@ Temp
 .vs
 
 *.asset
+*.sln
+*.csproj
 ProjectSettings/ProjectVersion.txt
 MapzenGo.sln
 *.csproj
