@@ -13,7 +13,7 @@ namespace MapzenGo.Models
 
         public override void Start()
         {
-            CacheFolderPath = Path.Combine(Application.dataPath, RelativeCachePath);
+            CacheFolderPath = Path.Combine(Application.persistentDataPath, RelativeCachePath);
             CacheFolderPath = CacheFolderPath.Format(Zoom);
             if (!Directory.Exists(CacheFolderPath))
                 Directory.CreateDirectory(CacheFolderPath);
