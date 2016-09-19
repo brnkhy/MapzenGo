@@ -12,6 +12,7 @@ namespace MapzenGo.Models.Factories
     public class RoadFactory : Factory
     {
         public override string XmlTag { get { return "roads"; } }
+        [SerializeField] protected RoadFactorySettings FactorySettings;
 
         public override void Start()
         {
@@ -22,10 +23,10 @@ namespace MapzenGo.Models.Factories
         protected override IEnumerable<MonoBehaviour> Create(Tile tile, JSONObject geo)
         {
             var kind = geo["properties"]["kind"].str.ConvertToEnum<RoadType>();
-            if (!_settings.HasSettingsFor(kind) && !JustDrawEverythingFam)
+            if (!FactorySettings.HasSettingsFor(kind) && !JustDrawEverythingFam)
                 yield break;
 
-            var typeSettings = _settings.GetSettingsFor(kind);
+            var typeSettings = FactorySettings.GetSettingsFor<RoadSettings>(kind);
 
             if (geo["geometry"]["type"].str == "LineString")
             {
@@ -116,13 +117,13 @@ namespace MapzenGo.Models.Factories
             foreach (var geo in geoList.Where(x => Query(x)))
             {
                 var kind = geo["properties"]["kind"].str.ConvertToEnum<RoadType>();
-                if (!_settings.HasSettingsFor(kind) && !JustDrawEverythingFam)
+                if (!FactorySettings.HasSettingsFor(kind) && !JustDrawEverythingFam)
                     continue;
 
                 if (!_meshes.ContainsKey(kind))
                     _meshes.Add(kind, new MeshData());
 
-                var settings = _settings.GetSettingsFor(kind);
+                var settings = FactorySettings.GetSettingsFor<RoadSettings>(kind);
                 var roadEnds = new List<Vector3>();
 
                 if (geo["geometry"]["type"].str == "LineString")
@@ -177,12 +178,12 @@ namespace MapzenGo.Models.Factories
             mesh.vertices = meshdata.Vertices.ToArray();
             mesh.triangles = meshdata.Indices.ToArray();
             mesh.RecalculateNormals();
-            go.GetComponent<MeshRenderer>().material = _settings.GetSettingsFor(kind).Material;
+            go.GetComponent<MeshRenderer>().material = FactorySettings.GetSettingsFor<RoadSettings>(kind).Material;
             go.transform.position += Vector3.up * Order;
             go.transform.SetParent(parent, true);
         }
 
-        private void CreateMesh(List<Vector3> list, SettingsLayers.RoadSettings settings, MeshData md)
+        private void CreateMesh(List<Vector3> list, RoadSettings settings, MeshData md)
         {
             var vertsStartCount = md.Vertices.Count;
             Vector3 lastPos = Vector3.zero;

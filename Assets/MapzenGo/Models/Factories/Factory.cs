@@ -13,12 +13,10 @@ namespace MapzenGo.Models.Factories
         public float Order = 1;
         public virtual string XmlTag {get { return ""; } }
         public virtual Func<JSONObject, bool> Query { get; set; }
-        [SerializeField] protected SettingsLayers _settings;
+        
 
         public virtual void Start()
         {
-            if (_settings == null)
-                _settings = ScriptableObject.CreateInstance<SettingsLayers>();
             Query = (geo) => true;
         }
 

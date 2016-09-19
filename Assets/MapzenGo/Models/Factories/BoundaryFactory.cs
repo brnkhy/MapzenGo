@@ -12,6 +12,7 @@ namespace MapzenGo.Models.Factories
     public class BoundaryFactory : Factory
     {
         public override string XmlTag { get { return "boundaries"; } }
+        [SerializeField] protected BoundaryFactorySettings _settings;
 
         public override void Start()
         {
@@ -24,7 +25,7 @@ namespace MapzenGo.Models.Factories
             var kind = geo["properties"]["kind"].str.ConvertToEnum<BoundaryType>();
             if (_settings.HasSettingsFor(kind))
             {
-                var typeSettings = _settings.GetSettingsFor(kind);
+                var typeSettings = _settings.GetSettingsFor<BoundarySettings>(kind);
 
                 if (geo["geometry"]["type"].str == "LineString")
                 {
@@ -76,7 +77,7 @@ namespace MapzenGo.Models.Factories
                         mesh.RecalculateNormals();
                         
                         boundary.GetComponent<MeshRenderer>().material = typeSettings.Material;
-                        //road.Initialize(geo, roadEnds, _settings);
+                        //road.Initialize(geo, roadEnds, SettingsLayersLayers);
                         boundary.transform.position += Vector3.up * Order;
                         yield return boundary;
                     }
@@ -110,7 +111,7 @@ namespace MapzenGo.Models.Factories
                 if (!_settings.HasSettingsFor(kind))
                     continue;
 
-                var settings = _settings.GetSettingsFor(kind);
+                var settings = _settings.GetSettingsFor<BoundarySettings>(kind);
                 var roadEnds = new List<Vector3>();
 
                 if (geo["geometry"]["type"].str == "LineString")
@@ -144,7 +145,7 @@ namespace MapzenGo.Models.Factories
             }
         }
 
-        private void CreateMesh(List<Vector3> list, SettingsLayers.BoundarySettings settings, MeshData md)
+        private void CreateMesh(List<Vector3> list, BoundarySettings settings, MeshData md)
         {
             var vertsStartCount = md.Vertices.Count;
             Vector3 lastPos = Vector3.zero;
@@ -198,7 +199,7 @@ namespace MapzenGo.Models.Factories
             }
         }
 
-        private static void SetProperties(JSONObject geo, Boundary boundary, SettingsLayers.BoundarySettings typeSettings)
+        private static void SetProperties(JSONObject geo, Boundary boundary, BoundarySettings typeSettings)
         {
             boundary.name = "boundary " + geo["properties"]["id"].ToString();
             if (geo["properties"].HasField("name"))

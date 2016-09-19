@@ -13,7 +13,8 @@ namespace MapzenGo.Models.Factories
     public class WaterFactory : Factory
     {
         public override string XmlTag { get { return "water"; } }
-        
+        [SerializeField]
+        protected WaterFactorySettings FactorySettings;
         public override void Start()
         {
             base.Start();
@@ -23,7 +24,7 @@ namespace MapzenGo.Models.Factories
         protected override IEnumerable<MonoBehaviour> Create(Tile tile, JSONObject geo)
         {
             var kind = geo["properties"]["kind"].str.ConvertToEnum<WaterType>();
-            var typeSettings = _settings.GetSettingsFor(kind);
+            var typeSettings = FactorySettings.GetSettingsFor<WaterSettings>(kind);
 
             var go = new GameObject("water");
             var water = go.AddComponent<Water>();
@@ -61,7 +62,7 @@ namespace MapzenGo.Models.Factories
             yield return water;
         }
 
-        private static void SetProperties(JSONObject geo, Water water, SettingsLayers.WaterSettings typeSettings)
+        private static void SetProperties(JSONObject geo, Water water, WaterSettings typeSettings)
         {
             water.Id = geo["properties"]["id"].ToString();
             if (geo["properties"].HasField("name"))
@@ -83,10 +84,10 @@ namespace MapzenGo.Models.Factories
                 ? geo["properties"]["kind"].str.ConvertToEnum<WaterType>()
                 : WaterType.Water;
 
-                var typeSettings = _settings.GetSettingsFor(kind);
+                var typeSettings = FactorySettings.GetSettingsFor<WaterSettings>(kind);
 
                 //if we dont have a setting defined for that, it'Ll be merged to "unknown" 
-                if (!_settings.HasSettingsFor(kind))
+                if (!FactorySettings.HasSettingsFor(kind))
                     kind = WaterType.Water;
 
                 if (!meshes.ContainsKey(kind))
@@ -158,7 +159,7 @@ namespace MapzenGo.Models.Factories
             mesh.vertices = meshdata.Vertices.ToArray();
             mesh.triangles = meshdata.Indices.ToArray();
             mesh.RecalculateNormals();
-            go.GetComponent<MeshRenderer>().material = _settings.GetSettingsFor(kind).Material;
+            go.GetComponent<MeshRenderer>().material = FactorySettings.GetSettingsFor<WaterSettings>(kind).Material;
             go.transform.position += Vector3.up * Order;
             go.transform.SetParent(parent, true);
         }
