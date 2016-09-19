@@ -17,7 +17,7 @@ namespace MapzenGo.Models.Factories
     {
         public override string XmlTag { get { return "buildings"; } }
         private HashSet<string> _active = new HashSet<string>();
-
+        [SerializeField] protected BuildingFactorySettings FactorySettings;
         private TriangleNet.Mesh _mesh; 
 
         public override void Start()
@@ -38,7 +38,7 @@ namespace MapzenGo.Models.Factories
                 _active.Add(key);
                 tile.Destroyed += (s, e) => { _active.Remove(key); };
 
-                var typeSettings = _settings.GetSettingsFor(kind);
+                var typeSettings = FactorySettings.GetSettingsFor<BuildingSettings>(kind);
                 var buildingCorners = new List<Vector3>();
                 //foreach (var bb in geo["geometry"]["coordinates"].list)
                 //{
@@ -108,10 +108,10 @@ namespace MapzenGo.Models.Factories
                 ? geo["properties"]["landuse_kind"].str.ConvertToEnum<BuildingType>()
                 : BuildingType.Unknown;
 
-                var typeSettings = _settings.GetSettingsFor(kind);
+                var typeSettings = FactorySettings.GetSettingsFor<BuildingSettings>(kind);
 
                 //if we dont have a setting defined for that, it'Ll be merged to "unknown" 
-                if (!_settings.HasSettingsFor(kind))
+                if (!FactorySettings.HasSettingsFor(kind))
                     kind = BuildingType.Unknown;
 
                 if (!openList.ContainsKey(kind))
@@ -178,7 +178,7 @@ namespace MapzenGo.Models.Factories
         private float GetHeights(JSONObject geo, float min, float max)
         {
             var height = 0f;
-            if (_settings.DefaultBuilding.IsVolumetric)
+            if (FactorySettings.DefaultBuilding.IsVolumetric)
             {
                 height = geo["properties"].HasField("height")
                     ? geo["properties"]["height"].f
@@ -198,7 +198,7 @@ namespace MapzenGo.Models.Factories
             return buildingCenter;
         }
 
-        private static void SetProperties(JSONObject geo, Building building, SettingsLayers.BuildingSettings typeSettings)
+        private static void SetProperties(JSONObject geo, Building building, BuildingSettings typeSettings)
         {
             building.name = "building " + geo["properties"]["id"].ToString();
             if (geo["properties"].HasField("name"))
@@ -212,7 +212,7 @@ namespace MapzenGo.Models.Factories
             building.GetComponent<MeshRenderer>().material = typeSettings.Material;
         }
 
-        private void CreateMesh(List<Vector3> corners, float height, SettingsLayers.BuildingSettings typeSettings, MeshData data, Vector2 min, Vector2 size)
+        private void CreateMesh(List<Vector3> corners, float height, BuildingSettings typeSettings, MeshData data, Vector2 min, Vector2 size)
         {
             _mesh = new TriangleNet.Mesh();
 
@@ -309,7 +309,7 @@ namespace MapzenGo.Models.Factories
             mesh.triangles = data.Indices.ToArray();
             mesh.SetUVs(0, data.UV);
             mesh.RecalculateNormals();
-            go.GetComponent<MeshRenderer>().material = _settings.GetSettingsFor(kind).Material;
+            go.GetComponent<MeshRenderer>().material = FactorySettings.GetSettingsFor<BuildingSettings>(kind).Material;
             go.transform.position += Vector3.up * Order;
             go.transform.SetParent(main.transform, false);
         }

@@ -7,7 +7,53 @@ using UnityEditor;
 public class LayerSettingWindows : EditorWindow
 {
 
-    const string PATH_SAVE_SCRIPTABLE_OBJECT = "Assets/MapzenGo/Resources/Settings/LayerSettings.asset";
+    const string PATH_SAVE_SCRIPTABLE_OBJECT = "Assets/MapzenGo/Resources/Settings/";
+    private BuildingFactorySettings _factorySettingsBuildingFactory;
+    private BuildingFactorySettings BuildingFactorySettings
+    {
+        get
+        {
+            return _factorySettingsBuildingFactory ??
+                   HelperExtention.GetOrCreateSObjectReturn(ref _factorySettingsBuildingFactory, PATH_SAVE_SCRIPTABLE_OBJECT);
+        }
+    }
+    private RoadFactorySettings _factorySettingsRoadFactory;
+    private RoadFactorySettings RoadFactorySettings
+    {
+        get
+        {
+            return _factorySettingsRoadFactory ??
+                   HelperExtention.GetOrCreateSObjectReturn(ref _factorySettingsRoadFactory, PATH_SAVE_SCRIPTABLE_OBJECT);
+        }
+    }
+    private LanduseFactorySettings _factorySettingsLanduseFactory;
+    private LanduseFactorySettings LanduseFactorySettings
+    {
+        get
+        {
+            return _factorySettingsLanduseFactory ??
+                   HelperExtention.GetOrCreateSObjectReturn(ref _factorySettingsLanduseFactory, PATH_SAVE_SCRIPTABLE_OBJECT);
+        }
+    }
+    private WaterFactorySettings _factorySettingsWaterFactory;
+    private WaterFactorySettings WaterFactorySettings
+    {
+        get
+        {
+            return _factorySettingsWaterFactory ??
+                   HelperExtention.GetOrCreateSObjectReturn(ref _factorySettingsWaterFactory, PATH_SAVE_SCRIPTABLE_OBJECT);
+        }
+    }
+    private BoundaryFactorySettings _settingBoundary;
+    private BoundaryFactorySettings BoundaryFactorySettings
+    {
+        get
+        {
+            return _settingBoundary ??
+                   HelperExtention.GetOrCreateSObjectReturn(ref _settingBoundary, PATH_SAVE_SCRIPTABLE_OBJECT);
+        }
+    }
+
     private SettingsLayers settingElement;
 
     private int viewIndex = 1;
@@ -43,52 +89,42 @@ public class LayerSettingWindows : EditorWindow
     }
     void OnEnable()
     {
-        if (EditorPrefs.HasKey("ObjectPath"))
-        {
-            string objectPath = EditorPrefs.GetString("ObjectPath");
-            settingElement = AssetDatabase.LoadAssetAtPath(objectPath, typeof(SettingsLayers)) as SettingsLayers;
-        }
-        if (settingElement == null)
-        {
-            Debug.Log("CREATE ASSET");
-            CreateNewItemList();
-        }
         SetupSettings();
     }
 
     private void SetupSettings()
     {
         UsingType = new List<string>();
-        UsingType.Add("bt_" + settingElement.DefaultBuilding.Type.ToString());
-        settingElement.SettingsBuildings.ForEach(settings =>
+        UsingType.Add("bt_" + BuildingFactorySettings.DefaultBuilding.Type.ToString());
+        BuildingFactorySettings.SettingsBuildings.ForEach(settings =>
         {
             UsingType.Add("bt_" + settings.Type.ToString());
             settings.showContent = false;
         });
 
-        UsingType.Add("rt_" + settingElement.DefaultRoad.Type.ToString());
-        settingElement.SettingsRoad.ForEach(settings =>
+        UsingType.Add("rt_" + RoadFactorySettings.DefaultRoad.Type.ToString());
+        RoadFactorySettings.SettingsRoad.ForEach(settings =>
         {
             UsingType.Add("rt_" + settings.Type.ToString());
             settings.showContent = false;
         });
 
-        UsingType.Add("lt_" + settingElement.DefaultLanduse.Type.ToString());
-        settingElement.SettingsLanduse.ForEach(settings =>
+        UsingType.Add("lt_" + LanduseFactorySettings.DefaultLanduse.Type.ToString());
+        LanduseFactorySettings.SettingsLanduse.ForEach(settings =>
         {
             UsingType.Add("lt_" + settings.Type.ToString());
             settings.showContent = false;
         });
 
-        UsingType.Add("wt_" + settingElement.DefaultWater.Type.ToString());
-        settingElement.SettingsWater.ForEach(settings =>
+        UsingType.Add("wt_" + WaterFactorySettings.DefaultWater.Type.ToString());
+        WaterFactorySettings.SettingsWater.ForEach(settings =>
         {
             UsingType.Add("wt_" + settings.Type.ToString());
             settings.showContent = false;
         });
-
-        UsingType.Add("bt_" + settingElement.DefaultBoundary.Type.ToString());
-        settingElement.SettingsBoundary.ForEach(settings =>
+ 
+        UsingType.Add("bt_" + BoundaryFactorySettings.DefaultBoundary.Type.ToString());
+        BoundaryFactorySettings.SettingsBoundary.ForEach(settings =>
         {
             UsingType.Add("bt_" + settings.Type.ToString());
             settings.showContent = false;
@@ -98,6 +134,7 @@ public class LayerSettingWindows : EditorWindow
 
     void OnGUI()
     {
+        //return;
         tab = GUILayout.Toolbar(tab, new string[] { "BUILDING", "ROAD", "LANDUSE", "WATER", "BOUNDARY" });
         switch (tab)
         {
@@ -107,7 +144,7 @@ public class LayerSettingWindows : EditorWindow
                     EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
                     {
                         GUILayout.Label("DEFAULT BUILDING TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
-                        ShowBuildingElement(settingElement.DefaultBuilding);
+                        ShowBuildingElement(BuildingFactorySettings.DefaultBuilding);
                     }
                     EditorGUILayout.EndVertical();
                     GUILayout.Space(20);
@@ -120,7 +157,7 @@ public class LayerSettingWindows : EditorWindow
                     EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
                     {
                         GUILayout.Label("DEFAULT ROAD TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
-                        ShowRoadElement(settingElement.DefaultRoad);
+                        ShowRoadElement(RoadFactorySettings.DefaultRoad);
                     }
                     EditorGUILayout.EndVertical();
                     GUILayout.Space(20);
@@ -134,7 +171,7 @@ public class LayerSettingWindows : EditorWindow
                     EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
                     {
                         GUILayout.Label("DEFAULT ROAD TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
-                        ShowLanduseElement(settingElement.DefaultLanduse);
+                        ShowLanduseElement(LanduseFactorySettings.DefaultLanduse);
                     }
                     EditorGUILayout.EndVertical();
                     GUILayout.Space(20);
@@ -147,7 +184,7 @@ public class LayerSettingWindows : EditorWindow
                     EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
                     {
                         GUILayout.Label("DEFAULT ROAD TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
-                        ShowWaterElement(settingElement.DefaultWater);
+                        ShowWaterElement(WaterFactorySettings.DefaultWater);
                     }
                     EditorGUILayout.EndVertical();
                     GUILayout.Space(20);
@@ -159,7 +196,7 @@ public class LayerSettingWindows : EditorWindow
                     EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
                     {
                         GUILayout.Label("DEFAULT BOUNDARY TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
-                        ShowBoundaryElement(settingElement.DefaultBoundary);
+                        ShowBoundaryElement(BoundaryFactorySettings.DefaultBoundary);
                     }
                     EditorGUILayout.EndVertical();
                     GUILayout.Space(20);
@@ -170,7 +207,9 @@ public class LayerSettingWindows : EditorWindow
 
         if (GUI.changed)
         {
-            EditorUtility.SetDirty(settingElement);
+            EditorUtility.SetDirty(BuildingFactorySettings);
+            EditorUtility.SetDirty(RoadFactorySettings);
+            EditorUtility.SetDirty(LanduseFactorySettings);
         }
 
     }
@@ -183,7 +222,7 @@ public class LayerSettingWindows : EditorWindow
             GUILayout.Label("BUILDING TYPE FOR LAYER", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
             if (GUILayout.Button("ADD BUILDING TYPE"))
             {
-                settingElement.SettingsBuildings.Add(new SettingsLayers.BuildingSettings()
+                BuildingFactorySettings.SettingsBuildings.Add(new BuildingSettings()
                 {
                     Type = BuildingType.Unknown,
                     Material = null
@@ -195,28 +234,28 @@ public class LayerSettingWindows : EditorWindow
             GUILayout.Space(10);
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
             {
-                for (int ind = 0; ind < settingElement.SettingsBuildings.Count; ind++)
+                for (int ind = 0; ind < BuildingFactorySettings.SettingsBuildings.Count; ind++)
                 {
                     EditorGUILayout.BeginHorizontal("box");
-                    settingElement.SettingsBuildings[ind].showContent = EditorGUILayout.Foldout(settingElement.SettingsBuildings[ind].showContent,
-                        "BUILDING TYPE - " + settingElement.SettingsBuildings[ind].Type.ToString());
+                    BuildingFactorySettings.SettingsBuildings[ind].showContent = EditorGUILayout.Foldout(BuildingFactorySettings.SettingsBuildings[ind].showContent,
+                        "BUILDING TYPE - " + BuildingFactorySettings.SettingsBuildings[ind].Type.ToString());
 
                     #region CHECK DUBLE TYPE END ERROR
                     GUI.backgroundColor = Color.red;
-                    if (UsingType.FindAll(s => s == "bt_" + settingElement.SettingsBuildings[ind].Type.ToString()).Count > 1)
+                    if (UsingType.FindAll(s => s == "bt_" + BuildingFactorySettings.SettingsBuildings[ind].Type.ToString()).Count > 1)
                     {
                         if (GUILayout.Button("Type Exist", "CN CountBadge", GUILayout.Width(75)))
                         {
-                            settingElement.SettingsBuildings[ind].showContent = true;
+                            BuildingFactorySettings.SettingsBuildings[ind].showContent = true;
                         }
                     }
 
-                    if (settingElement.SettingsBuildings[ind].Material == null)
+                    if (BuildingFactorySettings.SettingsBuildings[ind].Material == null)
                     {
                         GUI.backgroundColor = Color.magenta;
                         if (GUILayout.Button("Mat is not set", "CN CountBadge", GUILayout.Width(95)))
                         {
-                            settingElement.SettingsBuildings[ind].showContent = true;
+                            BuildingFactorySettings.SettingsBuildings[ind].showContent = true;
                         }
                     }
                     GUI.backgroundColor = Color.white;
@@ -225,22 +264,22 @@ public class LayerSettingWindows : EditorWindow
                     #region BUTTON MOVE & REMOVE 
                     if (ind > 0 && GUILayout.Button(" \u25B2", "CN CountBadge", GUILayout.MaxWidth(30)))
                     {
-                        settingElement.SettingsBuildings.Move(ind, ind - 1);
+                        BuildingFactorySettings.SettingsBuildings.Move(ind, ind - 1);
                     }
-                    if (ind < settingElement.SettingsBuildings.Count - 1 && GUILayout.Button("\u25BC", "CN CountBadge", GUILayout.MaxWidth(30)))
+                    if (ind < BuildingFactorySettings.SettingsBuildings.Count - 1 && GUILayout.Button("\u25BC", "CN CountBadge", GUILayout.MaxWidth(30)))
                     {
-                        settingElement.SettingsBuildings.Move(ind, ind + 1);
+                        BuildingFactorySettings.SettingsBuildings.Move(ind, ind + 1);
                     }
                     GUI.contentColor = Color.red;
                     if (GUILayout.Button("\u2718", "CN CountBadge", GUILayout.MaxWidth(25)))
                     {
                         if (EditorUtility.DisplayDialog("Warning", "Are you sure you want to delete this type?", "Yes", "No"))
                         {
-                            if (UsingType.Contains("bt_" + settingElement.SettingsBuildings[ind].Type.ToString()))
+                            if (UsingType.Contains("bt_" + BuildingFactorySettings.SettingsBuildings[ind].Type.ToString()))
                             {
-                                UsingType.Remove("bt_" + settingElement.SettingsBuildings[ind].Type.ToString());
+                                UsingType.Remove("bt_" + BuildingFactorySettings.SettingsBuildings[ind].Type.ToString());
                             }
-                            settingElement.SettingsBuildings.RemoveAt(ind);
+                            BuildingFactorySettings.SettingsBuildings.RemoveAt(ind);
                         }
                     }
 
@@ -248,9 +287,9 @@ public class LayerSettingWindows : EditorWindow
                     #endregion
 
                     EditorGUILayout.EndHorizontal();
-                    if (settingElement.SettingsBuildings.Count > ind && settingElement.SettingsBuildings[ind].showContent)
+                    if (BuildingFactorySettings.SettingsBuildings.Count > ind && BuildingFactorySettings.SettingsBuildings[ind].showContent)
                     {
-                        ShowBuildingElement(settingElement.SettingsBuildings[ind]);
+                        ShowBuildingElement(BuildingFactorySettings.SettingsBuildings[ind]);
                     }
                     EditorGUILayout.Separator();
                 }
@@ -267,7 +306,7 @@ public class LayerSettingWindows : EditorWindow
             GUILayout.Label("ROAD TYPE FOR LAYER", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
             if (GUILayout.Button("ADD ROAD TYPE"))
             {
-                settingElement.SettingsRoad.Add(new SettingsLayers.RoadSettings()
+                RoadFactorySettings.SettingsRoad.Add(new RoadSettings()
                 {
                     Type = RoadType.Path,
                     Material = null,
@@ -278,30 +317,30 @@ public class LayerSettingWindows : EditorWindow
             GUILayout.Space(10);
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
             {
-                for (int ind = 0; ind < settingElement.SettingsRoad.Count; ind++)
+                for (int ind = 0; ind < RoadFactorySettings.SettingsRoad.Count; ind++)
                 {
 
                     EditorGUILayout.BeginHorizontal("box");
-                    settingElement.SettingsRoad[ind].showContent =
-                        EditorGUILayout.Foldout(settingElement.SettingsRoad[ind].showContent,
-                            "ROAD TYPE - " + settingElement.SettingsRoad[ind].Type.ToString());
+                    RoadFactorySettings.SettingsRoad[ind].showContent =
+                        EditorGUILayout.Foldout(RoadFactorySettings.SettingsRoad[ind].showContent,
+                            "ROAD TYPE - " + RoadFactorySettings.SettingsRoad[ind].Type.ToString());
 
                     #region CHECK DUBLE TYPE END ERROR
                     GUI.backgroundColor = Color.red;
-                    if (UsingType.FindAll(s => s == "rt_" + settingElement.SettingsRoad[ind].Type.ToString()).Count > 1)
+                    if (UsingType.FindAll(s => s == "rt_" + RoadFactorySettings.SettingsRoad[ind].Type.ToString()).Count > 1)
                     {
                         if (GUILayout.Button("Type Exist", "CN CountBadge", GUILayout.Width(75)))
                         {
-                            settingElement.SettingsRoad[ind].showContent = true;
+                            RoadFactorySettings.SettingsRoad[ind].showContent = true;
                         }
                     }
 
-                    if (settingElement.SettingsRoad[ind].Material == null)
+                    if (RoadFactorySettings.SettingsRoad[ind].Material == null)
                     {
                         GUI.backgroundColor = Color.magenta;
                         if (GUILayout.Button("Mat is not set", "CN CountBadge", GUILayout.Width(95)))
                         {
-                            settingElement.SettingsRoad[ind].showContent = true;
+                            RoadFactorySettings.SettingsRoad[ind].showContent = true;
                         }
                     }
                     GUI.backgroundColor = Color.white;
@@ -312,24 +351,24 @@ public class LayerSettingWindows : EditorWindow
                     if (ind > 0 && GUILayout.Button(" \u25B2", "CN CountBadge", GUILayout.MaxWidth(30)))
                     {
                         Debug.Log(ind > 0);
-                        settingElement.SettingsRoad.Move(ind, ind - 1);
+                        RoadFactorySettings.SettingsRoad.Move(ind, ind - 1);
                     }
-                    if (ind < settingElement.SettingsRoad.Count - 1 && GUILayout.Button("\u25BC", "CN CountBadge", GUILayout.MaxWidth(30)))
+                    if (ind < RoadFactorySettings.SettingsRoad.Count - 1 && GUILayout.Button("\u25BC", "CN CountBadge", GUILayout.MaxWidth(30)))
                     {
-                        Debug.Log(ind < settingElement.SettingsRoad.Count);
-                        settingElement.SettingsRoad.Move(ind, ind + 1);
+                        Debug.Log(ind < RoadFactorySettings.SettingsRoad.Count);
+                        RoadFactorySettings.SettingsRoad.Move(ind, ind + 1);
                     }
                     GUI.contentColor = Color.red;
                     if (GUILayout.Button("\u2718", "CN CountBadge", GUILayout.MaxWidth(25)))
                     {
                         if (EditorUtility.DisplayDialog("Warning", "Are you sure you want to delete this type?", "Yes", "No"))
                         {
-                            if (UsingType.Contains("rt_" + settingElement.SettingsRoad[ind].Type.ToString()))
+                            if (UsingType.Contains("rt_" + RoadFactorySettings.SettingsRoad[ind].Type.ToString()))
                             {
                                 UsingType.Remove("rt_" +
-                                                                settingElement.SettingsRoad[ind].Type.ToString());
+                                                                RoadFactorySettings.SettingsRoad[ind].Type.ToString());
                             }
-                            settingElement.SettingsRoad.RemoveAt(ind);
+                            RoadFactorySettings.SettingsRoad.RemoveAt(ind);
                         }
                     }
                     GUI.contentColor = Color.white;
@@ -337,7 +376,7 @@ public class LayerSettingWindows : EditorWindow
 
                     EditorGUILayout.EndHorizontal();
 
-                    if (settingElement.SettingsRoad.Count > ind && settingElement.SettingsRoad[ind].showContent) ShowRoadElement(settingElement.SettingsRoad[ind]);
+                    if (RoadFactorySettings.SettingsRoad.Count > ind && RoadFactorySettings.SettingsRoad[ind].showContent) ShowRoadElement(RoadFactorySettings.SettingsRoad[ind]);
 
                     EditorGUILayout.Separator();
                 }
@@ -354,7 +393,7 @@ public class LayerSettingWindows : EditorWindow
             GUILayout.Label("LANDUSE TYPE FOR LAYER", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
             if (GUILayout.Button("ADD LANDUSE TYPE"))
             {
-                settingElement.SettingsLanduse.Add(new SettingsLayers.LanduseSettings()
+                LanduseFactorySettings.SettingsLanduse.Add(new LanduseSettings()
                 {
                     Type = LanduseKind.Park,
                     Material = null,
@@ -364,31 +403,31 @@ public class LayerSettingWindows : EditorWindow
             GUILayout.Space(10);
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
             {
-                for (int ind = 0; ind < settingElement.SettingsLanduse.Count; ind++)
+                for (int ind = 0; ind < LanduseFactorySettings.SettingsLanduse.Count; ind++)
                 {
 
                     EditorGUILayout.BeginHorizontal("box");
-                    settingElement.SettingsLanduse[ind].showContent =
-                        EditorGUILayout.Foldout(settingElement.SettingsLanduse[ind].showContent,
-                            "LANDUSE TYPE - " + settingElement.SettingsLanduse[ind].Type.ToString());
+                    LanduseFactorySettings.SettingsLanduse[ind].showContent =
+                        EditorGUILayout.Foldout(LanduseFactorySettings.SettingsLanduse[ind].showContent,
+                            "LANDUSE TYPE - " + LanduseFactorySettings.SettingsLanduse[ind].Type.ToString());
 
                     #region CHECK DUBLE TYPE END ERROR
                     GUI.backgroundColor = Color.red;
 
-                    if (UsingType.FindAll(s => s == "lt_" + settingElement.SettingsLanduse[ind].Type.ToString()).Count > 1)
+                    if (UsingType.FindAll(s => s == "lt_" + LanduseFactorySettings.SettingsLanduse[ind].Type.ToString()).Count > 1)
                     {
                         if (GUILayout.Button("Type Exist", "CN CountBadge", GUILayout.Width(75)))
                         {
-                            settingElement.SettingsLanduse[ind].showContent = true;
+                            LanduseFactorySettings.SettingsLanduse[ind].showContent = true;
                         }
                     }
 
-                    if (settingElement.SettingsLanduse[ind].Material == null)
+                    if (LanduseFactorySettings.SettingsLanduse[ind].Material == null)
                     {
                         GUI.backgroundColor = Color.magenta;
                         if (GUILayout.Button("Mat is not set", "CN CountBadge", GUILayout.Width(95)))
                         {
-                            settingElement.SettingsLanduse[ind].showContent = true;
+                            LanduseFactorySettings.SettingsLanduse[ind].showContent = true;
                         }
                     }
 
@@ -399,24 +438,24 @@ public class LayerSettingWindows : EditorWindow
                     if (ind > 0 && GUILayout.Button(" \u25B2", "CN CountBadge", GUILayout.MaxWidth(30)))
                     {
                         Debug.Log(ind > 0);
-                        settingElement.SettingsLanduse.Move(ind, ind - 1);
+                        LanduseFactorySettings.SettingsLanduse.Move(ind, ind - 1);
                     }
-                    if (ind < settingElement.SettingsLanduse.Count - 1 && GUILayout.Button("\u25BC", "CN CountBadge", GUILayout.MaxWidth(30)))
+                    if (ind < LanduseFactorySettings.SettingsLanduse.Count - 1 && GUILayout.Button("\u25BC", "CN CountBadge", GUILayout.MaxWidth(30)))
                     {
-                        Debug.Log(ind < settingElement.SettingsLanduse.Count);
-                        settingElement.SettingsLanduse.Move(ind, ind + 1);
+                        Debug.Log(ind < LanduseFactorySettings.SettingsLanduse.Count);
+                        LanduseFactorySettings.SettingsLanduse.Move(ind, ind + 1);
                     }
                     GUI.contentColor = Color.red;
                     if (GUILayout.Button("\u2718", "CN CountBadge", GUILayout.MaxWidth(25)))
                     {
                         if (EditorUtility.DisplayDialog("Warning", "Are you sure you want to delete this type?", "Yes", "No"))
                         {
-                            if (UsingType.Contains("lt_" + settingElement.SettingsLanduse[ind].Type.ToString()))
+                            if (UsingType.Contains("lt_" + LanduseFactorySettings.SettingsLanduse[ind].Type.ToString()))
                             {
                                 UsingType.Remove("lt_" +
-                                                                settingElement.SettingsLanduse[ind].Type.ToString());
+                                                                LanduseFactorySettings.SettingsLanduse[ind].Type.ToString());
                             }
-                            settingElement.SettingsLanduse.RemoveAt(ind);
+                            LanduseFactorySettings.SettingsLanduse.RemoveAt(ind);
                         }
                     }
                     GUI.contentColor = Color.white;
@@ -425,9 +464,9 @@ public class LayerSettingWindows : EditorWindow
                     EditorGUILayout.EndHorizontal();
 
 
-                    if (settingElement.SettingsLanduse.Count > ind && settingElement.SettingsLanduse[ind].showContent)
+                    if (LanduseFactorySettings.SettingsLanduse.Count > ind && LanduseFactorySettings.SettingsLanduse[ind].showContent)
                     {
-                        ShowLanduseElement(settingElement.SettingsLanduse[ind]);
+                        ShowLanduseElement(LanduseFactorySettings.SettingsLanduse[ind]);
                     }
                     EditorGUILayout.Separator();
                 }
@@ -444,7 +483,7 @@ public class LayerSettingWindows : EditorWindow
             GUILayout.Label("WATER TYPE FOR LAYER", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
             if (GUILayout.Button("ADD WATER TYPE"))
             {
-                settingElement.SettingsWater.Add(new SettingsLayers.WaterSettings()
+                WaterFactorySettings.SettingsWater.Add(new WaterSettings()
                 {
                     Type = WaterType.Water,
                     Material = null,
@@ -454,31 +493,31 @@ public class LayerSettingWindows : EditorWindow
             GUILayout.Space(10);
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
             {
-                for (int ind = 0; ind < settingElement.SettingsWater.Count; ind++)
+                for (int ind = 0; ind < WaterFactorySettings.SettingsWater.Count; ind++)
                 {
 
                     EditorGUILayout.BeginHorizontal("box");
-                    settingElement.SettingsWater[ind].showContent =
-                        EditorGUILayout.Foldout(settingElement.SettingsWater[ind].showContent,
-                            "WATER TYPE - " + settingElement.SettingsWater[ind].Type.ToString());
+                    WaterFactorySettings.SettingsWater[ind].showContent =
+                        EditorGUILayout.Foldout(WaterFactorySettings.SettingsWater[ind].showContent,
+                            "WATER TYPE - " + WaterFactorySettings.SettingsWater[ind].Type.ToString());
 
                     #region CHECK DUBLE TYPE END ERROR
                     GUI.backgroundColor = Color.red;
 
-                    if (UsingType.FindAll(s => s == "wt_" + settingElement.SettingsWater[ind].Type.ToString()).Count > 1)
+                    if (UsingType.FindAll(s => s == "wt_" + WaterFactorySettings.SettingsWater[ind].Type.ToString()).Count > 1)
                     {
                         if (GUILayout.Button("Type Exist", "CN CountBadge", GUILayout.Width(75)))
                         {
-                            settingElement.SettingsWater[ind].showContent = true;
+                            WaterFactorySettings.SettingsWater[ind].showContent = true;
                         }
                     }
 
-                    if (settingElement.SettingsWater[ind].Material == null)
+                    if (WaterFactorySettings.SettingsWater[ind].Material == null)
                     {
                         GUI.backgroundColor = Color.magenta;
                         if (GUILayout.Button("Mat is not set", "CN CountBadge", GUILayout.Width(95)))
                         {
-                            settingElement.SettingsWater[ind].showContent = true;
+                            WaterFactorySettings.SettingsWater[ind].showContent = true;
                         }
                     }
                     #endregion
@@ -488,33 +527,33 @@ public class LayerSettingWindows : EditorWindow
                     if (ind > 0 && GUILayout.Button(" \u25B2", "CN CountBadge", GUILayout.MaxWidth(30)))
                     {
                         Debug.Log(ind > 0);
-                        settingElement.SettingsWater.Move(ind, ind - 1);
+                        WaterFactorySettings.SettingsWater.Move(ind, ind - 1);
                     }
-                    if (ind < settingElement.SettingsWater.Count - 1 && GUILayout.Button("\u25BC", "CN CountBadge", GUILayout.MaxWidth(30)))
+                    if (ind < WaterFactorySettings.SettingsWater.Count - 1 && GUILayout.Button("\u25BC", "CN CountBadge", GUILayout.MaxWidth(30)))
                     {
-                        Debug.Log(ind < settingElement.SettingsWater.Count);
-                        settingElement.SettingsWater.Move(ind, ind + 1);
+                        Debug.Log(ind < WaterFactorySettings.SettingsWater.Count);
+                        WaterFactorySettings.SettingsWater.Move(ind, ind + 1);
                     }
                     GUI.contentColor = Color.red;
                     if (GUILayout.Button("\u2718", "CN CountBadge", GUILayout.MaxWidth(25)))
                     {
                         if (EditorUtility.DisplayDialog("Warning", "Are you sure you want to delete this type?", "Yes", "No"))
                         {
-                            if (UsingType.Contains("wt_" + settingElement.SettingsWater[ind].Type.ToString()))
+                            if (UsingType.Contains("wt_" + WaterFactorySettings.SettingsWater[ind].Type.ToString()))
                             {
                                 UsingType.Remove("wt_" +
-                                                                settingElement.SettingsWater[ind].Type.ToString());
+                                                                WaterFactorySettings.SettingsWater[ind].Type.ToString());
                             }
-                            settingElement.SettingsWater.RemoveAt(ind);
+                            WaterFactorySettings.SettingsWater.RemoveAt(ind);
                         }
                     }
                     GUI.contentColor = Color.white;
                     #endregion
 
                     EditorGUILayout.EndHorizontal();
-                    if (settingElement.SettingsWater.Count > ind && settingElement.SettingsWater[ind].showContent)
+                    if (WaterFactorySettings.SettingsWater.Count > ind && WaterFactorySettings.SettingsWater[ind].showContent)
                     {
-                        ShowWaterElement(settingElement.SettingsWater[ind]);
+                        ShowWaterElement(WaterFactorySettings.SettingsWater[ind]);
                     }
                     EditorGUILayout.Separator();
                 }
@@ -531,7 +570,7 @@ public class LayerSettingWindows : EditorWindow
             GUILayout.Label("Boundary TYPE FOR LAYER", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
             if (GUILayout.Button("ADD Boundary TYPE"))
             {
-                settingElement.SettingsBoundary.Add(new SettingsLayers.BoundarySettings()
+                BoundaryFactorySettings.SettingsBoundary.Add(new BoundarySettings()
                 {
                     Type = BoundaryType.Unknown,
                     Material = null,
@@ -541,31 +580,31 @@ public class LayerSettingWindows : EditorWindow
             GUILayout.Space(10);
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
             {
-                for (int ind = 0; ind < settingElement.SettingsBoundary.Count; ind++)
+                for (int ind = 0; ind < BoundaryFactorySettings.SettingsBoundary.Count; ind++)
                 {
 
                     EditorGUILayout.BeginHorizontal("box");
-                    settingElement.SettingsBoundary[ind].showContent =
-                        EditorGUILayout.Foldout(settingElement.SettingsBoundary[ind].showContent,
-                            "Boundary TYPE - " + settingElement.SettingsBoundary[ind].Type.ToString());
+                    BoundaryFactorySettings.SettingsBoundary[ind].showContent =
+                        EditorGUILayout.Foldout(BoundaryFactorySettings.SettingsBoundary[ind].showContent,
+                            "Boundary TYPE - " + BoundaryFactorySettings.SettingsBoundary[ind].Type.ToString());
 
                     #region CHECK DUBLE TYPE END ERROR
                     GUI.backgroundColor = Color.red;
 
-                    if (UsingType.FindAll(s => s == "bt_" + settingElement.SettingsBoundary[ind].Type.ToString()).Count > 1)
+                    if (UsingType.FindAll(s => s == "bt_" + BoundaryFactorySettings.SettingsBoundary[ind].Type.ToString()).Count > 1)
                     {
                         if (GUILayout.Button("Type Exist", "CN CountBadge", GUILayout.Width(75)))
                         {
-                            settingElement.SettingsBoundary[ind].showContent = true;
+                            BoundaryFactorySettings.SettingsBoundary[ind].showContent = true;
                         }
                     }
 
-                    if (settingElement.SettingsBoundary[ind].Material == null)
+                    if (BoundaryFactorySettings.SettingsBoundary[ind].Material == null)
                     {
                         GUI.backgroundColor = Color.magenta;
                         if (GUILayout.Button("Mat is not set", "CN CountBadge", GUILayout.Width(95)))
                         {
-                            settingElement.SettingsBoundary[ind].showContent = true;
+                            BoundaryFactorySettings.SettingsBoundary[ind].showContent = true;
                         }
                     }
                     #endregion
@@ -575,33 +614,33 @@ public class LayerSettingWindows : EditorWindow
                     if (ind > 0 && GUILayout.Button(" \u25B2", "CN CountBadge", GUILayout.MaxWidth(30)))
                     {
                         Debug.Log(ind > 0);
-                        settingElement.SettingsBoundary.Move(ind, ind - 1);
+                        BoundaryFactorySettings.SettingsBoundary.Move(ind, ind - 1);
                     }
-                    if (ind < settingElement.SettingsBoundary.Count - 1 && GUILayout.Button("\u25BC", "CN CountBadge", GUILayout.MaxWidth(30)))
+                    if (ind < BoundaryFactorySettings.SettingsBoundary.Count - 1 && GUILayout.Button("\u25BC", "CN CountBadge", GUILayout.MaxWidth(30)))
                     {
-                        Debug.Log(ind < settingElement.SettingsBoundary.Count);
-                        settingElement.SettingsBoundary.Move(ind, ind + 1);
+                        Debug.Log(ind < BoundaryFactorySettings.SettingsBoundary.Count);
+                        BoundaryFactorySettings.SettingsBoundary.Move(ind, ind + 1);
                     }
                     GUI.contentColor = Color.red;
                     if (GUILayout.Button("\u2718", "CN CountBadge", GUILayout.MaxWidth(25)))
                     {
                         if (EditorUtility.DisplayDialog("Warning", "Are you sure you want to delete this type?", "Yes", "No"))
                         {
-                            if (UsingType.Contains("bt_" + settingElement.SettingsBoundary[ind].Type.ToString()))
+                            if (UsingType.Contains("bt_" + BoundaryFactorySettings.SettingsBoundary[ind].Type.ToString()))
                             {
                                 UsingType.Remove("bt_" +
-                                                                settingElement.SettingsBoundary[ind].Type.ToString());
+                                                                BoundaryFactorySettings.SettingsBoundary[ind].Type.ToString());
                             }
-                            settingElement.SettingsBoundary.RemoveAt(ind);
+                            BoundaryFactorySettings.SettingsBoundary.RemoveAt(ind);
                         }
                     }
                     GUI.contentColor = Color.white;
                     #endregion
 
                     EditorGUILayout.EndHorizontal();
-                    if (settingElement.SettingsBoundary.Count > ind && settingElement.SettingsBoundary[ind].showContent)
+                    if (BoundaryFactorySettings.SettingsBoundary.Count > ind && BoundaryFactorySettings.SettingsBoundary[ind].showContent)
                     {
-                        ShowBoundaryElement(settingElement.SettingsBoundary[ind]);
+                        ShowBoundaryElement(BoundaryFactorySettings.SettingsBoundary[ind]);
                     }
                     EditorGUILayout.Separator();
                 }
@@ -611,7 +650,7 @@ public class LayerSettingWindows : EditorWindow
         EditorGUILayout.EndVertical();
     }
 
-    private void ShowBuildingElement(SettingsLayers.BuildingSettings element)
+    private void ShowBuildingElement(BuildingSettings element)
     {
         EditorGUILayout.BeginVertical("box");
         {
@@ -638,7 +677,7 @@ public class LayerSettingWindows : EditorWindow
         }
         EditorGUILayout.EndVertical();
     }
-    private void ShowRoadElement(SettingsLayers.RoadSettings element)
+    private void ShowRoadElement(RoadSettings element)
     {
         EditorGUILayout.BeginVertical("box");
         {
@@ -662,7 +701,7 @@ public class LayerSettingWindows : EditorWindow
         }
         EditorGUILayout.EndVertical();
     }
-    private void ShowLanduseElement(SettingsLayers.LanduseSettings element)
+    private void ShowLanduseElement(LanduseSettings element)
     {
         EditorGUILayout.BeginVertical("box");
         {
@@ -681,7 +720,7 @@ public class LayerSettingWindows : EditorWindow
         }
         EditorGUILayout.EndVertical();
     }
-    private void ShowWaterElement(SettingsLayers.WaterSettings element)
+    private void ShowWaterElement(WaterSettings element)
     {
         EditorGUILayout.BeginVertical("box");
         {
@@ -699,7 +738,7 @@ public class LayerSettingWindows : EditorWindow
         }
         EditorGUILayout.EndVertical();
     }
-    private void ShowBoundaryElement(SettingsLayers.BoundarySettings element)
+    private void ShowBoundaryElement(BoundarySettings element)
     {
         EditorGUILayout.BeginVertical("box");
         {
@@ -719,30 +758,30 @@ public class LayerSettingWindows : EditorWindow
         EditorGUILayout.EndVertical();
     }
 
-    void CreateNewItemList()
+   /* void CreateNewItemList()
     {
         viewIndex = 1;
         settingElement = Create();
         if (settingElement)
         {
-            settingElement.SettingsBuildings = new List<SettingsLayers.BuildingSettings>();
-            settingElement.SettingsLanduse = new List<SettingsLayers.LanduseSettings>();
-            settingElement.SettingsRoad = new List<SettingsLayers.RoadSettings>();
-            settingElement.SettingsWater = new List<SettingsLayers.WaterSettings>();
-            settingElement.SettingsBoundary = new List<SettingsLayers.BoundarySettings>();
+            BuildingFactorySettings.SettingsBuildings = new List<BuildingSettings>();
+            LanduseFactorySettings.SettingsLanduse = new List<LanduseSettings>();
+            RoadFactorySettings.SettingsRoad = new List<RoadSettings>();
+            WaterFactorySettings.SettingsWater = new List<WaterSettings>();
+            BoundaryFactorySettings.SettingsBoundary = new List<BoundarySettings>();
 
             string relPath = AssetDatabase.GetAssetPath(settingElement);
             EditorPrefs.SetString("ObjectPath", relPath);
         }
     }
-    public SettingsLayers Create()
+    public SettingsLayersLayers Create()
     {
-        SettingsLayers asset = ScriptableObject.CreateInstance<SettingsLayers>();
+        SettingsLayersLayers asset = ScriptableObject.CreateInstance<SettingsLayersLayers>();
 
         AssetDatabase.CreateAsset(asset, PATH_SAVE_SCRIPTABLE_OBJECT);
         AssetDatabase.SaveAssets();
         return asset;
-    }
+    }*/
 
     public void DisplayErrorMEssage(string message, MessageType type = MessageType.Error)
     {

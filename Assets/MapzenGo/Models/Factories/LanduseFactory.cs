@@ -12,7 +12,8 @@ namespace MapzenGo.Models.Factories
     public class LanduseFactory : Factory
     {
         public override string XmlTag { get { return "landuse"; } }
-
+        [SerializeField]
+        protected LanduseFactorySettings FactorySettings;
         public override void Start()
         {
             base.Start();
@@ -23,7 +24,7 @@ namespace MapzenGo.Models.Factories
         {
             var kind = geo["properties"]["kind"].str.ConvertToEnum<LanduseKind>();
 
-            if (!_settings.HasSettingsFor(kind) && !JustDrawEverythingFam)
+            if (!FactorySettings.HasSettingsFor(kind) && !JustDrawEverythingFam)
                 yield break;
 
             var bb = geo["geometry"]["coordinates"].list[0]; //this is wrong but cant fix it now
@@ -71,10 +72,10 @@ namespace MapzenGo.Models.Factories
             foreach (var geo in items.Where(x => Query(x)))
             {
                 var kind = geo["properties"]["kind"].str.ConvertToEnum<LanduseKind>();
-                if (!_settings.HasSettingsFor(kind) && !JustDrawEverythingFam)
+                if (!FactorySettings.HasSettingsFor(kind) && !JustDrawEverythingFam)
                     continue;
 
-                var typeSettings = _settings.GetSettingsFor(kind);
+                var typeSettings = FactorySettings.GetSettingsFor<LanduseSettings>(kind);
                 if (!_meshes.ContainsKey(kind))
                     _meshes.Add(kind, new MeshData());
 
@@ -135,7 +136,7 @@ namespace MapzenGo.Models.Factories
             landuse.Type = geo["type"].str;
             landuse.SortKey = (int)geo["properties"]["sort_key"].f;
             landuse.Kind = kind;
-            landuse.GetComponent<MeshRenderer>().material = _settings.GetSettingsFor(kind).Material;
+            landuse.GetComponent<MeshRenderer>().material = FactorySettings.GetSettingsFor<LanduseSettings>(kind).Material;
         }
 
         private void CreateMesh(InputGeometry corners, MeshData meshdata)
@@ -164,7 +165,7 @@ namespace MapzenGo.Models.Factories
             mesh.vertices = meshdata.Vertices.ToArray();
             mesh.triangles = meshdata.Indices.ToArray();
             mesh.RecalculateNormals();
-            go.GetComponent<MeshRenderer>().material = _settings.GetSettingsFor(kind).Material;
+            go.GetComponent<MeshRenderer>().material = FactorySettings.GetSettingsFor<LanduseSettings>(kind).Material;
             go.transform.position += Vector3.up * Order;
             go.transform.SetParent(parent, true);
         }
