@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MapzenGo.Models.Enums;
 using MapzenGo.Helpers;
+using MapzenGo.Models.Settings;
 using TriangleNet;
 using TriangleNet.Geometry;
 using UniRx;

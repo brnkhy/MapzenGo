@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.MapzenGo.Models.Enums;
 using MapzenGo.Models.Enums;
+using MapzenGo.Models.Settings.Base;
 
 public class BoundaryFactorySettings: SettingsLayers
 {

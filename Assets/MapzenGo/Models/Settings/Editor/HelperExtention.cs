@@ -31,7 +31,7 @@ public class HelperExtention : MonoBehaviour {
     {
         if (!Directory.Exists(pathSaveScriptableObject)) Directory.CreateDirectory(pathSaveScriptableObject);
 
-        var path = pathSaveScriptableObject + typeof(T).ToString()+ ".asset";
+        var path = pathSaveScriptableObject + typeof(T).Name + ".asset";
         if (File.Exists(Path.Combine(Environment.CurrentDirectory, path)))
         {
            // Debug.LogError("\u25B6 " + "GET OBJECT" + path);
