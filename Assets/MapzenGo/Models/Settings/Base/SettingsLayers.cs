@@ -1,33 +1,32 @@
 ﻿using System;
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.MapzenGo.Models.Enums;
 using MapzenGo.Models.Enums;
 using SerializableCollections;
+using UnityEngine;
 
-[System.Serializable]
-public abstract class SettingsLayers : ScriptableObject
+namespace MapzenGo.Models.Settings.Base
 {
-    public virtual T GetSettingsFor<T>(Enum type) where T : BaseSetting
+    [System.Serializable]
+    public abstract class SettingsLayers : ScriptableObject
     {
-     return null;   
+        public virtual T GetSettingsFor<T>(Enum type) where T : BaseSetting
+        {
+            return null;
+        }
+
+        public virtual bool HasSettingsFor(Enum type)
+        {
+            return false;
+        }
+
+        public static T GetScriptableObject<T>() where T : SettingsLayers
+        {
+            return Resources.Load<T>("Settings/" + (typeof(T).ToString()));
+        }
+
     }
 
-    public virtual bool HasSettingsFor(Enum type)
-    {
-        return false;
-    }
-
-    public static T GetScriptableObject<T>() where T : SettingsLayers
-    {
-        return Resources.Load<T>("Settings/" + (typeof (T).ToString()));
-    }
-
+    public class SettingsLayersDictionary : SerializableDictionary<Enum, BaseSetting> { };
 }
-
-public class SettingsLayersDictionary : SerializableDictionary<Enum, BaseSetting> { };
-
-
-

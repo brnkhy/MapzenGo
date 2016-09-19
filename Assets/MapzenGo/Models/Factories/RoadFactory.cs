@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using MapzenGo.Helpers;
 using MapzenGo.Models.Enums;
+using MapzenGo.Models.Settings;
 using UniRx;
 using UnityEngine;
 

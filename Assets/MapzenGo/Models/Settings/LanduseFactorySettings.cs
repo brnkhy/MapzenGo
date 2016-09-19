@@ -1,38 +1,41 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.MapzenGo.Models.Enums;
 using MapzenGo.Models.Enums;
+using MapzenGo.Models.Settings.Base;
 
-public class LanduseFactorySettings: SettingsLayers
+namespace MapzenGo.Models.Settings
 {
-    public LanduseSettings DefaultLanduse = new LanduseSettings();
-    public List<LanduseSettings> SettingsLanduse;
-
-    public LanduseFactorySettings()
+    public class LanduseFactorySettings: SettingsLayers
     {
-        DefaultLanduse = new LanduseSettings()
+        public LanduseSettings DefaultLanduse = new LanduseSettings();
+        public List<LanduseSettings> SettingsLanduse;
+
+        public LanduseFactorySettings()
         {
-            Material = null,
-            Type = LanduseKind.Forest,
-        };
-        SettingsLanduse = new List<LanduseSettings>();
+            DefaultLanduse = new LanduseSettings()
+            {
+                Material = null,
+                Type = LanduseKind.Forest,
+            };
+            SettingsLanduse = new List<LanduseSettings>();
+        }
+
+        public override LanduseSettings GetSettingsFor<LanduseSettings>(Enum type)
+        {
+            var f = SettingsLanduse.FirstOrDefault(x => x.Type == (LanduseKind)type);
+            return f as LanduseSettings ?? DefaultLanduse as LanduseSettings;
+        }
+
+        public override bool HasSettingsFor(Enum type)
+        {
+            return SettingsLanduse.Any(x => x.Type == (LanduseKind)type);
+        }
     }
 
-    public override LanduseSettings GetSettingsFor<LanduseSettings>(Enum type)
+    [Serializable]
+    public class LanduseSettings : BaseSetting
     {
-        var f = SettingsLanduse.FirstOrDefault(x => x.Type == (LanduseKind)type);
-        return f as LanduseSettings ?? DefaultLanduse as LanduseSettings;
+        public LanduseKind Type;
     }
-
-    public override bool HasSettingsFor(Enum type)
-    {
-        return SettingsLanduse.Any(x => x.Type == (LanduseKind)type);
-    }
-}
-
-[Serializable]
-public class LanduseSettings : BaseSetting
-{
-    public LanduseKind Type;
 }
