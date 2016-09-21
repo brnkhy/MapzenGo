@@ -23,7 +23,7 @@ namespace MapzenGo.Models.Factories
 
         protected override IEnumerable<MonoBehaviour> Create(Tile tile, JSONObject geo)
         {
-            var kind = geo["properties"]["kind"].str.ConvertToEnum<LanduseKind>();
+            var kind = geo["properties"]["kind"].str.ConvertToLanduseType();
 
             if (!FactorySettings.HasSettingsFor(kind) && !JustDrawEverythingFam)
                 yield break;
@@ -72,7 +72,7 @@ namespace MapzenGo.Models.Factories
             var _meshes = new Dictionary<LanduseKind, MeshData>();
             foreach (var geo in items.Where(x => Query(x)))
             {
-                var kind = geo["properties"]["kind"].str.ConvertToEnum<LanduseKind>();
+                var kind = geo["properties"]["kind"].str.ConvertToLanduseType();
                 if (!FactorySettings.HasSettingsFor(kind) && !JustDrawEverythingFam)
                     continue;
 

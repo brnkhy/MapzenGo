@@ -22,7 +22,7 @@ namespace MapzenGo.Models.Factories
 
         protected override IEnumerable<MonoBehaviour> Create(Tile tile, JSONObject geo)
         {
-            var kind = geo["properties"]["kind"].str.ConvertToEnum<BoundaryType>();
+            var kind = geo["properties"]["kind"].str.ConvertToBoundaryType();
             if (_settings.HasSettingsFor(kind))
             {
                 var typeSettings = _settings.GetSettingsFor<BoundarySettings>(kind);
@@ -107,7 +107,7 @@ namespace MapzenGo.Models.Factories
         {
             foreach (var geo in geoList.Where(x => Query(x)))
             {
-                var kind = geo["properties"]["kind"].str.ConvertToEnum<BoundaryType>();
+                var kind = geo["properties"]["kind"].str.ConvertToBoundaryType();
                 if (!_settings.HasSettingsFor(kind))
                     continue;
 
