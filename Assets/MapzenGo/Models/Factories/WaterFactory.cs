@@ -24,7 +24,7 @@ namespace MapzenGo.Models.Factories
 
         protected override IEnumerable<MonoBehaviour> Create(Tile tile, JSONObject geo)
         {
-            var kind = geo["properties"]["kind"].str.ConvertToEnum<WaterType>();
+            var kind = geo["properties"]["kind"].str.ConvertToWaterType();
             var typeSettings = FactorySettings.GetSettingsFor<WaterSettings>(kind);
 
             var go = new GameObject("water");
@@ -82,7 +82,7 @@ namespace MapzenGo.Models.Factories
             foreach (var geo in items.Where(x => Query(x)))
             {
                 var kind = geo["properties"].HasField("kind")
-                ? geo["properties"]["kind"].str.ConvertToEnum<WaterType>()
+                ? geo["properties"]["kind"].str.ConvertToWaterType()
                 : WaterType.Water;
 
                 var typeSettings = FactorySettings.GetSettingsFor<WaterSettings>(kind);

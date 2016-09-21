@@ -32,7 +32,7 @@ namespace MapzenGo.Models.Factories
         {
             var key = geo["properties"]["id"].ToString();
             var kind = geo["properties"].HasField("landuse_kind")
-                ? geo["properties"]["landuse_kind"].str.ConvertToEnum<BuildingType>()
+                ? geo["properties"]["landuse_kind"].str.ConvertToBuildingType()
                 : BuildingType.Unknown;
             if (!_active.Contains(key))
             {
@@ -106,7 +106,7 @@ namespace MapzenGo.Models.Factories
                 tile.Destroyed += (s, e) => { _active.Remove(key); };
 
                 var kind = geo["properties"].HasField("landuse_kind")
-                ? geo["properties"]["landuse_kind"].str.ConvertToEnum<BuildingType>()
+                ? geo["properties"]["landuse_kind"].str.ConvertToBuildingType()
                 : BuildingType.Unknown;
 
                 var typeSettings = FactorySettings.GetSettingsFor<BuildingSettings>(kind);
