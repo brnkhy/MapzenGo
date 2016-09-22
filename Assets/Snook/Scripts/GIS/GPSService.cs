@@ -38,7 +38,10 @@ namespace Snook.GIS
         // allow us to paste in a comma sep lat/lon from goog maps etc
         private string _message;
 
+        // Maintain a timestamp log of the locations
         private Dictionary<DateTime, GeoLocationCoordinate> locations;
+
+        public Dictionary<DateTime, GeoLocationCoordinate> LocationHistory { get { return locations; } }
 
         private IEnumerator Wait(int Seconds)
         {
@@ -61,22 +64,24 @@ namespace Snook.GIS
             this.locations = new Dictionary<DateTime, GeoLocationCoordinate>();
 
             GpsStart();
-            InvokeRepeating("CheckLocation", 2, 2);
         }
 
+        /// <summary>
+        /// Gets repeated every couple of seconds
+        /// </summary>
         private void CheckLocation()
         {
             if (this.ActiveAndConnected)
             {
-                var newlocation = new GeoLocationCoordinate(Input.location.lastData);
-                if (newlocation != this.lastLocation)
+                var newLocation = new GeoLocationCoordinate(Input.location.lastData);
+                if (!newLocation.Equals(this.lastLocation))
                 {
                     // let anybody who cares know
                     if (Changed != null)
-                        Changed.Invoke(new GPSEventArgs(newlocation));
+                        Changed.Invoke(new GPSEventArgs(newLocation));
                     //save it to a log.
-                    this.locations.Add(DateTime.Now, newlocation);
-                    this.lastLocation = newlocation;
+                    this.locations.Add(DateTime.Now, newLocation);
+                    this.lastLocation = newLocation;
                 }
             }
         }
@@ -107,8 +112,8 @@ namespace Snook.GIS
                     _message = "GPS Service is go";
                     var loc = new GeoLocationCoordinate(Input.location.lastData.latitude, Input.location.lastData.longitude);
                     this.startLocation = this.lastLocation = loc;
-
                     Connected.Invoke(new GPSEventArgs(loc));
+                    InvokeRepeating("CheckLocation", 2, 2);
                 }
             }
         }

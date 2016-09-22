@@ -26,8 +26,7 @@ namespace Snook
 
         #region private properties
 
-        private GeoLocationCoordinate startLocation;
-        private GeoLocationCoordinate lastLocation;
+        private GameObject world;
 
         private Rigidbody hardBody;
         private Animator animator;
@@ -45,18 +44,22 @@ namespace Snook
 
         private void Awake()
         {
-            if (GPS == null)
+            this.world = GameObject.Find("World");
+
+            if (this.GPS == null)
                 try
                 {
 #if UNITY_EDITOR
-                    this.GPS = GetComponent<GPSServiceTest>();
+                    this.GPS = world.GetComponent<GPSServiceTest>();
 #else
-                    this.GPS = GetComponent<GPSService>();
+                    this.GPS = GameObject.Find("World").GetComponent<GPSService>();
 #endif
+                    GPS.Connected += onConnected;
+                    GPS.Changed += onGPSChanged;
                 }
                 catch
                 {
-                    Debug.LogError("GPSCHaracterController require a GPS Service attached");
+                    Debug.LogError("GPSCHaracterController requires a GPS Service attached to World");
                 }
             else
             {
@@ -68,7 +71,6 @@ namespace Snook
 
         private void onConnected(GPSEventArgs e)
         {
-            lastLocation = startLocation = GPS.Location; // new GeoLocationCoordinate(GPS.Location.latitude, GPS.Location.longitude);
             if (GetComponent<Rigidbody>())
                 this.hardBody = GetComponent<Rigidbody>();
             else
@@ -85,9 +87,10 @@ namespace Snook
 
         public void onGPSChanged(GPSEventArgs e)
         {
+            transform.SetParent(world.transform);
+            var tm = world.GetComponent<GPS_CDTM>();
             var meters = GM.LatLonToMeters(e.Coordinate.latitude, e.Coordinate.longitude);
             // get the tile manager for the correct zoom
-            var tm = GameObject.Find("World").GetComponent<GPS_CDTM>();
             var tileinfo = GM.MetersToTile(meters, tm.Zoom);
 
             //does the tile we want to go to exist?
@@ -99,6 +102,9 @@ namespace Snook
                 if (tile.Rect.Contains(meters))
                 {
                     transform.position = (meters - tile.Rect.Center).ToVector3();
+                    //this.destination = (meters - tile.Rect.Center).ToVector3();
+                    transform.localScale = Vector3.one * 152.8741f;
+                    transform.SetParent(tile.transform, false); //or true, not sure about that part
                 }
             }
             else // coordinate outside of current area.  reset the map?
@@ -107,24 +113,11 @@ namespace Snook
             }
         }
 
-        //public void onGPSChanged(GPSEventArgs e)
-        //{
-        //    var newLocation = GPS.Location;
-
-        //    if (this.lastLocation != newLocation)
-        //    {
-        //        Vector2d localMerc = newLocation.ToMeters() - lastLocation.ToMeters();
-
-        //        this.destination = localMerc.ToVector3();
-        //        this.lastLocation = newLocation;
-        //        Debug.Log(destination.x + ", " + destination.z);
-        //    }
-        //}
-
         public void FixedUpdate()
         {
-            if (GPS != null && GPS.ActiveAndConnected)
-                Run();
+            //if (GPS != null && GPS.ActiveAndConnected)
+            //    move();
+            //Run();
         }
 
         private Vector3 lastpos;
