@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Assets.MapzenGo.Models.Plugins;
+﻿using Assets.MapzenGo.Models.Plugins;
 using MapzenGo.Models.Plugins;
+using System;
+using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
@@ -37,7 +37,6 @@ namespace MapzenGo.Models.Plugins
                 {
                     Debug.Log(error);
                 });
-
         }
     }
 }

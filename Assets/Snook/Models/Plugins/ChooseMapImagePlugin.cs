@@ -41,12 +41,11 @@ namespace Snook.Models.Plugins
             go.localScale = new Vector3((float)tile.Rect.Width, (float)tile.Rect.Width, 1);
             go.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
             go.localPosition = Vector3.zero;
-            //go.localPosition -= new Vector3(0, 1, 0);
-            go.localPosition -= new Vector3(0, 0, 0);
+
+            go.localPosition -= new Vector3(0, 1, 0);
             var rend = go.GetComponent<Renderer>();
             rend.material = tile.Material;
 
-            //var url = MapImageUrlBase + tile.Zoom + "/" + tile.TileTms.x + "/" + tile.TileTms.y + ".png";
             var url = TileServiceUrls[(int)TileService] + tile.Zoom + "/" + tile.TileTms.x + "/" + tile.TileTms.y + ".png";
 
             ObservableWWW.GetWWW(url).Subscribe(

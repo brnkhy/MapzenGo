@@ -13,8 +13,8 @@ namespace Snook
     {
         #region Public properties
 
-        [Tooltip("Drag GpsService container component here.")]
-        public GPSService GPS;
+        [Tooltip("Drag GpsService, (eg 'World') container component here.")]
+        public IGPSService GPS;
 
         [Tooltip("Speed of object movement.")]
         public float Speed = 2;
@@ -29,40 +29,52 @@ namespace Snook
         private GeoLocationCoordinate startLocation;
         private GeoLocationCoordinate lastLocation;
 
-        private Rigidbody _hardBody;
-        private Animator _animator;
+        private Rigidbody hardBody;
+        private Animator animator;
+        //private Quaternion _targetRotation;
 
-        //flag to check if the user has tapped / clicked.
         //Set to true on click. Reset to false on reaching destination
-        private bool _weMovin = false;
+        private bool weMovin = false;
 
         //destination point
-        private Vector3 _destination;
+        private Vector3 destination;
 
-        private Vector3 _lastpos;
-        private Vector3 _direction;
+        public Vector3 eulerAngleVelocity;
 
         #endregion private properties
 
-        private void Start()
+        private void Awake()
         {
             if (GPS == null)
-                Debug.LogError("GPSCHaracterController require a GPS Service attached");
-
-            //We can't really start unitl we've got a signal so.
-            GPS.Connected += OnConnected;
-            GPS.Changed += onGPSChanged;
+                try
+                {
+#if UNITY_EDITOR
+                    this.GPS = GetComponent<GPSServiceTest>();
+#else
+                    this.GPS = GetComponent<GPSService>();
+#endif
+                }
+                catch
+                {
+                    Debug.LogError("GPSCHaracterController require a GPS Service attached");
+                }
+            else
+            {
+                //We can't really start unitl we've got a signal so.
+                GPS.Connected += onConnected;
+                GPS.Changed += onGPSChanged;
+            }
         }
 
-        private void OnConnected(object sender, GPSEventArgs e)
+        private void onConnected(GPSEventArgs e)
         {
             lastLocation = startLocation = GPS.Location; // new GeoLocationCoordinate(GPS.Location.latitude, GPS.Location.longitude);
             if (GetComponent<Rigidbody>())
-                _hardBody = GetComponent<Rigidbody>();
+                this.hardBody = GetComponent<Rigidbody>();
             else
                 Debug.LogError("The character needs a rigidbody.");
 
-            _animator = GetComponent<Animator>();
+            animator = GetComponent<Animator>();
         }
 
         // Update is called once per frame
@@ -71,66 +83,105 @@ namespace Snook
             //GetInput();
         }
 
-        public void onGPSChanged(object sender, GPSEventArgs e)
+        public void onGPSChanged(GPSEventArgs e)
         {
-            var newLocation = GPS.Location;
+            var meters = GM.LatLonToMeters(e.Coordinate.latitude, e.Coordinate.longitude);
+            // get the tile manager for the correct zoom
+            var tm = GameObject.Find("World").GetComponent<GPS_CDTM>();
+            var tileinfo = GM.MetersToTile(meters, tm.Zoom);
 
-            if (lastLocation != newLocation)
+            //does the tile we want to go to exist?
+            var gTile = GameObject.Find("tile " + tileinfo.x + '-' + tileinfo.y);
+            if (gTile)
             {
-                Vector2d localMerc = newLocation.ToMeters() - lastLocation.ToMeters();
-                _destination = localMerc.ToVector3();
-
-                /*
-                var tm = GameObject.Find("World").GetComponent<TileManager>();
-
-                //var tileMgr = new GeoLocationCoordinate(tm.Latitude, tm.Longitude);
-
-                Vector2d startMerc = GM.LatLonToMeters(tm.Latitude, tm.Longitude);
-                Vector2d destMerc = GM.LatLonToMeters(lat, lon); //33.8301, -84.265
-                Vector2d localMerc = destMerc - startMerc;
-                _destination = localMerc.ToVector3();
-                Debug.Log("_destination: {" + _destination.x + ", " + _destination.y + ", " + _destination.z + "}");
-                */
+                //get this tiles Tile object move relative to it?
+                Tile tile = gTile.GetComponent<Tile>();
+                if (tile.Rect.Contains(meters))
+                {
+                    transform.position = (meters - tile.Rect.Center).ToVector3();
+                }
+            }
+            else // coordinate outside of current area.  reset the map?
+            {
+                tm.onConnected(e);
             }
         }
+
+        //public void onGPSChanged(GPSEventArgs e)
+        //{
+        //    var newLocation = GPS.Location;
+
+        //    if (this.lastLocation != newLocation)
+        //    {
+        //        Vector2d localMerc = newLocation.ToMeters() - lastLocation.ToMeters();
+
+        //        this.destination = localMerc.ToVector3();
+        //        this.lastLocation = newLocation;
+        //        Debug.Log(destination.x + ", " + destination.z);
+        //    }
+        //}
 
         public void FixedUpdate()
         {
             if (GPS.ActiveAndConnected)
+                //move();
                 Run();
+        }
+
+        private Vector3 lastpos;
+
+        private void LateUpdate()
+        {
+            //Vector3 newpos = transform.position;
+            //newpos.y = Terrain.activeTerrain.SampleHeight(transform.position);
+            //transform.position = newpos;
+        }
+
+        private void move()
+        {
+            Quaternion deltaRotation = Quaternion.Euler(this.eulerAngleVelocity * Time.deltaTime);
+
+            this.hardBody.MoveRotation(this.hardBody.rotation * deltaRotation);
+            this.hardBody.MovePosition(this.destination + this.transform.forward * Time.deltaTime);
         }
 
         public void Run()
         {
-            transform.position = Vector3.MoveTowards(transform.position, _destination, Time.deltaTime * Speed);
-            float velocity = System.Math.Abs((transform.position.magnitude - _lastpos.magnitude) / Time.deltaTime);
+            float velocity;
 
-            _lastpos = transform.position;
-            //Debug.Log("velocity = " + velocity);
-
-            if (velocity > 0)
+            if (this.transform.position != this.destination)
             {
-                Turn();
-                _animator.SetFloat("velocity", velocity);
+                weMovin = true;
+                transform.position = Vector3.MoveTowards(transform.position, destination, Time.deltaTime * this.Speed);
+
+                velocity = System.Math.Abs((transform.position.magnitude - lastpos.magnitude) / Time.deltaTime);
+
+                lastpos = transform.position;
+
+                if (velocity > 0)
+                {
+                    Turn();
+                    //move
+                    animator.SetFloat("velocity", velocity);
+                }
+                else
+                {
+                    animator.SetFloat("velocity", 0f);
+                }
             }
             else
-            {
-                _animator.SetFloat("velocity", 0f);
-            }
+                weMovin = false;
         }
 
         private void Turn()
         {
-            Quaternion _targetRotation;
-
             //find the vector pointing from our position to the target
-            _direction = (_destination - transform.position).normalized;
+            Vector3 _direction = (destination - transform.position).normalized;
             //create the rotation we need to be in to look at the target
-            _targetRotation = Quaternion.LookRotation(_direction);
+            Quaternion _targetRotation = Quaternion.LookRotation(_direction);
 
-            if (_hardBody.transform.rotation != _targetRotation)
-                //rotate us over time according to speed until we are in the required rotation
-                transform.rotation = Quaternion.Slerp(transform.rotation, _targetRotation, Time.deltaTime * RotationSpeed);
+            //rotate us over time according to speed until we are in the required rotation
+            transform.rotation = Quaternion.Slerp(transform.rotation, _targetRotation, Time.deltaTime * this.RotationSpeed);
         }
     }
 }

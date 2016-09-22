@@ -14,25 +14,33 @@ namespace Snook.GIS
         private bool _weGotAMap = false;
 
         //[Tooltip("Drag GpsService container (World) component here.")]
-        public GPSService GPS;
+        public IGPSService GPS;
 
         /// <summary>
         /// Subscribe to gps connect event
         /// </summary>
-        public override void Start()
+        public void Awake()
         {
+#if UNITY_EDITOR
+            this.GPS = GetComponent<GPSServiceTest>();
+#else
             this.GPS = GetComponent<GPSService>();
+#endif
 
             GPS.Connected += onConnected;
+        }
+
+        public override void Start()
+        {
             GeoLocationCoordinateSettings.Zoom = this.Zoom;
-            GeoLocationCoordinateSettings.TileSize = (int)this.TileSize;
         }
 
         /// Application.persistentDataPath is for android.  We've got a gps signal so lets draw our map
-        public void onConnected(object sender, EventArgs e)
+        public void onConnected(GPSEventArgs e)
         {
-            Latitude = GPS.Location.latitude;
-            Longitude = GPS.Location.longitude;
+            Latitude = e.Coordinate.latitude;
+            Longitude = e.Coordinate.longitude;
+            Destroy(GameObject.Find("Tiles"));
 
             base.Start();
 
@@ -40,6 +48,8 @@ namespace Snook.GIS
             CacheFolderPath = CacheFolderPath.Format(Zoom);
             if (!Directory.Exists(CacheFolderPath))
                 Directory.CreateDirectory(CacheFolderPath);
+
+            _weGotAMap = true;
         }
 
         protected override void Update()

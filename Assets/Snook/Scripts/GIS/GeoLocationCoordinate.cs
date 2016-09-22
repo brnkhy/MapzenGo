@@ -9,7 +9,6 @@ namespace Snook.GIS
     public class GeoLocationCoordinate //: LocationInfo
     {
         private const int EarthRadius = 6378137;
-        private double InitialResolution { get { return 2 * Math.PI * EarthRadius / GeoLocationCoordinateSettings.TileSize; } }
         private const double OriginShift = 2 * Math.PI * EarthRadius / 2;
 
         private float _latitude;
@@ -47,6 +46,12 @@ namespace Snook.GIS
         {
             this.latitude = fLatitude;
             this.longitude = fLatitude;
+        }
+
+        public GeoLocationCoordinate(LocationInfo locationInfo)
+        {
+            this.latitude = locationInfo.latitude;
+            this.longitude = locationInfo.latitude;
         }
 
         /// <summary>
@@ -88,6 +93,5 @@ namespace Snook.GIS
     public static class GeoLocationCoordinateSettings
     {
         public static int Zoom;
-        public static int TileSize;
     }
 }

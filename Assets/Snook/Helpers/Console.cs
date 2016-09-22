@@ -38,7 +38,7 @@ public class Console : MonoBehaviour
 
     private const int margin = 20;
 
-    private Rect windowRect = new Rect(margin, margin, Screen.width - (margin * 2), Screen.height - (margin * 2));
+    private Rect windowRect = new Rect(margin, margin, Screen.width - (margin * 2) - 200, Screen.height - (margin * 2));
     private Rect titleBarRect = new Rect(0, 0, 10000, 20);
     private GUIContent clearLabel = new GUIContent("Clear", "Clear the contents of the console.");
     private GUIContent collapseLabel = new GUIContent("Collapse", "Hide repeated messages.");

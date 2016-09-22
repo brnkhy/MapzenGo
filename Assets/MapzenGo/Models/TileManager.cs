@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Assets.MapzenGo.Models.Plugins;
+﻿using Assets.MapzenGo.Models.Plugins;
 using MapzenGo.Helpers;
 using MapzenGo.Models.Factories;
 using MapzenGo.Models.Plugins;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UniRx;
 using UnityEngine;
 
@@ -12,16 +12,32 @@ namespace MapzenGo.Models
 {
     public class TileManager : MonoBehaviour
     {
-        [SerializeField] public float Latitude = 39.921864f;
-        [SerializeField] public float Longitude = 32.818442f;
-        [SerializeField] public int Range = 3;
-        [SerializeField] public int Zoom = 16;
-        [SerializeField] public float TileSize = 100;
+        [SerializeField]
+        public float Latitude = 39.921864f;
+
+        [SerializeField]
+        public float Longitude = 32.818442f;
+
+        [SerializeField]
+        public int Range = 3;
+
+        [SerializeField]
+        public int Zoom = 16;
+
+        [SerializeField]
+        public float TileSize = 100;
 
         protected readonly string _mapzenUrl = "https://vector.mapzen.com/osm/{0}/{1}/{2}/{3}.{4}?api_key={5}";
-        [SerializeField] protected string _key = "vector-tiles-5sBcqh6"; //try getting your own key if this doesn't work
-        [SerializeField] protected readonly string _mapzenLayers = "buildings,roads,landuse,water";
-        [SerializeField] protected Material MapMaterial;
+
+        [SerializeField]
+        protected string _key = "vector-tiles-5sBcqh6"; //try getting your own key if this doesn't work
+
+        [SerializeField]
+        protected readonly string _mapzenLayers = "buildings,roads,landuse,water";
+
+        [SerializeField]
+        protected Material MapMaterial;
+
         protected readonly string _mapzenFormat = "json";
         protected Transform TileHost;
 
@@ -29,7 +45,7 @@ namespace MapzenGo.Models
 
         protected Dictionary<Vector2d, Tile> Tiles; //will use this later on
         protected Vector2d CenterTms; //tms tile coordinate
-        protected Vector2d CenterInMercator; //this is like distance (meters) in mercator 
+        protected Vector2d CenterInMercator; //this is like distance (meters) in mercator
 
         public virtual void Start()
         {
@@ -92,7 +108,7 @@ namespace MapzenGo.Models
             tile.transform.position = (rect.Center - centerInMercator).ToVector3();
             tile.transform.SetParent(TileHost, false);
             LoadTile(tileTms, tile);
-            
+
             yield return null;
         }
 

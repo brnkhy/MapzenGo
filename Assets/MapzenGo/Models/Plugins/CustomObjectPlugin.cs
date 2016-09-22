@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Assets.MapzenGo.Models.Plugins;
+﻿using Assets.MapzenGo.Models.Plugins;
 using MapzenGo.Helpers;
 using MapzenGo.Models;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace MapzenGo.Models.Plugins
@@ -11,10 +11,10 @@ namespace MapzenGo.Models.Plugins
     {
         private readonly List<Vector2d> _customObjects = new List<Vector2d>()
         {
-            new Vector2d(40.753176, -73.982229),
-            new Vector2d(40.769759, -73.975537),
-            new Vector2d(40.740304, -73.972425),
-            new Vector2d(40.728664, -74.032011),
+            //new Vector2d(33.830426, -84.264398),
+            //new Vector2d(33.830435, -84.262948),
+            new Vector2d(33.829375, -84.262900),
+            //new Vector2d(33.829582, -84.264110),
         };
 
         public override void Create(Tile tile)
@@ -29,7 +29,7 @@ namespace MapzenGo.Models.Plugins
                 {
                     var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                     go.transform.position = (meters - tile.Rect.Center).ToVector3();
-                    go.transform.localScale = Vector3.one * 1000;
+                    go.transform.localScale = Vector3.one * 50;
                     go.transform.SetParent(tile.transform, false);
                 }
             }

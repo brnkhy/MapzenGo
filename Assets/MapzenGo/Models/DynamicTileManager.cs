@@ -18,6 +18,9 @@ namespace MapzenGo.Models
         private int _removeAfter;
 
         [SerializeField]
+        private bool _busy = false;
+
+        [SerializeField]
         private bool _keepCentralized;
 
         public override void Start()
@@ -37,6 +40,7 @@ namespace MapzenGo.Models
         {
             if (!_centerCollider.Contains(_player.transform.position.ToVector2xz(), true))
             {
+                _busy = true;
                 //player movement in TMS tiles
                 var tileDif = GetMovementVector();
                 //Debug.Log(tileDif);
@@ -46,6 +50,7 @@ namespace MapzenGo.Models
                 LoadTiles(CenterTms, CenterInMercator);
                 UnloadTiles(CenterTms);
             }
+            _busy = false;
         }
 
         private void Centralize(Vector2 tileDif)
@@ -62,7 +67,7 @@ namespace MapzenGo.Models
                 CenterInMercator = GM.TileBounds(CenterTms, Zoom).Center;
                 var difInUnity = new Vector3((float)(tileDif.x * TileSize), 0, (float)(-tileDif.y * TileSize));
                 _player.position -= difInUnity;
-                Camera.main.transform.position -= difInUnity;
+                //Camera.main.transform.position -= difInUnity;
             }
             else
             {
