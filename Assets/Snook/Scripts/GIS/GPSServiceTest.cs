@@ -53,8 +53,10 @@ namespace Snook.GIS
 
         public void Start()
         {
-            Connected.Invoke(new GPSEventArgs(this.startLocation));
-            Changed.Invoke(new GPSEventArgs(this.startLocation));
+            if (Connected != null)
+                Connected.Invoke(new GPSEventArgs(this.startLocation));
+            if (Changed != null)
+                Changed.Invoke(new GPSEventArgs(this.startLocation));
         }
 
         public GeoLocationCoordinate GetStartLocation()

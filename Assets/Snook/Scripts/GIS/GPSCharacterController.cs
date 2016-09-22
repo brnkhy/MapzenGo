@@ -123,8 +123,7 @@ namespace Snook
 
         public void FixedUpdate()
         {
-            if (GPS.ActiveAndConnected)
-                //move();
+            if (GPS != null && GPS.ActiveAndConnected)
                 Run();
         }
 
