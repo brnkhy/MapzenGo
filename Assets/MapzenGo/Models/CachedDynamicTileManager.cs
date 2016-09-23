@@ -26,9 +26,11 @@ namespace MapzenGo.Models
             var tilePath = Path.Combine(CacheFolderPath, tileTms.x + "_" + tileTms.y);
             if (File.Exists(tilePath))
             {
-                var r = new StreamReader(tilePath, Encoding.Default);
-                var mapData = r.ReadToEnd();
-                ConstructTile(mapData, tile);
+                using (var r = new StreamReader(tilePath, Encoding.Default))
+                {
+                    var mapData = r.ReadToEnd();
+                    ConstructTile(mapData, tile);
+                }
             }
             else
             {
