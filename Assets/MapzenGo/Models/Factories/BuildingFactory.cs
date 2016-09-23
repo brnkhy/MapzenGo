@@ -16,6 +16,7 @@ namespace MapzenGo.Models.Factories
 {
     public class BuildingFactory : Factory
     {
+        [SerializeField] private bool _useTriangulationNet;
         public override string XmlTag { get { return "buildings"; } }
         private HashSet<string> _active = new HashSet<string>();
         [SerializeField] protected BuildingFactorySettings FactorySettings;
@@ -215,29 +216,10 @@ namespace MapzenGo.Models.Factories
 
         private void CreateMesh(List<Vector3> corners, float height, BuildingSettings typeSettings, MeshData data, Vector2 min, Vector2 size)
         {
-            _mesh = new TriangleNet.Mesh();
+            var vertsStartCount = _useTriangulationNet 
+                    ? CreateRoofTriangulation(corners, height, data)
+                    : CreateRoofClass(corners, height, data);
 
-            var inp = new InputGeometry(corners.Count);
-
-            for (int i = 0; i < corners.Count; i++)
-            {
-                var v = corners[i];
-                inp.AddPoint(v.x, v.z);
-                inp.AddSegment(i, (i + 1) % corners.Count);
-            }
-            _mesh.Behavior.Algorithm = TriangulationAlgorithm.SweepLine;
-            _mesh.Behavior.Quality = true;
-            _mesh.Triangulate(inp);
-
-            var vertsStartCount = data.Vertices.Count;
-            data.Vertices.AddRange(corners.Select(x => new Vector3(x.x, height, x.z)).ToList());
-
-            foreach (var tri in _mesh.Triangles)
-            {
-                data.Indices.Add(vertsStartCount + tri.P1);
-                data.Indices.Add(vertsStartCount + tri.P0);
-                data.Indices.Add(vertsStartCount + tri.P2);
-            }
 
             foreach (var c in corners)
             {
@@ -299,6 +281,41 @@ namespace MapzenGo.Models.Factories
                 data.Indices.Add(ind + 3);
                 data.Indices.Add(ind + 2);
             }
+        }
+
+        private static int CreateRoofClass(List<Vector3> corners, float height, MeshData data)
+        {
+            var vertsStartCount = data.Vertices.Count;
+            var tris = new Triangulator(corners);
+            data.Vertices.AddRange(corners.Select(x => new Vector3(x.x, height, x.z)).ToList());
+            data.Indices.AddRange(tris.Triangulate().Select(x => vertsStartCount + x));
+            return vertsStartCount;
+        }
+
+        private int CreateRoofTriangulation(List<Vector3> corners, float height, MeshData data)
+        {
+            _mesh = new TriangleNet.Mesh();
+            var inp = new InputGeometry(corners.Count);
+            for (int i = 0; i < corners.Count; i++)
+            {
+                var v = corners[i];
+                inp.AddPoint(v.x, v.z);
+                inp.AddSegment(i, (i + 1)%corners.Count);
+            }
+            _mesh.Behavior.Algorithm = TriangulationAlgorithm.SweepLine;
+            _mesh.Behavior.Quality = true;
+            _mesh.Triangulate(inp);
+
+            var vertsStartCount = data.Vertices.Count;
+            data.Vertices.AddRange(corners.Select(x => new Vector3(x.x, height, x.z)).ToList());
+
+            foreach (var tri in _mesh.Triangles)
+            {
+                data.Indices.Add(vertsStartCount + tri.P1);
+                data.Indices.Add(vertsStartCount + tri.P0);
+                data.Indices.Add(vertsStartCount + tri.P2);
+            }
+            return vertsStartCount;
         }
 
         private void CreateGameObject(BuildingType kind, MeshData data, GameObject main)
