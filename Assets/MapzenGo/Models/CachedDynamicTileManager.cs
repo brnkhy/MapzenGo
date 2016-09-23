@@ -23,7 +23,8 @@ namespace MapzenGo.Models
         protected override void LoadTile(Vector2d tileTms, Tile tile)
         {
             var url = string.Format(_mapzenUrl, _mapzenLayers, Zoom, tileTms.x, tileTms.y, _mapzenFormat, _key);
-            var tilePath = Path.Combine(CacheFolderPath, tileTms.x + "_" + tileTms.y);
+            //this is temporary (hopefully), cant just keep adding stuff to filenames
+            var tilePath = Path.Combine(CacheFolderPath, _mapzenLayers.Replace(',', '_') + "_" + tileTms.x + "_" + tileTms.y);
             if (File.Exists(tilePath))
             {
                 using (var r = new StreamReader(tilePath, Encoding.Default))
