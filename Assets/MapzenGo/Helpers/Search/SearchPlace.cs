@@ -3,17 +3,17 @@ using MapzenGo.Models;
 using UniRx;
 using UnityEngine;
 
+
 namespace MapzenGo.Helpers.Search
 {
     [ExecuteInEditMode]
     [AddComponentMenu("Mapzen/SearchPlace")]
-    public class SearchPlace : MonoBehaviour {
-
+    public class SearchPlace : MonoBehaviour
+    {
         const string seachUrl = "https://search.mapzen.com/v1/autocomplete?text=";
-        public string namePlace;
-        public string namePlaceСache;
-        public List<StructSeachData> dataList;
-    
+        public string namePlace = "";
+        public string namePlaceСache = "";
+        public StructSearchData DataStructure;
 
         void OnEnable()
         {
@@ -25,12 +25,13 @@ namespace MapzenGo.Helpers.Search
         {
 #if UNITY_EDITOR
             if (!Application.isPlaying) return;
+
 #endif
         }
 
         public void SearchInMapzen()
         {
-            if (namePlace!=string.Empty&&namePlaceСache != namePlace)
+            if (namePlace != string.Empty && namePlaceСache != namePlace)
             {
                 namePlaceСache = namePlace;
                 ObservableWWW.Get(seachUrl + namePlace).Subscribe(
@@ -55,10 +56,10 @@ namespace MapzenGo.Helpers.Search
         public void DataProcessing(string success)
         {
             JSONObject obj = new JSONObject(success);
-            dataList = new List<StructSeachData>();
+            DataStructure.dataChache = new List<SearchData>();
             foreach (JSONObject jsonObject in obj["features"].list)
             {
-                dataList.Add(new StructSeachData()
+                DataStructure.dataChache.Add(new SearchData()
                 {
                     coordinates = new Vector2(jsonObject["geometry"]["coordinates"][0].f, jsonObject["geometry"]["coordinates"][1].f),
                     label = jsonObject["properties"]["label"].str
