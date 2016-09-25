@@ -45,9 +45,12 @@ namespace MapzenGo.Models.Plugins
             ObservableWWW.GetWWW(url).Subscribe(
                 success =>
                 {
-                    rend.material.mainTexture = new Texture2D(512, 512, TextureFormat.DXT5, false);
-                    rend.material.color = new Color(1f, 1f, 1f, 1f);
-                    success.LoadImageIntoTexture((Texture2D)rend.material.mainTexture);
+                    if (rend)
+                    {
+                        rend.material.mainTexture = new Texture2D(512, 512, TextureFormat.DXT5, false);
+                        rend.material.color = new Color(1f, 1f, 1f, 1f);
+                        success.LoadImageIntoTexture((Texture2D) rend.material.mainTexture);
+                    }
                 },
                 error =>
                 {
