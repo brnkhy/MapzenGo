@@ -9,6 +9,30 @@ namespace MapzenGo.Helpers
 {
     public static class Extensions
     {
+        public static Dictionary<string, PlaceType> PlaceTypes = new Dictionary<string, PlaceType>()
+        {
+            {"Borough",PlaceType.Borough},
+            {"City",PlaceType.City},
+            {"Continent",PlaceType.Continent},
+            {"Country",PlaceType.Country},
+            {"Farm",PlaceType.Farm},
+            {"Hamlet",PlaceType.Hamlet},
+            {"HistoricPlace",PlaceType.HistoricPlace},
+            {"IsolatedDwelling",PlaceType.IsolatedDwelling},
+            {"Locality",PlaceType.Locality},
+            {"Macrohood",PlaceType.Macrohood},
+            {"MeteorologicalStation",PlaceType.MeteorologicalStation},
+            {"Neighbourhood",PlaceType.Neighbourhood},
+            {"PopulatedPlace",PlaceType.PopulatedPlace},
+            {"Province",PlaceType.Province},
+            {"Quarter",PlaceType.Quarter},
+            {"ScientificStation",PlaceType.ScientificStation},
+            {"State",PlaceType.State},
+            {"Suburb",PlaceType.Suburb},
+            {"Town",PlaceType.Town},
+            {"Village",PlaceType.Village},
+        };
+
         public static Dictionary<string, BoundaryType> BoundaryTypes = new Dictionary<string, BoundaryType>()
         {
             {"Unknown", BoundaryType.Unknown},
@@ -161,6 +185,15 @@ namespace MapzenGo.Helpers
             {"Riverbank", WaterType.Riverbank},
             {"Swimming_Pool", WaterType.Swimming_Pool},
             {"Water", WaterType.Water},
+        };
+
+        public static Dictionary<string, EarthType> EarthTypes = new Dictionary<string, EarthType>()
+        {
+            {"arete",  EarthType.Arete},
+            {"cliff",  EarthType.Cliff},
+            {"earth",  EarthType.Earth},
+            {"ridge",  EarthType.Ridge},
+            {"valley", EarthType.Valley},
         };
 
         public static Dictionary<string, RoadType> RoadTypes = new Dictionary<string, RoadType>()
@@ -365,6 +398,19 @@ namespace MapzenGo.Helpers
             return BoundaryType.Unknown;
         }
 
+        public static EarthType ConvertToEarthType(this string value)
+        {
+            if (EarthTypes.ContainsKey(value))
+                return EarthTypes[value];
+            return EarthType.Earth;
+        }
+
+        public static PlaceType ConvertToPlaceType(this string value)
+        {
+            if (PlaceTypes.ContainsKey(value))
+                return PlaceTypes[value];
+            return PlaceType.Unknown;
+        }
 
         public static string Format(this string s, params object[] args)
         {
