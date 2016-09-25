@@ -46,6 +46,28 @@ namespace MapzenGo.Models.Settings.Editor
                        HelperExtention.GetOrCreateSObjectReturn(ref _factorySettingsWaterFactory, PATH_SAVE_SCRIPTABLE_OBJECT);
             }
         }
+
+        private EarthFactorySettings _factorySettingsEarthFactory;
+        private EarthFactorySettings EarthFactorySettings
+        {
+            get
+            {
+                return _factorySettingsEarthFactory ??
+                       HelperExtention.GetOrCreateSObjectReturn(ref _factorySettingsEarthFactory, PATH_SAVE_SCRIPTABLE_OBJECT);
+            }
+        }
+
+        private PlacesFactorySettings _factorySettingsPlacesFactory;
+        private PlacesFactorySettings PlacesFactorySettings
+        {
+            get
+            {
+                return _factorySettingsPlacesFactory ??
+                       HelperExtention.GetOrCreateSObjectReturn(ref _factorySettingsPlacesFactory, PATH_SAVE_SCRIPTABLE_OBJECT);
+            }
+        }
+
+
         private BoundaryFactorySettings _settingBoundary;
         private BoundaryFactorySettings BoundaryFactorySettings
         {
@@ -124,11 +146,25 @@ namespace MapzenGo.Models.Settings.Editor
                 UsingType.Add("wt_" + settings.Type.ToString());
                 settings.showContent = false;
             });
- 
+
+            UsingType.Add("et_" + EarthFactorySettings.DefaultEarth.Type.ToString());
+            EarthFactorySettings.SettingsEarth.ForEach(settings =>
+            {
+                UsingType.Add("et_" + settings.Type.ToString());
+                settings.showContent = false;
+            });
+
             UsingType.Add("bt_" + BoundaryFactorySettings.DefaultBoundary.Type.ToString());
             BoundaryFactorySettings.SettingsBoundary.ForEach(settings =>
             {
                 UsingType.Add("bt_" + settings.Type.ToString());
+                settings.showContent = false;
+            });
+
+            UsingType.Add("pt_" + PlacesFactorySettings.DefaultPlace.Type.ToString());
+            PlacesFactorySettings.SettingsPlace.ForEach(settings =>
+            {
+                UsingType.Add("pt_" + settings.Type.ToString());
                 settings.showContent = false;
             });
         }
@@ -137,74 +173,98 @@ namespace MapzenGo.Models.Settings.Editor
         void OnGUI()
         {
             //return;
-            tab = GUILayout.Toolbar(tab, new string[] { "BUILDING", "ROAD", "LANDUSE", "WATER", "BOUNDARY" });
+            tab = GUILayout.Toolbar(tab, new string[] { "BUILDING", "ROAD", "LANDUSE", "WATER", "BOUNDARY", "EARTH", "PLACES" });
             switch (tab)
             {
                 case 0:
-                {
-                    //BUILDING
-                    EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
                     {
-                        GUILayout.Label("DEFAULT BUILDING TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
-                        ShowBuildingElement(BuildingFactorySettings.DefaultBuilding);
+                        //BUILDING
+                        EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
+                        {
+                            GUILayout.Label("DEFAULT BUILDING TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
+                            ShowBuildingElement(BuildingFactorySettings.DefaultBuilding);
+                        }
+                        EditorGUILayout.EndVertical();
+                        GUILayout.Space(20);
+                        ShowExistListBuilding();
+                        break;
                     }
-                    EditorGUILayout.EndVertical();
-                    GUILayout.Space(20);
-                    ShowExistListBuilding();
-                    break;
-                }
                 case 1:
-                {
-                    //ROAD
-                    EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
                     {
-                        GUILayout.Label("DEFAULT ROAD TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
-                        ShowRoadElement(RoadFactorySettings.DefaultRoad);
-                    }
-                    EditorGUILayout.EndVertical();
-                    GUILayout.Space(20);
-                    ShowExistListRoad();
-                    break;
+                        //ROAD
+                        EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
+                        {
+                            GUILayout.Label("DEFAULT ROAD TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
+                            ShowRoadElement(RoadFactorySettings.DefaultRoad);
+                        }
+                        EditorGUILayout.EndVertical();
+                        GUILayout.Space(20);
+                        ShowExistListRoad();
+                        break;
 
-                }
-                case 2:
-                {
-                    //LANDUSE
-                    EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
-                    {
-                        GUILayout.Label("DEFAULT ROAD TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
-                        ShowLanduseElement(LanduseFactorySettings.DefaultLanduse);
                     }
-                    EditorGUILayout.EndVertical();
-                    GUILayout.Space(20);
-                    ShowExistListLanduse();
-                    break;
-                }
+                case 2:
+                    {
+                        //LANDUSE
+                        EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
+                        {
+                            GUILayout.Label("DEFAULT ROAD TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
+                            ShowLanduseElement(LanduseFactorySettings.DefaultLanduse);
+                        }
+                        EditorGUILayout.EndVertical();
+                        GUILayout.Space(20);
+                        ShowExistListLanduse();
+                        break;
+                    }
 
                 case 3:
-                {
-                    EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
                     {
-                        GUILayout.Label("DEFAULT ROAD TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
-                        ShowWaterElement(WaterFactorySettings.DefaultWater);
+                        EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
+                        {
+                            GUILayout.Label("DEFAULT ROAD TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
+                            ShowWaterElement(WaterFactorySettings.DefaultWater);
+                        }
+                        EditorGUILayout.EndVertical();
+                        GUILayout.Space(20);
+                        ShowWaterListLanduse();
+                        break;
                     }
-                    EditorGUILayout.EndVertical();
-                    GUILayout.Space(20);
-                    ShowWaterListLanduse();
-                    break;
-                }
                 case 4:
-                {
-                    EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
                     {
-                        GUILayout.Label("DEFAULT BOUNDARY TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
-                        ShowBoundaryElement(BoundaryFactorySettings.DefaultBoundary);
+                        EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
+                        {
+                            GUILayout.Label("DEFAULT BOUNDARY TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
+                            ShowBoundaryElement(BoundaryFactorySettings.DefaultBoundary);
+                        }
+                        EditorGUILayout.EndVertical();
+                        GUILayout.Space(20);
+                        ShowBoundaryListLanduse();
+                        break;
                     }
-                    EditorGUILayout.EndVertical();
-                    GUILayout.Space(20);
-                    ShowBoundaryListLanduse();
-                    break;
-                }
+                case 5:
+                    {
+                        EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
+                        {
+                            GUILayout.Label("DEFAULT EARTH TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
+                            ShowEarthElement(EarthFactorySettings.DefaultEarth);
+                        }
+                        EditorGUILayout.EndVertical();
+                        GUILayout.Space(20);
+                        ShowEarthListLanduse();
+                        break;
+                    }
+                case 6:
+                    {
+                        EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
+                        {
+                            GUILayout.Label("DEFAULT PLACE TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
+                            ShowPlaceElement(PlacesFactorySettings.DefaultPlace);
+                        }
+                        EditorGUILayout.EndVertical();
+                        GUILayout.Space(20);
+                        ShowPlaceListLanduse();
+                        break;
+                    }
             }
 
             if (GUI.changed)
@@ -564,6 +624,93 @@ namespace MapzenGo.Models.Settings.Editor
             }
             EditorGUILayout.EndVertical();
         }
+        private void ShowEarthListLanduse()
+        {
+            EditorGUILayout.Separator();
+            EditorGUILayout.BeginVertical("TextArea");
+            {
+                GUILayout.Label("EARTH TYPE FOR LAYER", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
+                if (GUILayout.Button("ADD EARTH TYPE"))
+                {
+                    EarthFactorySettings.SettingsEarth.Add(new EarthSettings()
+                    {
+                        Type = EarthType.Earth,
+                        Material = null,
+                    });
+                    UsingType.Add("et_" + EarthType.Earth.ToString());
+                }
+                GUILayout.Space(10);
+                scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+                {
+                    for (int ind = 0; ind < EarthFactorySettings.SettingsEarth.Count; ind++)
+                    {
+
+                        EditorGUILayout.BeginHorizontal("box");
+                        EarthFactorySettings.SettingsEarth[ind].showContent =
+                            EditorGUILayout.Foldout(EarthFactorySettings.SettingsEarth[ind].showContent,
+                                "Earth TYPE - " + EarthFactorySettings.SettingsEarth[ind].Type.ToString());
+
+                        #region CHECK DUBLE TYPE END ERROR
+                        GUI.backgroundColor = Color.red;
+
+                        if (UsingType.FindAll(s => s == "wt_" + EarthFactorySettings.SettingsEarth[ind].Type.ToString()).Count > 1)
+                        {
+                            if (GUILayout.Button("Type Exist", "CN CountBadge", GUILayout.Width(75)))
+                            {
+                                EarthFactorySettings.SettingsEarth[ind].showContent = true;
+                            }
+                        }
+
+                        if (EarthFactorySettings.SettingsEarth[ind].Material == null)
+                        {
+                            GUI.backgroundColor = Color.magenta;
+                            if (GUILayout.Button("Mat is not set", "CN CountBadge", GUILayout.Width(95)))
+                            {
+                                EarthFactorySettings.SettingsEarth[ind].showContent = true;
+                            }
+                        }
+                        #endregion
+
+                        #region BUTTON MOVE & REMOVE 
+                        GUI.backgroundColor = Color.white;
+                        if (ind > 0 && GUILayout.Button(" \u25B2", "CN CountBadge", GUILayout.MaxWidth(30)))
+                        {
+                            Debug.Log(ind > 0);
+                            EarthFactorySettings.SettingsEarth.Move(ind, ind - 1);
+                        }
+                        if (ind < EarthFactorySettings.SettingsEarth.Count - 1 && GUILayout.Button("\u25BC", "CN CountBadge", GUILayout.MaxWidth(30)))
+                        {
+                            Debug.Log(ind < EarthFactorySettings.SettingsEarth.Count);
+                            EarthFactorySettings.SettingsEarth.Move(ind, ind + 1);
+                        }
+                        GUI.contentColor = Color.red;
+                        if (GUILayout.Button("\u2718", "CN CountBadge", GUILayout.MaxWidth(25)))
+                        {
+                            if (EditorUtility.DisplayDialog("Warning", "Are you sure you want to delete this type?", "Yes", "No"))
+                            {
+                                if (UsingType.Contains("et_" + EarthFactorySettings.SettingsEarth[ind].Type.ToString()))
+                                {
+                                    UsingType.Remove("et_" +
+                                                     EarthFactorySettings.SettingsEarth[ind].Type.ToString());
+                                }
+                                EarthFactorySettings.SettingsEarth.RemoveAt(ind);
+                            }
+                        }
+                        GUI.contentColor = Color.white;
+                        #endregion
+
+                        EditorGUILayout.EndHorizontal();
+                        if (EarthFactorySettings.SettingsEarth.Count > ind && EarthFactorySettings.SettingsEarth[ind].showContent)
+                        {
+                            ShowEarthElement(EarthFactorySettings.SettingsEarth[ind]);
+                        }
+                        EditorGUILayout.Separator();
+                    }
+                }
+                EditorGUILayout.EndScrollView();
+            }
+            EditorGUILayout.EndVertical();
+        }
         private void ShowBoundaryListLanduse()
         {
             EditorGUILayout.Separator();
@@ -651,6 +798,94 @@ namespace MapzenGo.Models.Settings.Editor
             }
             EditorGUILayout.EndVertical();
         }
+        private void ShowPlaceListLanduse()
+        {
+            EditorGUILayout.Separator();
+            EditorGUILayout.BeginVertical("TextArea");
+            {
+                GUILayout.Label("Place TYPE FOR LAYER", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
+                if (GUILayout.Button("ADD Place TYPE"))
+                {
+                    PlacesFactorySettings.SettingsPlace.Add(new PlaceSettings()
+                    {
+                        Type = PlaceType.Unknown,
+                        Material = null,
+                    });
+                    UsingType.Add("pt_" + PlaceType.Unknown.ToString());
+                }
+                GUILayout.Space(10);
+                scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+                {
+                    for (int ind = 0; ind < PlacesFactorySettings.SettingsPlace.Count; ind++)
+                    {
+
+                        EditorGUILayout.BeginHorizontal("box");
+                        PlacesFactorySettings.SettingsPlace[ind].showContent =
+                            EditorGUILayout.Foldout(PlacesFactorySettings.SettingsPlace[ind].showContent,
+                                "Place TYPE - " + PlacesFactorySettings.SettingsPlace[ind].Type.ToString());
+
+                        #region CHECK DUBLE TYPE END ERROR
+                        GUI.backgroundColor = Color.red;
+
+                        if (UsingType.FindAll(s => s == "pt_" + PlacesFactorySettings.SettingsPlace[ind].Type.ToString()).Count > 1)
+                        {
+                            if (GUILayout.Button("Type Exist", "CN CountBadge", GUILayout.Width(75)))
+                            {
+                                PlacesFactorySettings.SettingsPlace[ind].showContent = true;
+                            }
+                        }
+
+                        if (PlacesFactorySettings.SettingsPlace[ind].Material == null)
+                        {
+                            GUI.backgroundColor = Color.magenta;
+                            if (GUILayout.Button("Mat is not set", "CN CountBadge", GUILayout.Width(95)))
+                            {
+                                PlacesFactorySettings.SettingsPlace[ind].showContent = true;
+                            }
+                        }
+                        #endregion
+
+                        #region BUTTON MOVE & REMOVE 
+                        GUI.backgroundColor = Color.white;
+                        if (ind > 0 && GUILayout.Button(" \u25B2", "CN CountBadge", GUILayout.MaxWidth(30)))
+                        {
+                            Debug.Log(ind > 0);
+                            PlacesFactorySettings.SettingsPlace.Move(ind, ind - 1);
+                        }
+                        if (ind < PlacesFactorySettings.SettingsPlace.Count - 1 && GUILayout.Button("\u25BC", "CN CountBadge", GUILayout.MaxWidth(30)))
+                        {
+                            Debug.Log(ind < PlacesFactorySettings.SettingsPlace.Count);
+                            PlacesFactorySettings.SettingsPlace.Move(ind, ind + 1);
+                        }
+                        GUI.contentColor = Color.red;
+                        if (GUILayout.Button("\u2718", "CN CountBadge", GUILayout.MaxWidth(25)))
+                        {
+                            if (EditorUtility.DisplayDialog("Warning", "Are you sure you want to delete this type?", "Yes", "No"))
+                            {
+                                if (UsingType.Contains("pt_" + PlacesFactorySettings.SettingsPlace[ind].Type.ToString()))
+                                {
+                                    UsingType.Remove("pt_" +
+                                                     PlacesFactorySettings.SettingsPlace[ind].Type.ToString());
+                                }
+                                PlacesFactorySettings.SettingsPlace.RemoveAt(ind);
+                            }
+                        }
+                        GUI.contentColor = Color.white;
+                        #endregion
+
+                        EditorGUILayout.EndHorizontal();
+                        if (PlacesFactorySettings.SettingsPlace.Count > ind && PlacesFactorySettings.SettingsPlace[ind].showContent)
+                        {
+                            ShowPlaceElement(PlacesFactorySettings.SettingsPlace[ind]);
+                        }
+                        EditorGUILayout.Separator();
+                    }
+                }
+                EditorGUILayout.EndScrollView();
+            }
+            EditorGUILayout.EndVertical();
+        }
+
 
         private void ShowBuildingElement(BuildingSettings element)
         {
@@ -740,6 +975,45 @@ namespace MapzenGo.Models.Settings.Editor
             }
             EditorGUILayout.EndVertical();
         }
+
+        private void ShowEarthElement(EarthSettings element)
+        {
+            EditorGUILayout.BeginVertical("box");
+            {
+                EarthType saveKind = element.Type;
+                element.Type = (EarthType)EditorGUILayout.EnumPopup("Type Earth:", element.Type);
+                if (GUI.changed && saveKind != element.Type)
+                {
+                    if (UsingType.Contains("et_" + saveKind.ToString())) UsingType.Remove("et_" + saveKind.ToString());
+                    UsingType.Add("et_" + element.Type.ToString());
+                }
+
+                element.Material = (Material)EditorGUILayout.ObjectField("Material", element.Material, typeof(Material));
+
+                if (element.Material == null) DisplayErrorMEssage("Not setting material");
+            }
+            EditorGUILayout.EndVertical();
+        }
+
+        private void ShowPlaceElement(PlaceSettings element)
+        {
+            EditorGUILayout.BeginVertical("box");
+            {
+                PlaceType saveKind = element.Type;
+                element.Type = (PlaceType)EditorGUILayout.EnumPopup("Type Place:", element.Type);
+                if (GUI.changed && saveKind != element.Type)
+                {
+                    if (UsingType.Contains("pt_" + saveKind.ToString())) UsingType.Remove("pt_" + saveKind.ToString());
+                    UsingType.Add("pt_" + element.Type.ToString());
+                }
+
+                element.Material = (Material)EditorGUILayout.ObjectField("Material", element.Material, typeof(Material));
+
+                if (element.Material == null) DisplayErrorMEssage("Not setting material");
+            }
+            EditorGUILayout.EndVertical();
+        }
+
         private void ShowBoundaryElement(BoundarySettings element)
         {
             EditorGUILayout.BeginVertical("box");
