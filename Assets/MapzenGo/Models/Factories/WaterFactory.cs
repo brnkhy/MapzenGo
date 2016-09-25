@@ -63,7 +63,7 @@ namespace MapzenGo.Models.Factories
             yield return water;
         }
 
-        private static void SetProperties(JSONObject geo, Water water, WaterSettings typeSettings)
+        private void SetProperties(JSONObject geo, Water water, WaterSettings typeSettings)
         {
             water.Id = geo["properties"]["id"].ToString();
             if (geo["properties"].HasField("name"))
