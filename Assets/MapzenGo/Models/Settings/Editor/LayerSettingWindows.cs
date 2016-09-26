@@ -1007,6 +1007,7 @@ namespace MapzenGo.Models.Settings.Editor
                     UsingType.Add("pt_" + element.Type.ToString());
                 }
 
+                element.Color = EditorGUILayout.ColorField("Color", element.Color);
                 element.Material = (Material)EditorGUILayout.ObjectField("Material", element.Material, typeof(Material));
 
                 if (element.Material == null) DisplayErrorMEssage("Not setting material");

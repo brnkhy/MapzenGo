@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using MapzenGo.Helpers;
 using MapzenGo.Models.Factories;
 using MapzenGo.Models.Settings;
@@ -8,13 +9,30 @@ namespace MapzenGo.Models
 {
     public class PlacesFactory : Factory
     {
-        [SerializeField] private GameObject _labelPrefab;
+        [SerializeField]
+        private GameObject _labelPrefab;
         public override string XmlTag { get { return "places"; } }
-        [SerializeField] protected PlacesFactorySettings FactorySettings;
+        [SerializeField]
+        protected PlacesFactorySettings FactorySettings;
         public override void Start()
         {
             base.Start();
             Query = (geo) => geo["geometry"]["type"].str == "Point";
+        }
+
+        public override void Create(Tile tile)
+        {
+            if (!(tile.Data.HasField(XmlTag) && tile.Data[XmlTag].HasField("features")))
+                return;
+
+            foreach (var entity in tile.Data[XmlTag]["features"].list.Where(x => Query(x)).SelectMany(geo => Create(tile, geo)))
+            {
+                if (entity != null)
+                {
+                    entity.transform.SetParent(tile.transform, false);
+                    entity.transform.localScale = Vector3.one * 3/tile.transform.lossyScale.x;
+                }
+            }
         }
 
         protected override IEnumerable<MonoBehaviour> Create(Tile tile, JSONObject geo)
@@ -33,7 +51,7 @@ namespace MapzenGo.Models
             go.transform.position = localMercPos.ToVector3();
 
             SetProperties(geo, water, typeSettings);
-            
+
             yield return water;
         }
 
