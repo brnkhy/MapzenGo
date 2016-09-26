@@ -24,6 +24,8 @@ namespace MapzenGo.Models
 
             var go = Instantiate(_labelPrefab);
             var water = go.AddComponent<Place>();
+            if (geo["properties"].HasField("name"))
+                go.GetComponentInChildren<TextMesh>().text = geo["properties"]["name"].str;
 
             var c = geo["geometry"]["coordinates"];
             var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
