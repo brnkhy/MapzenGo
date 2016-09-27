@@ -1,0 +1,2856 @@
+fileFormatVersion: 2
+guid: 69d4d6e2d4257d84781137050fd12175
+timeCreated: 1475004021
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: poi_icons_18@2x_0
+    21300002: poi_icons_18@2x_1
+    21300004: poi_icons_18@2x_2
+    21300006: poi_icons_18@2x_3
+    21300008: poi_icons_18@2x_4
+    21300010: poi_icons_18@2x_5
+    21300012: poi_icons_18@2x_6
+    21300014: poi_icons_18@2x_7
+    21300016: poi_icons_18@2x_8
+    21300018: poi_icons_18@2x_9
+    21300020: poi_icons_18@2x_10
+    21300022: poi_icons_18@2x_11
+    21300024: poi_icons_18@2x_12
+    21300026: poi_icons_18@2x_13
+    21300028: poi_icons_18@2x_14
+    21300030: poi_icons_18@2x_15
+    21300032: poi_icons_18@2x_16
+    21300034: poi_icons_18@2x_17
+    21300036: poi_icons_18@2x_18
+    21300038: poi_icons_18@2x_19
+    21300040: poi_icons_18@2x_20
+    21300042: poi_icons_18@2x_21
+    21300044: poi_icons_18@2x_22
+    21300046: poi_icons_18@2x_23
+    21300048: poi_icons_18@2x_24
+    21300050: poi_icons_18@2x_25
+    21300052: poi_icons_18@2x_26
+    21300054: poi_icons_18@2x_27
+    21300056: poi_icons_18@2x_28
+    21300058: poi_icons_18@2x_29
+    21300060: poi_icons_18@2x_30
+    21300062: poi_icons_18@2x_31
+    21300064: poi_icons_18@2x_32
+    21300066: poi_icons_18@2x_33
+    21300068: poi_icons_18@2x_34
+    21300070: poi_icons_18@2x_35
+    21300072: poi_icons_18@2x_36
+    21300074: poi_icons_18@2x_37
+    21300076: poi_icons_18@2x_38
+    21300078: poi_icons_18@2x_39
+    21300080: poi_icons_18@2x_40
+    21300082: poi_icons_18@2x_41
+    21300084: poi_icons_18@2x_42
+    21300086: poi_icons_18@2x_43
+    21300088: poi_icons_18@2x_44
+    21300090: poi_icons_18@2x_45
+    21300092: poi_icons_18@2x_46
+    21300094: poi_icons_18@2x_47
+    21300096: poi_icons_18@2x_48
+    21300098: poi_icons_18@2x_49
+    21300100: poi_icons_18@2x_50
+    21300102: poi_icons_18@2x_51
+    21300104: poi_icons_18@2x_52
+    21300106: poi_icons_18@2x_53
+    21300108: poi_icons_18@2x_54
+    21300110: poi_icons_18@2x_55
+    21300112: poi_icons_18@2x_56
+    21300114: poi_icons_18@2x_57
+    21300116: poi_icons_18@2x_58
+    21300118: poi_icons_18@2x_59
+    21300120: poi_icons_18@2x_60
+    21300122: poi_icons_18@2x_61
+    21300124: poi_icons_18@2x_62
+    21300126: poi_icons_18@2x_63
+    21300128: poi_icons_18@2x_64
+    21300130: poi_icons_18@2x_65
+    21300132: poi_icons_18@2x_66
+    21300134: poi_icons_18@2x_67
+    21300136: poi_icons_18@2x_68
+    21300138: poi_icons_18@2x_69
+    21300140: poi_icons_18@2x_70
+    21300142: poi_icons_18@2x_71
+    21300144: poi_icons_18@2x_72
+    21300146: poi_icons_18@2x_73
+    21300148: poi_icons_18@2x_74
+    21300150: poi_icons_18@2x_75
+    21300152: poi_icons_18@2x_76
+    21300154: poi_icons_18@2x_77
+    21300156: poi_icons_18@2x_78
+    21300158: poi_icons_18@2x_79
+    21300160: poi_icons_18@2x_80
+    21300162: poi_icons_18@2x_81
+    21300164: poi_icons_18@2x_82
+    21300166: poi_icons_18@2x_83
+    21300168: poi_icons_18@2x_84
+    21300170: poi_icons_18@2x_85
+    21300172: poi_icons_18@2x_86
+    21300174: poi_icons_18@2x_87
+    21300176: poi_icons_18@2x_88
+    21300178: poi_icons_18@2x_89
+    21300180: poi_icons_18@2x_90
+    21300182: poi_icons_18@2x_91
+    21300184: poi_icons_18@2x_92
+    21300186: poi_icons_18@2x_93
+    21300188: poi_icons_18@2x_94
+    21300190: poi_icons_18@2x_95
+    21300192: poi_icons_18@2x_96
+    21300194: poi_icons_18@2x_97
+    21300196: poi_icons_18@2x_98
+    21300198: poi_icons_18@2x_99
+    21300200: poi_icons_18@2x_100
+    21300202: poi_icons_18@2x_101
+    21300204: poi_icons_18@2x_102
+    21300206: poi_icons_18@2x_103
+    21300208: poi_icons_18@2x_104
+    21300210: poi_icons_18@2x_105
+    21300212: poi_icons_18@2x_106
+    21300214: poi_icons_18@2x_107
+    21300216: poi_icons_18@2x_108
+    21300218: poi_icons_18@2x_109
+    21300220: poi_icons_18@2x_110
+    21300222: poi_icons_18@2x_111
+    21300224: poi_icons_18@2x_112
+    21300226: poi_icons_18@2x_113
+    21300228: poi_icons_18@2x_114
+    21300230: poi_icons_18@2x_115
+    21300232: poi_icons_18@2x_116
+    21300234: poi_icons_18@2x_117
+    21300236: poi_icons_18@2x_118
+    21300238: poi_icons_18@2x_119
+    21300240: poi_icons_18@2x_120
+    21300242: poi_icons_18@2x_121
+    21300244: poi_icons_18@2x_122
+    21300246: poi_icons_18@2x_123
+    21300248: poi_icons_18@2x_124
+    21300250: poi_icons_18@2x_125
+    21300252: poi_icons_18@2x_126
+    21300254: poi_icons_18@2x_127
+    21300256: poi_icons_18@2x_128
+    21300258: poi_icons_18@2x_129
+    21300260: poi_icons_18@2x_130
+    21300262: poi_icons_18@2x_131
+    21300264: poi_icons_18@2x_132
+    21300266: poi_icons_18@2x_133
+    21300268: poi_icons_18@2x_134
+    21300270: poi_icons_18@2x_135
+    21300272: poi_icons_18@2x_136
+    21300274: poi_icons_18@2x_137
+    21300276: poi_icons_18@2x_138
+    21300278: poi_icons_18@2x_139
+    21300280: poi_icons_18@2x_140
+    21300282: poi_icons_18@2x_141
+    21300284: poi_icons_18@2x_142
+    21300286: poi_icons_18@2x_143
+    21300288: poi_icons_18@2x_144
+    21300290: poi_icons_18@2x_145
+    21300292: poi_icons_18@2x_146
+    21300294: poi_icons_18@2x_147
+    21300296: poi_icons_18@2x_148
+    21300298: poi_icons_18@2x_149
+    21300300: poi_icons_18@2x_150
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: poi_icons_18@2x_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_1
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_2
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_3
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_4
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 416
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 17}
+        - {x: -17, y: -17}
+        - {x: 17, y: -17}
+        - {x: 17, y: 17}
+    - name: poi_icons_18@2x_5
+      rect:
+        serializedVersion: 2
+        x: 226
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_6
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_7
+      rect:
+        serializedVersion: 2
+        x: 318
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_8
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_9
+      rect:
+        serializedVersion: 2
+        x: 410
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_10
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_11
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_12
+      rect:
+        serializedVersion: 2
+        x: 548
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_13
+      rect:
+        serializedVersion: 2
+        x: 594
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -19, y: 19}
+        - {x: -19, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -18}
+        - {x: 19, y: 19}
+    - name: poi_icons_18@2x_14
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_15
+      rect:
+        serializedVersion: 2
+        x: 686
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_16
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_17
+      rect:
+        serializedVersion: 2
+        x: 778
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_18
+      rect:
+        serializedVersion: 2
+        x: 824
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_19
+      rect:
+        serializedVersion: 2
+        x: 870
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_20
+      rect:
+        serializedVersion: 2
+        x: 916
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_21
+      rect:
+        serializedVersion: 2
+        x: 962
+        y: 412
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_22
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_23
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_24
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_25
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_26
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_27
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_28
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_29
+      rect:
+        serializedVersion: 2
+        x: 322
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_30
+      rect:
+        serializedVersion: 2
+        x: 368
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_31
+      rect:
+        serializedVersion: 2
+        x: 414
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_32
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_33
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_34
+      rect:
+        serializedVersion: 2
+        x: 552
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_35
+      rect:
+        serializedVersion: 2
+        x: 598
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_36
+      rect:
+        serializedVersion: 2
+        x: 644
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_37
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_38
+      rect:
+        serializedVersion: 2
+        x: 736
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_39
+      rect:
+        serializedVersion: 2
+        x: 782
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_40
+      rect:
+        serializedVersion: 2
+        x: 828
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_41
+      rect:
+        serializedVersion: 2
+        x: 874
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_42
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_43
+      rect:
+        serializedVersion: 2
+        x: 966
+        y: 370
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_44
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_45
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_46
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_47
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_48
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_49
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_50
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_51
+      rect:
+        serializedVersion: 2
+        x: 322
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_52
+      rect:
+        serializedVersion: 2
+        x: 368
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_53
+      rect:
+        serializedVersion: 2
+        x: 414
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_54
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_55
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_56
+      rect:
+        serializedVersion: 2
+        x: 552
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_57
+      rect:
+        serializedVersion: 2
+        x: 598
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_58
+      rect:
+        serializedVersion: 2
+        x: 644
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_59
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_60
+      rect:
+        serializedVersion: 2
+        x: 736
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_61
+      rect:
+        serializedVersion: 2
+        x: 782
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_62
+      rect:
+        serializedVersion: 2
+        x: 828
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_63
+      rect:
+        serializedVersion: 2
+        x: 874
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_64
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_65
+      rect:
+        serializedVersion: 2
+        x: 966
+        y: 328
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_66
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_67
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_68
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_69
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_70
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_71
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_72
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_73
+      rect:
+        serializedVersion: 2
+        x: 322
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_74
+      rect:
+        serializedVersion: 2
+        x: 368
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_75
+      rect:
+        serializedVersion: 2
+        x: 414
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_76
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_77
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_78
+      rect:
+        serializedVersion: 2
+        x: 552
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_79
+      rect:
+        serializedVersion: 2
+        x: 598
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_80
+      rect:
+        serializedVersion: 2
+        x: 644
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -19, y: 19}
+        - {x: -19, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -18}
+        - {x: 19, y: 19}
+    - name: poi_icons_18@2x_81
+      rect:
+        serializedVersion: 2
+        x: 694
+        y: 291
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_82
+      rect:
+        serializedVersion: 2
+        x: 734
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_83
+      rect:
+        serializedVersion: 2
+        x: 780
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -19, y: 19}
+        - {x: -19, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -18}
+        - {x: 19, y: 19}
+    - name: poi_icons_18@2x_84
+      rect:
+        serializedVersion: 2
+        x: 826
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_85
+      rect:
+        serializedVersion: 2
+        x: 872
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_86
+      rect:
+        serializedVersion: 2
+        x: 918
+        y: 286
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_87
+      rect:
+        serializedVersion: 2
+        x: 969
+        y: 291
+        width: 28
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_88
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -19, y: 19}
+        - {x: -19, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -18}
+        - {x: 19, y: 19}
+    - name: poi_icons_18@2x_89
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_90
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_91
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_92
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_93
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_94
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_95
+      rect:
+        serializedVersion: 2
+        x: 322
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_96
+      rect:
+        serializedVersion: 2
+        x: 368
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_97
+      rect:
+        serializedVersion: 2
+        x: 414
+        y: 248
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 17}
+        - {x: -17, y: -17}
+        - {x: 17, y: -17}
+        - {x: 17, y: 17}
+    - name: poi_icons_18@2x_98
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_99
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_100
+      rect:
+        serializedVersion: 2
+        x: 548
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_101
+      rect:
+        serializedVersion: 2
+        x: 594
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_102
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_103
+      rect:
+        serializedVersion: 2
+        x: 686
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_104
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_105
+      rect:
+        serializedVersion: 2
+        x: 778
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_106
+      rect:
+        serializedVersion: 2
+        x: 824
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_107
+      rect:
+        serializedVersion: 2
+        x: 870
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_108
+      rect:
+        serializedVersion: 2
+        x: 916
+        y: 256
+        width: 36
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_109
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 244
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_110
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 202
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_111
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 202
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_112
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 202
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_113
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 202
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_114
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 202
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_115
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 202
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_116
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 202
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_117
+      rect:
+        serializedVersion: 2
+        x: 322
+        y: 202
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 19}
+        - {x: -19, y: 17}
+        - {x: -19, y: -17}
+        - {x: -17, y: -19}
+        - {x: 17, y: -19}
+        - {x: 19, y: -17}
+        - {x: 19, y: 17}
+        - {x: 17, y: 19}
+    - name: poi_icons_18@2x_118
+      rect:
+        serializedVersion: 2
+        x: 374
+        y: 208
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_119
+      rect:
+        serializedVersion: 2
+        x: 459
+        y: 231
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_120
+      rect:
+        serializedVersion: 2
+        x: 475
+        y: 229
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_121
+      rect:
+        serializedVersion: 2
+        x: 494
+        y: 227
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_122
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 223
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_123
+      rect:
+        serializedVersion: 2
+        x: 537
+        y: 219
+        width: 22
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_124
+      rect:
+        serializedVersion: 2
+        x: 566
+        y: 233
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_125
+      rect:
+        serializedVersion: 2
+        x: 580
+        y: 229
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_126
+      rect:
+        serializedVersion: 2
+        x: 597
+        y: 227
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_127
+      rect:
+        serializedVersion: 2
+        x: 617
+        y: 223
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_128
+      rect:
+        serializedVersion: 2
+        x: 641
+        y: 219
+        width: 21
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_129
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 232
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_130
+      rect:
+        serializedVersion: 2
+        x: 686
+        y: 230
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_131
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 228
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_132
+      rect:
+        serializedVersion: 2
+        x: 724
+        y: 224
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_133
+      rect:
+        serializedVersion: 2
+        x: 748
+        y: 220
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_134
+      rect:
+        serializedVersion: 2
+        x: 924
+        y: 151
+        width: 49
+        height: 88
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -16.5, y: 44}
+        - {x: -24.5, y: 38}
+        - {x: -24.5, y: -4}
+        - {x: -4.5, y: -44}
+        - {x: 3.5, y: -44}
+        - {x: 24.5, y: -3}
+        - {x: 24.5, y: 42}
+        - {x: 15.5, y: 44}
+    - name: poi_icons_18@2x_135
+      rect:
+        serializedVersion: 2
+        x: 426
+        y: 214
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_136
+      rect:
+        serializedVersion: 2
+        x: 783
+        y: 118
+        width: 114
+        height: 115
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -47, y: 57.5}
+        - {x: -57, y: 37.5}
+        - {x: -57, y: -40.5}
+        - {x: -34, y: -57.5}
+        - {x: 27, y: -57.5}
+        - {x: 57, y: -34.5}
+        - {x: 57, y: 32.5}
+        - {x: 31, y: 57.5}
+    - name: poi_icons_18@2x_137
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 19
+        width: 49
+        height: 88
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -24.5, y: 44}
+        - {x: -24.5, y: -19}
+        - {x: -19.5, y: -44}
+        - {x: 8.5, y: -44}
+        - {x: 24.5, y: 0}
+        - {x: 24.5, y: 40}
+        - {x: 19.5, y: 44}
+    - name: poi_icons_18@2x_138
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 25
+        width: 80
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -30, y: 40.5}
+        - {x: -40, y: 26.5}
+        - {x: -40, y: -26.5}
+        - {x: -39, y: -30.5}
+        - {x: -23, y: -40.5}
+        - {x: 34, y: -40.5}
+        - {x: 40, y: -22.5}
+        - {x: 40, y: 31.5}
+        - {x: 32, y: 40.5}
+    - name: poi_icons_18@2x_139
+      rect:
+        serializedVersion: 2
+        x: 183
+        y: 2
+        width: 56
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 18, y: 50}
+        - {x: -20, y: 50}
+        - {x: -28, y: 40}
+        - {x: -28, y: -2}
+        - {x: -26, y: -12}
+        - {x: -3, y: -50}
+        - {x: 3, y: -50}
+        - {x: 13, y: -38}
+        - {x: 28, y: 5}
+        - {x: 28, y: 41}
+    - name: poi_icons_18@2x_140
+      rect:
+        serializedVersion: 2
+        x: 262
+        y: 1
+        width: 56
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -28, y: 50}
+        - {x: -28, y: -19}
+        - {x: -3, y: -50}
+        - {x: 3, y: -50}
+        - {x: 28, y: -17}
+        - {x: 28, y: 43}
+        - {x: 25, y: 50}
+    - name: poi_icons_18@2x_141
+      rect:
+        serializedVersion: 2
+        x: 368
+        y: 92
+        width: 5
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_142
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 92
+        width: 5
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_143
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 69
+        width: 12
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_144
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 54
+        width: 36
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -12, y: 18}
+        - {x: -18, y: 15}
+        - {x: -18, y: -18}
+        - {x: 17, y: -18}
+        - {x: 18, y: -17}
+        - {x: 18, y: 15}
+        - {x: 17, y: 18}
+      - - {x: -6, y: -7}
+        - {x: -5, y: 7}
+        - {x: 3, y: 9}
+        - {x: 9, y: -2}
+      - - {x: -2, y: 8}
+        - {x: -7, y: 4}
+        - {x: -7, y: -7}
+        - {x: -4, y: -8}
+        - {x: 8, y: -8}
+        - {x: 8, y: 3}
+        - {x: 7, y: 8}
+    - name: poi_icons_18@2x_145
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 69
+        width: 12
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_146
+      rect:
+        serializedVersion: 2
+        x: 418
+        y: 69
+        width: 12
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_147
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 54
+        width: 36
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -11, y: 18}
+        - {x: -18, y: 11}
+        - {x: -18, y: -13}
+        - {x: -15, y: -18}
+        - {x: 18, y: -18}
+        - {x: 18, y: 12}
+        - {x: 12, y: 18}
+      - - {x: -4, y: -9}
+        - {x: -8, y: 3}
+        - {x: 9, y: 4}
+        - {x: 5, y: -8}
+      - - {x: -5, y: 8}
+        - {x: -7, y: 6}
+        - {x: -8, y: 1}
+        - {x: -8, y: -4}
+        - {x: -5, y: -8}
+        - {x: 3, y: -8}
+        - {x: 8, y: -7}
+        - {x: 8, y: 6}
+        - {x: 4, y: 8}
+    - name: poi_icons_18@2x_148
+      rect:
+        serializedVersion: 2
+        x: 470
+        y: 69
+        width: 12
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_149
+      rect:
+        serializedVersion: 2
+        x: 368
+        y: 40
+        width: 5
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: poi_icons_18@2x_150
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 40
+        width: 5
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
