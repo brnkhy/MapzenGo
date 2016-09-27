@@ -7,6 +7,7 @@ namespace MapzenGo.Models.Enums
 {
     public enum RailwayType
     {
+        Unknown,
         Construction,
         Disused,
         Funicular,
@@ -17,6 +18,7 @@ namespace MapzenGo.Models.Enums
         Preserved,
         Rail,
         Subway,
-        Tram
+        Tram,
+        
     }
 }
