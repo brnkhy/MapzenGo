@@ -7,6 +7,7 @@ namespace MapzenGo.Models.Enums
 {
     public enum LanduseKind
     {
+        Unknown,
         Aerodrome,
         Allotments,
         Amusement_ride,
@@ -107,8 +108,6 @@ namespace MapzenGo.Models.Enums
         Winter_sports,
         Wood,
         Works,
-        Zoo,
-
-
+        Zoo
     }
 }

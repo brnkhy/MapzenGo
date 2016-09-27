@@ -7,6 +7,7 @@ namespace MapzenGo.Models.Enums
 {
     public enum EarthType
     {
+        Unknown,
         Arete,
         Cliff,
         Earth,
