@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace MapzenGo.Models
 {
-    public class Place : MonoBehaviour
+    public class Poi : MonoBehaviour
     {
         private Transform _target;
         public string Id;
@@ -24,7 +24,7 @@ namespace MapzenGo.Models
 
         public void Update()
         {
-            if (_target == null)
+            if(_target == null)
                 Destroy(gameObject);
             else
                 transform.position = Camera.main.WorldToScreenPoint(_target.position);

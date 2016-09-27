@@ -9,11 +9,10 @@ namespace MapzenGo.Models
 {
     public class PoiFactory : Factory
     {
-        [SerializeField]
-        private GameObject _labelPrefab;
+        [SerializeField] private GameObject _labelPrefab;
+        [SerializeField] private GameObject _container;
         public override string XmlTag { get { return "pois"; } }
-        [SerializeField]
-        protected PlacesFactorySettings FactorySettings;
+        [SerializeField] protected PlacesFactorySettings FactorySettings;
         public override void Start()
         {
             base.Start();
@@ -29,8 +28,8 @@ namespace MapzenGo.Models
             {
                 if (entity != null)
                 {
-                    entity.transform.SetParent(tile.transform, false);
-                    entity.transform.localScale = Vector3.one * 3/tile.transform.lossyScale.x;
+                    entity.transform.SetParent(_container.transform, true);
+                    //entity.transform.localScale = Vector3.one * 3/tile.transform.lossyScale.x;
                 }
             }
         }
@@ -41,28 +40,33 @@ namespace MapzenGo.Models
             var typeSettings = FactorySettings.GetSettingsFor<PlaceSettings>(kind);
 
             var go = Instantiate(_labelPrefab);
-            var water = go.AddComponent<Place>();
+            var poi = go.AddComponent<Poi>();
+            poi.transform.SetParent(_container.transform, true);
             //if (geo["properties"].HasField("name"))
             //    go.GetComponentInChildren<TextMesh>().text = geo["properties"]["name"].str;
 
             var c = geo["geometry"]["coordinates"];
             var dotMerc = GM.LatLonToMeters(c[1].f, c[0].f);
             var localMercPos = dotMerc - tile.Rect.Center;
-            go.transform.position = localMercPos.ToVector3();
+            go.transform.position = new Vector3((float) localMercPos.x, (float) localMercPos.y);
+            var target = new GameObject("poiTarget");
+            target.transform.position = localMercPos.ToVector3();
+            target.transform.SetParent(tile.transform, false);
+            poi.Stick(target.transform);
 
-            SetProperties(geo, water, typeSettings);
+            SetProperties(geo, poi, typeSettings);
 
-            yield return water;
+            yield return poi;
         }
 
-        private static void SetProperties(JSONObject geo, Place place, PlaceSettings typeSettings)
+        private static void SetProperties(JSONObject geo, Poi poi, PlaceSettings typeSettings)
         {
-            place.Id = geo["properties"]["id"].ToString();
+            poi.Id = geo["properties"]["id"].ToString();
             if (geo["properties"].HasField("name"))
-                place.Name = geo["properties"]["name"].str;
-            place.Type = geo["type"].str;
-            place.Kind = geo["properties"]["kind"].str;
-            place.name = "place";
+                poi.Name = geo["properties"]["name"].str;
+            poi.Type = geo["type"].str;
+            poi.Kind = geo["properties"]["kind"].str;
+            poi.name = "poi";
         }
     }
 }
