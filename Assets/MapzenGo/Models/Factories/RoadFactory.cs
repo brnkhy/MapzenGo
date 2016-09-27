@@ -176,8 +176,9 @@ namespace MapzenGo.Models.Factories
             var go = new GameObject(kind + " Road");
             var mesh = go.AddComponent<MeshFilter>().mesh;
             go.AddComponent<MeshRenderer>();
-            mesh.vertices = meshdata.Vertices.ToArray();
-            mesh.triangles = meshdata.Indices.ToArray();
+            mesh.SetVertices(meshdata.Vertices);
+            mesh.SetTriangles(meshdata.Indices, 0);
+            mesh.SetUVs(0, meshdata.UV);
             mesh.RecalculateNormals();
             go.GetComponent<MeshRenderer>().material = FactorySettings.GetSettingsFor<RoadSettings>(kind).Material;
             go.transform.position += Vector3.up * Order;
@@ -189,6 +190,7 @@ namespace MapzenGo.Models.Factories
             var vertsStartCount = md.Vertices.Count;
             Vector3 lastPos = Vector3.zero;
             var norm = Vector3.zero;
+            var lastUV = 0f;
             for (int i = 1; i < list.Count; i++)
             {
                 var p1 = list[i - 1];
@@ -203,12 +205,18 @@ namespace MapzenGo.Models.Factories
                     norm = GetNormal(p1, lastPos, p2) * settings.Width;
                     md.Vertices.Add(lastPos + norm);
                     md.Vertices.Add(lastPos - norm);
+                    md.UV.Add(new Vector2(0, 0));
+                    md.UV.Add(new Vector2(1, 0));
                 }
-
-                lastPos = Vector3.Lerp(p1, p2, 1f);
+                var dist = Vector3.Distance(lastPos, p2);
+                lastUV += dist;
+                lastPos = p2;
+                //lastPos = Vector3.Lerp(p1, p2, 1f);
                 norm = GetNormal(p1, lastPos, p3) * settings.Width;
                 md.Vertices.Add(lastPos + norm);
                 md.Vertices.Add(lastPos - norm);
+                md.UV.Add(new Vector2(0, lastUV));
+                md.UV.Add(new Vector2(1, lastUV));
             }
 
 

@@ -149,7 +149,7 @@ namespace MapzenGo.Models.Factories
 
             var vertsStartCount = meshdata.Vertices.Count;
             meshdata.Vertices.AddRange(corners.Points.Select(x => new Vector3((float)x.X, 0, (float)x.Y)).ToList());
-
+            meshdata.UV.AddRange(corners.Points.Select(x => new Vector2((float)x.X, (float)x.Y)).ToList());
             foreach (var tri in mesh.Triangles)
             {
                 meshdata.Indices.Add(vertsStartCount + tri.P1);
@@ -163,8 +163,9 @@ namespace MapzenGo.Models.Factories
             var go = new GameObject(kind + " Landuse");
             var mesh = go.AddComponent<MeshFilter>().mesh;
             go.AddComponent<MeshRenderer>();
-            mesh.vertices = meshdata.Vertices.ToArray();
-            mesh.triangles = meshdata.Indices.ToArray();
+            mesh.SetVertices(meshdata.Vertices);
+            mesh.SetTriangles(meshdata.Indices, 0);
+            mesh.SetUVs(0, meshdata.UV);
             mesh.RecalculateNormals();
             go.GetComponent<MeshRenderer>().material = FactorySettings.GetSettingsFor<LanduseSettings>(kind).Material;
             go.transform.position += Vector3.up * Order;
