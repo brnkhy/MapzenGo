@@ -18,7 +18,7 @@ namespace MapzenGo.Helpers
             {"country",PlaceType.Country},
             {"farm",PlaceType.Farm},
             {"hamlet",PlaceType.Hamlet},
-            {"historicPlace",PlaceType.HistoricPlace},
+            {"historic_place",PlaceType.HistoricPlace},
             {"isolatedDwelling",PlaceType.IsolatedDwelling},
             {"locality",PlaceType.Locality},
             {"macrohood",PlaceType.Macrohood},
@@ -208,8 +208,8 @@ namespace MapzenGo.Helpers
             {"exit"       , RoadType.Exit},
             {"ferry"      , RoadType.Ferry},
             {"highway"    , RoadType.Highway},
-            {"major_Road" , RoadType.Major_Road},
-            {"minor_Road" , RoadType.Minor_Road},
+            {"major_road" , RoadType.Major_Road},
+            {"minor_road" , RoadType.Minor_Road},
             {"path"       , RoadType.Path},
             {"piste"      , RoadType.Piste},
             {"racetrack"  , RoadType.Racetrack},
@@ -383,6 +383,9 @@ namespace MapzenGo.Helpers
 
         public static RoadType ConvertToRoadType(this string value)
         {
+            if(value.StartsWith("f"))
+                Debug.Log("here");
+
             if (RoadTypes.ContainsKey(value))
                 return RoadTypes[value];
             return RoadType.Path;
