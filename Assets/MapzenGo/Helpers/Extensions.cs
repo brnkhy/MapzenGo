@@ -11,6 +11,7 @@ namespace MapzenGo.Helpers
     {
         public static Dictionary<string, PlaceType> PlaceTypes = new Dictionary<string, PlaceType>()
         {
+            {"unknown", PlaceType.Unknown},
             {"borough",PlaceType.Borough},
             {"city",PlaceType.City},
             {"continent",PlaceType.Continent},
@@ -57,6 +58,7 @@ namespace MapzenGo.Helpers
 
         public static Dictionary<string, LanduseKind> LanduseKinds = new Dictionary<string, LanduseKind>()
         {
+            {"unknown", LanduseKind.Unknown},
             {"aerodrome", LanduseKind.Aerodrome},
             {"allotments", LanduseKind.Allotments},
             {"amusement_ride", LanduseKind.Amusement_ride},
@@ -162,6 +164,7 @@ namespace MapzenGo.Helpers
 
         public static Dictionary<string, RailwayType> RailwayTypes = new Dictionary<string, RailwayType>()
         {
+            {"unknown", RailwayType.Unknown},
             {"Construction", RailwayType.Construction},
             {"Disused", RailwayType.Disused},
             {"Funicular", RailwayType.Funicular},
@@ -177,6 +180,7 @@ namespace MapzenGo.Helpers
 
         public static Dictionary<string, WaterType> WaterTypes = new Dictionary<string, WaterType>()
         {
+            {"unknown", WaterType.Unknown},
             {"basin", WaterType.Basin},
             {"dock", WaterType.Dock},
             {"lake", WaterType.Lake},
@@ -189,6 +193,7 @@ namespace MapzenGo.Helpers
 
         public static Dictionary<string, EarthType> EarthTypes = new Dictionary<string, EarthType>()
         {
+            {"unknown", EarthType.Unknown},
             {"arete",  EarthType.Arete},
             {"cliff",  EarthType.Cliff},
             {"earth",  EarthType.Earth},
@@ -198,6 +203,7 @@ namespace MapzenGo.Helpers
 
         public static Dictionary<string, RoadType> RoadTypes = new Dictionary<string, RoadType>()
         {
+            {"unknown", RoadType.Unknown},
             {"aerialway"  , RoadType.Aerialway},
             {"exit"       , RoadType.Exit},
             {"ferry"      , RoadType.Ferry},
