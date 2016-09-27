@@ -383,9 +383,6 @@ namespace MapzenGo.Helpers
 
         public static RoadType ConvertToRoadType(this string value)
         {
-            if(value.StartsWith("f"))
-                Debug.Log("here");
-
             if (RoadTypes.ContainsKey(value))
                 return RoadTypes[value];
             return RoadType.Path;
