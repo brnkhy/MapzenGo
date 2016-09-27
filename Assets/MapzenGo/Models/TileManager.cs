@@ -54,6 +54,11 @@ namespace MapzenGo.Models
             transform.localScale = Vector3.one * (float)(TileSize / rect.Width);
         }
 
+        public virtual void Update()
+        {
+            
+        }
+
         private void InitLayers()
         {
             var layers = new List<string>();
