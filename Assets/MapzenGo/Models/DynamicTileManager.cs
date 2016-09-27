@@ -21,8 +21,9 @@ namespace MapzenGo.Models
             _centerCollider = new Rect(Vector2.zero - rect / 2 , rect);
         }
 
-        void Update()
+        public override void Update()
         {
+            base.Update();
             UpdateTiles();
         }
 
