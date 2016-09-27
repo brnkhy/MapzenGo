@@ -18,7 +18,7 @@ namespace MapzenGo.Models
         public override void Start()
         {
             _readyToProcess = new Queue<Tile>();
-#if UNITY_ANDROID
+#if UNITY_ANDROID || UNITY_IPHONE
             CacheFolderPath = Path.Combine(Application.persistentDataPath, RelativeCachePath);
 #else
             CacheFolderPath = Path.Combine(Application.dataPath, RelativeCachePath);
