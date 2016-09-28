@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Assets.MapzenGo.Models.Enums;
 using MapzenGo.Models.Enums;
 using MapzenGo.Models.Settings.Base;
 using UnityEditor;
@@ -67,6 +68,15 @@ namespace MapzenGo.Models.Settings.Editor
             }
         }
 
+        private PoiFactorySettings _factorySettingsPoiFactory;
+        private PoiFactorySettings PoiFactorySettings
+        {
+            get
+            {
+                return _factorySettingsPoiFactory ??
+                       HelperExtention.GetOrCreateSObjectReturn(ref _factorySettingsPoiFactory, PATH_SAVE_SCRIPTABLE_OBJECT);
+            }
+        }
 
         private BoundaryFactorySettings _settingBoundary;
         private BoundaryFactorySettings BoundaryFactorySettings
@@ -167,13 +177,20 @@ namespace MapzenGo.Models.Settings.Editor
                 UsingType.Add("pt_" + settings.Type.ToString());
                 settings.showContent = false;
             });
+
+            UsingType.Add("pot_" + PoiFactorySettings.DefaultPoi.Type.ToString());
+            PoiFactorySettings.SettingsPoi.ForEach(settings =>
+            {
+                UsingType.Add("pot_" + settings.Type.ToString());
+                settings.showContent = false;
+            });
         }
 
 
         void OnGUI()
         {
             //return;
-            tab = GUILayout.Toolbar(tab, new string[] { "BUILDING", "ROAD", "LANDUSE", "WATER", "BOUNDARY", "EARTH", "PLACES" });
+            tab = GUILayout.Toolbar(tab, new string[] { "BUILDING", "ROAD", "LANDUSE", "WATER", "BOUNDARY", "EARTH", "PLACES", "POI" });
             switch (tab)
             {
                 case 0:
@@ -263,6 +280,18 @@ namespace MapzenGo.Models.Settings.Editor
                         EditorGUILayout.EndVertical();
                         GUILayout.Space(20);
                         ShowPlaceListLanduse();
+                        break;
+                    }
+                case 7:
+                    {
+                        EditorGUILayout.BeginVertical(EditorStyles.inspectorFullWidthMargins);
+                        {
+                            GUILayout.Label("DEFAULT POI TYPE", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
+                            ShowPoiElement(PoiFactorySettings.DefaultPoi);
+                        }
+                        EditorGUILayout.EndVertical();
+                        GUILayout.Space(20);
+                        ShowPoiListLanduse();
                         break;
                     }
             }
@@ -885,7 +914,93 @@ namespace MapzenGo.Models.Settings.Editor
             }
             EditorGUILayout.EndVertical();
         }
+        private void ShowPoiListLanduse()
+        {
+            EditorGUILayout.Separator();
+            EditorGUILayout.BeginVertical("TextArea");
+            {
+                GUILayout.Label("Poi TYPE FOR LAYER", GuiTitleSize(14, TextAnchor.MiddleLeft, Color.black));
+                if (GUILayout.Button("ADD POI TYPE"))
+                {
+                    PoiFactorySettings.SettingsPoi.Add(new PoiSettings()
+                    {
+                        Type = PoiType.Unknown,
+                        Material = null,
+                    });
+                    UsingType.Add("pot_" + PoiType.Unknown.ToString());
+                }
+                GUILayout.Space(10);
+                scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+                {
+                    for (int ind = 0; ind < PoiFactorySettings.SettingsPoi.Count; ind++)
+                    {
 
+                        EditorGUILayout.BeginHorizontal("box");
+                        PoiFactorySettings.SettingsPoi[ind].showContent =
+                            EditorGUILayout.Foldout(PoiFactorySettings.SettingsPoi[ind].showContent,
+                                "POI TYPE - " + PoiFactorySettings.SettingsPoi[ind].Type.ToString());
+
+                        #region CHECK DUBLE TYPE END ERROR
+                        GUI.backgroundColor = Color.red;
+
+                        if (UsingType.FindAll(s => s == "pot_" + PoiFactorySettings.SettingsPoi[ind].Type.ToString()).Count > 1)
+                        {
+                            if (GUILayout.Button("Type Exist", "CN CountBadge", GUILayout.Width(75)))
+                            {
+                                PoiFactorySettings.SettingsPoi[ind].showContent = true;
+                            }
+                        }
+
+                        if (PoiFactorySettings.SettingsPoi[ind].Material == null)
+                        {
+                            GUI.backgroundColor = Color.magenta;
+                            if (GUILayout.Button("Mat is not set", "CN CountBadge", GUILayout.Width(95)))
+                            {
+                                PoiFactorySettings.SettingsPoi[ind].showContent = true;
+                            }
+                        }
+                        #endregion
+
+                        #region BUTTON MOVE & REMOVE 
+                        GUI.backgroundColor = Color.white;
+                        if (ind > 0 && GUILayout.Button(" \u25B2", "CN CountBadge", GUILayout.MaxWidth(30)))
+                        {
+                            Debug.Log(ind > 0);
+                            PoiFactorySettings.SettingsPoi.Move(ind, ind - 1);
+                        }
+                        if (ind < PoiFactorySettings.SettingsPoi.Count - 1 && GUILayout.Button("\u25BC", "CN CountBadge", GUILayout.MaxWidth(30)))
+                        {
+                            Debug.Log(ind < PoiFactorySettings.SettingsPoi.Count);
+                            PoiFactorySettings.SettingsPoi.Move(ind, ind + 1);
+                        }
+                        GUI.contentColor = Color.red;
+                        if (GUILayout.Button("\u2718", "CN CountBadge", GUILayout.MaxWidth(25)))
+                        {
+                            if (EditorUtility.DisplayDialog("Warning", "Are you sure you want to delete this type?", "Yes", "No"))
+                            {
+                                if (UsingType.Contains("pot_" + PoiFactorySettings.SettingsPoi[ind].Type.ToString()))
+                                {
+                                    UsingType.Remove("pot_" +
+                                                     PoiFactorySettings.SettingsPoi[ind].Type.ToString());
+                                }
+                                PoiFactorySettings.SettingsPoi.RemoveAt(ind);
+                            }
+                        }
+                        GUI.contentColor = Color.white;
+                        #endregion
+
+                        EditorGUILayout.EndHorizontal();
+                        if (PoiFactorySettings.SettingsPoi.Count > ind && PoiFactorySettings.SettingsPoi[ind].showContent)
+                        {
+                            ShowPoiElement(PoiFactorySettings.SettingsPoi[ind]);
+                        }
+                        EditorGUILayout.Separator();
+                    }
+                }
+                EditorGUILayout.EndScrollView();
+            }
+            EditorGUILayout.EndVertical();
+        }
 
         private void ShowBuildingElement(BuildingSettings element)
         {
@@ -1008,6 +1123,25 @@ namespace MapzenGo.Models.Settings.Editor
                 }
 
                 element.Color = EditorGUILayout.ColorField("Color", element.Color);
+                element.Material = (Material)EditorGUILayout.ObjectField("Material", element.Material, typeof(Material));
+
+                if (element.Material == null) DisplayErrorMEssage("Not setting material");
+            }
+            EditorGUILayout.EndVertical();
+        }
+        private void ShowPoiElement(PoiSettings element)
+        {
+            EditorGUILayout.BeginVertical("box");
+            {
+                PoiType saveKind = element.Type;
+                element.Type = (PoiType)EditorGUILayout.EnumPopup("Type Poi:", element.Type);
+                if (GUI.changed && saveKind != element.Type)
+                {
+                    if (UsingType.Contains("pot_" + saveKind.ToString())) UsingType.Remove("pot_" + saveKind.ToString());
+                    UsingType.Add("pot_" + element.Type.ToString());
+                }
+
+                element.Sprite = (Sprite)EditorGUILayout.ObjectField(element.Sprite, typeof(Sprite), allowSceneObjects: true);
                 element.Material = (Material)EditorGUILayout.ObjectField("Material", element.Material, typeof(Material));
 
                 if (element.Material == null) DisplayErrorMEssage("Not setting material");
