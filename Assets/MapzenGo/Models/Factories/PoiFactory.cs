@@ -4,6 +4,7 @@ using MapzenGo.Helpers;
 using MapzenGo.Models.Factories;
 using MapzenGo.Models.Settings;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MapzenGo.Models
 {
@@ -12,7 +13,7 @@ namespace MapzenGo.Models
         [SerializeField] private GameObject _labelPrefab;
         [SerializeField] private GameObject _container;
         public override string XmlTag { get { return "pois"; } }
-        [SerializeField] protected PlacesFactorySettings FactorySettings;
+        [SerializeField] protected PoiFactorySettings FactorySettings;
         public override void Start()
         {
             base.Start();
@@ -36,12 +37,17 @@ namespace MapzenGo.Models
 
         protected override IEnumerable<MonoBehaviour> Create(Tile tile, JSONObject geo)
         {
-            var kind = geo["properties"]["kind"].str.ConvertToPlaceType();
-            var typeSettings = FactorySettings.GetSettingsFor<PlaceSettings>(kind);
+            var kind = geo["properties"]["kind"].str.ConvertToPoiType();
+
+            if (!FactorySettings.HasSettingsFor(kind))
+                yield break;
+
+            var typeSettings = FactorySettings.GetSettingsFor<PoiSettings>(kind);
 
             var go = Instantiate(_labelPrefab);
             var poi = go.AddComponent<Poi>();
             poi.transform.SetParent(_container.transform, true);
+            poi.GetComponentInChildren<Image>().sprite = typeSettings.Sprite;
             //if (geo["properties"].HasField("name"))
             //    go.GetComponentInChildren<TextMesh>().text = geo["properties"]["name"].str;
 
@@ -59,7 +65,7 @@ namespace MapzenGo.Models
             yield return poi;
         }
 
-        private static void SetProperties(JSONObject geo, Poi poi, PlaceSettings typeSettings)
+        private static void SetProperties(JSONObject geo, Poi poi, PoiSettings typeSettings)
         {
             poi.Id = geo["properties"]["id"].ToString();
             if (geo["properties"].HasField("name"))
