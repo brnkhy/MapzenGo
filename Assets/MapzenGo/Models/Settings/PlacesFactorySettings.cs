@@ -16,7 +16,6 @@ namespace MapzenGo.Models.Settings
         {
             DefaultPlace = new PlaceSettings()
             {
-                Material = null,
                 Type = PlaceType.Unknown
             };
             SettingsPlace = new List<PlaceSettings>();
@@ -37,13 +36,17 @@ namespace MapzenGo.Models.Settings
     {
         public PlaceType Type;
         public Color Color;
+        public Font Font;
+        public int FontSize;
+        public Color OutlineColor;
 
         public PlaceSettings() 
         {
             Type = PlaceType.Unknown;
-            Material = null;
-            Color = Color.black;
+            Color = Color.white;
+            FontSize = 16;
+            OutlineColor = Color.black;
         }
-   
+
     }
 }

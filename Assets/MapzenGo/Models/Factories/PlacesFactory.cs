@@ -26,12 +26,13 @@ namespace MapzenGo.Models
             if (!(tile.Data.HasField(XmlTag) && tile.Data[XmlTag].HasField("features")))
                 return;
 
-            foreach (var entity in tile.Data[XmlTag]["features"].list.Where(x => Query(x)).SelectMany(geo => Create(tile, geo)))
+
+            var ql = tile.Data[XmlTag]["features"].list.Where(x => Query(x));
+            foreach (var entity in ql.SelectMany(geo => Create(tile, geo)))
             {
                 if (entity != null)
                 {
                     entity.transform.SetParent(_container.transform, true);
-                    //entity.transform.localScale = Vector3.one * 3/tile.transform.lossyScale.x;
                 }
             }
         }
@@ -39,10 +40,19 @@ namespace MapzenGo.Models
         protected override IEnumerable<MonoBehaviour> Create(Tile tile, JSONObject geo)
         {
             var kind = geo["properties"]["kind"].str.ConvertToPlaceType();
+            if (!FactorySettings.HasSettingsFor(kind))
+                yield break;
+
             var typeSettings = FactorySettings.GetSettingsFor<PlaceSettings>(kind);
 
             var go = Instantiate(_labelPrefab);
             var place = go.AddComponent<Place>();
+            go.GetComponentInChildren<Outline>().effectColor = typeSettings.OutlineColor;
+            var text = go.GetComponentInChildren<Text>();
+            text.fontSize = typeSettings.FontSize;
+            text.color = typeSettings.Color;
+            text.font = typeSettings.Font;
+
             place.transform.SetParent(_container.transform, true);
 
             if (geo["properties"].HasField("name"))
