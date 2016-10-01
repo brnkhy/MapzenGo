@@ -17,7 +17,6 @@ namespace MapzenGo.Models.Settings
         {
             DefaultPoi = new PoiSettings()
             {
-                Material = null,
                 Type = PoiType.Unknown
             };
             SettingsPoi = new List<PoiSettings>();
@@ -42,7 +41,6 @@ namespace MapzenGo.Models.Settings
         public PoiSettings() 
         {
             Type = PoiType.Unknown;
-            Material = null;
         }
    
     }

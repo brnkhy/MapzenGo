@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MapzenGo.Models.Enums;
 using MapzenGo.Models.Settings.Base;
+using UnityEngine;
 
 namespace MapzenGo.Models.Settings
 {
@@ -35,6 +36,7 @@ namespace MapzenGo.Models.Settings
     public class WaterSettings : BaseSetting
     {
         public WaterType Type;
+        public Material Material;
 
         public WaterSettings() 
         {

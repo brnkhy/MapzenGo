@@ -838,7 +838,6 @@ namespace MapzenGo.Models.Settings.Editor
                     PlacesFactorySettings.SettingsPlace.Add(new PlaceSettings()
                     {
                         Type = PlaceType.Unknown,
-                        Material = null,
                     });
                     UsingType.Add("pt_" + PlaceType.Unknown.ToString());
                 }
@@ -859,15 +858,6 @@ namespace MapzenGo.Models.Settings.Editor
                         if (UsingType.FindAll(s => s == "pt_" + PlacesFactorySettings.SettingsPlace[ind].Type.ToString()).Count > 1)
                         {
                             if (GUILayout.Button("Type Exist", "CN CountBadge", GUILayout.Width(75)))
-                            {
-                                PlacesFactorySettings.SettingsPlace[ind].showContent = true;
-                            }
-                        }
-
-                        if (PlacesFactorySettings.SettingsPlace[ind].Material == null)
-                        {
-                            GUI.backgroundColor = Color.magenta;
-                            if (GUILayout.Button("Mat is not set", "CN CountBadge", GUILayout.Width(95)))
                             {
                                 PlacesFactorySettings.SettingsPlace[ind].showContent = true;
                             }
@@ -925,7 +915,6 @@ namespace MapzenGo.Models.Settings.Editor
                     PoiFactorySettings.SettingsPoi.Add(new PoiSettings()
                     {
                         Type = PoiType.Unknown,
-                        Material = null,
                     });
                     UsingType.Add("pot_" + PoiType.Unknown.ToString());
                 }
@@ -950,15 +939,7 @@ namespace MapzenGo.Models.Settings.Editor
                                 PoiFactorySettings.SettingsPoi[ind].showContent = true;
                             }
                         }
-
-                        if (PoiFactorySettings.SettingsPoi[ind].Material == null)
-                        {
-                            GUI.backgroundColor = Color.magenta;
-                            if (GUILayout.Button("Mat is not set", "CN CountBadge", GUILayout.Width(95)))
-                            {
-                                PoiFactorySettings.SettingsPoi[ind].showContent = true;
-                            }
-                        }
+                        
                         #endregion
 
                         #region BUTTON MOVE & REMOVE 
@@ -1123,9 +1104,9 @@ namespace MapzenGo.Models.Settings.Editor
                 }
 
                 element.Color = EditorGUILayout.ColorField("Color", element.Color);
-                element.Material = (Material)EditorGUILayout.ObjectField("Material", element.Material, typeof(Material));
-
-                if (element.Material == null) DisplayErrorMEssage("Not setting material");
+                element.FontSize = EditorGUILayout.IntField("Font Size", element.FontSize);
+                element.OutlineColor = EditorGUILayout.ColorField("Outline Color", element.OutlineColor);
+                element.Font = (Font)EditorGUILayout.ObjectField(element.Font, typeof(Font), allowSceneObjects: true);
             }
             EditorGUILayout.EndVertical();
         }
@@ -1142,9 +1123,6 @@ namespace MapzenGo.Models.Settings.Editor
                 }
 
                 element.Sprite = (Sprite)EditorGUILayout.ObjectField(element.Sprite, typeof(Sprite), allowSceneObjects: true);
-                element.Material = (Material)EditorGUILayout.ObjectField("Material", element.Material, typeof(Material));
-
-                if (element.Material == null) DisplayErrorMEssage("Not setting material");
             }
             EditorGUILayout.EndVertical();
         }

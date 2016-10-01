@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MapzenGo.Models.Enums;
 using MapzenGo.Models.Settings.Base;
+using UnityEngine;
 
 namespace MapzenGo.Models.Settings
 {
@@ -37,5 +38,6 @@ namespace MapzenGo.Models.Settings
     public class LanduseSettings : BaseSetting
     {
         public LanduseKind Type;
+        public Material Material;
     }
 }

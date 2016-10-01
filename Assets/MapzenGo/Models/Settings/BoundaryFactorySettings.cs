@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MapzenGo.Models.Enums;
 using MapzenGo.Models.Settings.Base;
+using UnityEngine;
 
 public class BoundaryFactorySettings: SettingsLayers
 {
@@ -31,6 +32,7 @@ public class BoundaryFactorySettings: SettingsLayers
 [Serializable]
 public class BoundarySettings : BaseSetting
 {
+    public Material Material;
     public BoundaryType Type;
     public float Width = 2;
 }
