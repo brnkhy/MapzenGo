@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MapzenGo.Models.Enums;
 using MapzenGo.Models.Settings.Base;
+using UnityEngine;
 
 namespace MapzenGo.Models.Settings
 {
@@ -28,6 +29,7 @@ namespace MapzenGo.Models.Settings
     public class BuildingSettings:BaseSetting
     {
         public BuildingType Type;
+        public Material Material;
         public int MinimumBuildingHeight = 2;
         public int MaximumBuildingHeight = 5;
         public bool IsVolumetric = true;

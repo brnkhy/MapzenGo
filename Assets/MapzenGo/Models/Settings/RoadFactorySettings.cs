@@ -38,6 +38,7 @@ namespace MapzenGo.Models.Settings
     [Serializable]
     public class RoadSettings : BaseSetting
     {
+        public Material Material;
         public RoadType Type;
         public RailwayType TypeRail;
         public float Width = 6;
