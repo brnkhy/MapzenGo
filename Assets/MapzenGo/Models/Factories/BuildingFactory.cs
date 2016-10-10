@@ -69,13 +69,15 @@ namespace MapzenGo.Models.Factories
                 SetProperties(geo, building, typeSettings);
 
                 var height = 0f;
+                var minHeight = 0f;
                 if (typeSettings.IsVolumetric)
                 {
                     height = geo["properties"].HasField("height") ? geo["properties"]["height"].f : Random.Range(typeSettings.MinimumBuildingHeight, typeSettings.MaximumBuildingHeight);
+                    minHeight = GetMinHeight(geo);
                 }
 
                 var tb = new MeshData();
-                CreateMesh(buildingCorners, height, typeSettings, tb, new Vector2(minx, miny), new Vector2(maxx - minx, maxy - miny));
+                CreateMesh(buildingCorners, minHeight, height, typeSettings, tb, new Vector2(minx, miny), new Vector2(maxx - minx, maxy - miny));
 
                 mesh.vertices = tb.Vertices.ToArray();
                 mesh.triangles = tb.Indices.ToArray();
@@ -141,10 +143,10 @@ namespace MapzenGo.Models.Factories
 
                 //returns random height if real value not available
                 var height = GetHeights(geo, typeSettings.MinimumBuildingHeight, typeSettings.MaximumBuildingHeight);
-
+                var minHeight = GetMinHeight(geo);
                 //create mesh, actually just to get vertice&indices
                 //filling last two parameters, horrible call yea
-                CreateMesh(buildingCorners, height, typeSettings, openList[kind], new Vector2(minx, miny), new Vector2(maxx - minx, maxy - miny));
+                CreateMesh(buildingCorners, minHeight, height, typeSettings, openList[kind], new Vector2(minx, miny), new Vector2(maxx - minx, maxy - miny));
                 
                 //unity cant handle more than 65k on single mesh
                 //so we'll finish current and start a new one
@@ -189,6 +191,18 @@ namespace MapzenGo.Models.Factories
             return height;
         }
 
+        private float GetMinHeight(JSONObject geo)
+        {
+            var height = 0f;
+            if (FactorySettings.DefaultBuilding.IsVolumetric)
+            {
+                height = geo["properties"].HasField("min_height")
+                    ? geo["properties"]["min_height"].f
+                    : 0;
+            }
+            return height;
+        }
+
         private Vector3 ChangeToRelativePositions(List<Vector3> buildingCorners)
         {
             var buildingCenter = buildingCorners.Aggregate((acc, cur) => acc + cur) / buildingCorners.Count;
@@ -214,7 +228,7 @@ namespace MapzenGo.Models.Factories
             building.GetComponent<MeshRenderer>().material = typeSettings.Material;
         }
 
-        private void CreateMesh(List<Vector3> corners, float height, BuildingSettings typeSettings, MeshData data, Vector2 min, Vector2 size)
+        private void CreateMesh(List<Vector3> corners, float min_height, float height, BuildingSettings typeSettings, MeshData data, Vector2 min, Vector2 size)
         {
             var vertsStartCount = _useTriangulationNet 
                     ? CreateRoofTriangulation(corners, height, data)
@@ -239,8 +253,8 @@ namespace MapzenGo.Models.Factories
                     ind = data.Vertices.Count;
                     data.Vertices.Add(v1);
                     data.Vertices.Add(v2);
-                    data.Vertices.Add(new Vector3(v1.x, 0, v1.z));
-                    data.Vertices.Add(new Vector3(v2.x, 0, v2.z));
+                    data.Vertices.Add(new Vector3(v1.x, min_height, v1.z));
+                    data.Vertices.Add(new Vector3(v2.x, min_height, v2.z));
 
                     d = (v2 - v1).magnitude;
 
@@ -263,8 +277,8 @@ namespace MapzenGo.Models.Factories
                 ind = data.Vertices.Count;
                 data.Vertices.Add(v1);
                 data.Vertices.Add(v2);
-                data.Vertices.Add(new Vector3(v1.x, 0, v1.z));
-                data.Vertices.Add(new Vector3(v2.x, 0, v2.z));
+                data.Vertices.Add(new Vector3(v1.x, min_height, v1.z));
+                data.Vertices.Add(new Vector3(v2.x, min_height, v2.z));
 
                 d = (v2 - v1).magnitude;
 
