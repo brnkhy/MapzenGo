@@ -42,6 +42,7 @@ namespace MapzenGo.Models.Plugins
             rend.material = tile.Material;
 
             var url = TileServiceUrls[(int)TileService] + tile.Zoom + "/" + tile.TileTms.x + "/" + tile.TileTms.y + ".png";
+            
             ObservableWWW.GetWWW(url).Subscribe(
                 success =>
                 {

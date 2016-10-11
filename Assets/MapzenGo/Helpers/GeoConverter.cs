@@ -81,13 +81,22 @@ namespace MapzenGo.Helpers
             return new RectD(min, max - min);
         }
 
+        public static Vector2d MetersToLatLon(Vector2d m)
+        {
+            var ll = new Vector2d();
+            ll.x = (m.x / OriginShift) * 180;
+            ll.y = (m.y / OriginShift) * 180;
+            ll.y = 180 / Math.PI * (2 * Math.Atan(Math.Exp(ll.y * Math.PI / 180)) - Math.PI / 2);
+            return ll;
+        }
+
         //Returns bounds of the given tile in latutude/longitude using WGS84 datum
-        //public static Rect TileLatLonBounds(Vector2d t, int zoom)
+        //public static RectD TileLatLonBounds(Vector2d t, int zoom)
         //{
         //    var bound = TileBounds(t, zoom);
-        //    var min = MetersToLatLon(new Vector2d(bound.xMin, bound.yMin));
-        //    var max = MetersToLatLon(new Vector2d(bound.xMax, bound.yMax));
-        //    return new Rect(min.x, min.y, Math.Abs(max.x - min.x), Math.Abs(max.y - min.y));
+        //    var min = MetersToLatLon(new Vector2d(bound.Min.x, bound.Min.y));
+        //    var max = MetersToLatLon(new Vector2d(bound.Min.x + bound.Size.x, bound.Min.y + bound.Size.y));
+        //    return new RectD(min.x, min.y, Math.Abs(max.x - min.x), Math.Abs(max.y - min.y));
         //}
 
         //Resolution (meters/pixel) for given zoom level (measured at Equator)
