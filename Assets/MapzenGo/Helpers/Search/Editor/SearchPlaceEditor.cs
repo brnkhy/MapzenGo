@@ -20,6 +20,7 @@ namespace MapzenGo.Helpers.Search.Editor
         public Color m_Color;
         public string m_String;
         public int m_Number;
+        Color colorInterface;
 
         AnimBool m_ShowExtraFields;
         //private string str;
@@ -28,16 +29,7 @@ namespace MapzenGo.Helpers.Search.Editor
             place = target as SearchPlace;
             place.DataStructure = HelperExtention.GetOrCreateSObjectReturn<StructSearchData>(ref place.DataStructure,PATH_SAVE_SCRIPTABLE_OBJECT);
             place.namePlaceСache = "";
-         //   place.namePlace = "";
-            /*if (place.namePlace!=String.Empty)
-            {
-                place.SearchInMapzen();
-            }
-            else
-            {
-                place.DataStructure.dataChache.Clear();
-            }*/
-
+            colorInterface = EditorGUIUtility.isProSkin?Color.white:Color.black;
         }
 
         private void ShowSaveLocation()
@@ -75,7 +67,7 @@ namespace MapzenGo.Helpers.Search.Editor
             for (int i = 0; i < place.DataStructure.dataChache.Count; i++)
             {
                 var style = new GUIStyle(GUI.skin.button);
-                style.normal.textColor = Color.black;
+                style.normal.textColor = colorInterface;
                 style.alignment = TextAnchor.MiddleLeft;
                 style.fontSize = 14;
                 style.padding = new RectOffset(10, 1, 1, 1);
@@ -104,13 +96,12 @@ namespace MapzenGo.Helpers.Search.Editor
 
         public override void OnInspectorGUI()
         {
-            // DrawDefaultInspector();
             place = target as SearchPlace;
             if (place != null)
             {
 
                 GUILayout.BeginHorizontal("Box");
-                GUILayout.Label("Enter location name",LayerSettingWindows.GuiTitleSize(14, TextAnchor.MiddleCenter, Color.black));
+                GUILayout.Label("Enter location name",LayerSettingWindows.GuiTitleSize(14, TextAnchor.MiddleCenter, colorInterface));
                 place.namePlace = EditorGUILayout.TextField("", place.namePlace,GUILayout.Height(20));
                 GUILayout.EndHorizontal();
 
@@ -121,7 +112,7 @@ namespace MapzenGo.Helpers.Search.Editor
                     place.DataStructure.dataChache.Clear();
                     EditorGUILayout.HelpBox("Enter place name", MessageType.Info);
                 }
-                else
+                else if (GUILayout.Button("SEARCH"))
                 {
                     place.SearchInMapzen();
                 }

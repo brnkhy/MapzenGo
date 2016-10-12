@@ -57,6 +57,10 @@ namespace MapzenGo.Helpers.Search
         {
             JSONObject obj = new JSONObject(success);
             DataStructure.dataChache = new List<SearchData>();
+            Debug.Log(DataStructure.dataChache.Count);
+            DataStructure.dataChache = new List<SearchData>();
+            Debug.Log(obj["features"].list.Count);
+
             foreach (JSONObject jsonObject in obj["features"].list)
             {
                 DataStructure.dataChache.Add(new SearchData()
