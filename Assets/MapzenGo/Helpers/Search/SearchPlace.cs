@@ -66,7 +66,11 @@ namespace MapzenGo.Helpers.Search
                 DataStructure.dataChache.Add(new SearchData()
                 {
                     coordinates = new Vector2(jsonObject["geometry"]["coordinates"][0].f, jsonObject["geometry"]["coordinates"][1].f),
-                    label = jsonObject["properties"]["label"].str
+                    label = jsonObject["properties"].HasField("label") 
+                        ? jsonObject["properties"]["label"].str 
+                        : jsonObject["properties"].HasField("name") 
+                            ? jsonObject["properties"]["name"].str 
+                            : ""
                 });
             }
         }
