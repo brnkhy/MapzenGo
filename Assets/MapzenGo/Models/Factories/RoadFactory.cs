@@ -56,7 +56,7 @@ namespace MapzenGo.Models.Factories
                 road.Id = geo["properties"]["id"].ToString();
                 road.Type = geo["type"].str;
                 road.Kind = geo["properties"]["kind"].str;
-                road.SortKey = (int)geo["properties"]["sort_key"].f;
+                road.SortKey = (int)geo["properties"]["sort_rank"].f;
                 if (geo["properties"].HasField("name"))
                     road.Name = geo["properties"]["name"].str;
 
@@ -105,7 +105,7 @@ namespace MapzenGo.Models.Factories
             road.Id = geo["properties"]["id"].ToString();
             road.Type = geo["type"].str;
             road.Kind = geo["properties"]["kind"].str;
-            road.SortKey = (int)geo["properties"]["sort_key"].f;
+            road.SortKey = (int)geo["properties"]["sort_rank"].f;
             if (geo["properties"].HasField("name"))
                 road.Name = geo["properties"]["name"].str;
         }
