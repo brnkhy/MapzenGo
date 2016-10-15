@@ -18,6 +18,7 @@ namespace MapzenGo.Models
         public Vector3d TileCenter { get; set; }
         public bool UseLayers { get; set; }
         public Material Material { get; set; }
+        public Texture2D TerrariumData { get; set; }
 
         public void OnDestroy()
         {

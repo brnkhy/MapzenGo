@@ -58,6 +58,9 @@ namespace MapzenGo.Models.Factories
             return null;
         }
 
-        
+        public float GetTerrariumHeight(Color c)
+        {
+            return (c.r * 256 * 256 + c.g * 256 + c.b) - 32768;
+        }
     }
 }

@@ -17,7 +17,7 @@ namespace MapzenGo.Models
         [SerializeField] public int Zoom = 16;
         [SerializeField] public float TileSize = 100;
 
-        protected readonly string _mapzenUrl = "https://vector.mapzen.com/osm/{0}/{1}/{2}/{3}.{4}?api_key={5}";
+        protected readonly string _mapzenUrl = "http://tile.mapzen.com/mapzen/vector/v1/{0}/{1}/{2}/{3}.{4}?api_key={5}";
         [SerializeField] protected string _key = "vector-tiles-5sBcqh6"; //try getting your own key if this doesn't work
         protected string _mapzenLayers;
         [SerializeField] protected Material MapMaterial;
@@ -132,10 +132,16 @@ namespace MapzenGo.Models
                     return;
                 tile.Data = mapData;
 
-                foreach (var factory in _plugins)
+                var th = new TerrainHeightPlugin();
+                th.Create(tile);
+                th.TerrainHeightSet += ((s, e) =>
                 {
-                    factory.Create(tile);
-                }
+                    foreach (var factory in _plugins)
+                    {
+                        factory.Create(tile);
+                    }
+                });
+
             });
         }
     }

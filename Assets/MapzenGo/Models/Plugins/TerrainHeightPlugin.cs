@@ -7,8 +7,10 @@ using UnityEngine;
 
 namespace MapzenGo.Models.Plugins
 {
-    public class TerrainHeightPlugin : Plugin
+    public class TerrainHeightPlugin
     {
+        public event EventHandler TerrainHeightSet;
+
         public enum TileServices
         {
             Default,
@@ -28,10 +30,8 @@ namespace MapzenGo.Models.Plugins
             "https://stamen-tiles.a.ssl.fastly.net/watercolor/"
         };
 
-        public override void Create(Tile tile)
+        public void Create(Tile tile)
         {
-            base.Create(tile);
-
             var url = "https://tile.mapzen.com/mapzen/terrain/v1/terrarium/" + tile.Zoom + "/" + tile.TileTms.x + "/" +
                       tile.TileTms.y + ".png?api_key=" + _key;
             
@@ -49,10 +49,10 @@ namespace MapzenGo.Models.Plugins
         private void CreateMesh(Tile tile, WWW terrarium)
         {
             var url = TileServiceUrls[(int)TileService] + tile.Zoom + "/" + tile.TileTms.x + "/" + tile.TileTms.y + ".png";
-            var sampleCount = 3;
+            var sampleCount = 7;
             var tex = new Texture2D(256, 256);
             terrarium.LoadImageIntoTexture(tex);
-
+            tile.TerrariumData = tex;
             ObservableWWW.GetWWW(url).Subscribe(
                 success =>
                 {
@@ -76,28 +76,44 @@ namespace MapzenGo.Models.Plugins
                     }
 
                     mesh.SetVertices(verts);
-                    mesh.triangles = new int[]
+
+                    //we can read these from a hardcoded dictionary as well
+                    //no need to calculate this every single time unless we need a really high range for sampleCount
+                    var trilist = new List<int>();
+                    for (int y = 0; y < sampleCount-1; y++)
                     {
-                0,3,4,0,4,1,1,4,5,1,5,2,3,6,7,3,7,4,4,7,8,4,8,5
-                    };
-                    mesh.SetUVs(0, new List<Vector2>()
+                        for (int x = 0; x < sampleCount-1; x++)
+                        {
+                            trilist.Add((y * sampleCount) + x);
+                            trilist.Add((y * sampleCount) + x + sampleCount);
+                            trilist.Add((y * sampleCount) + x + sampleCount + 1);
+
+                            trilist.Add((y * sampleCount) + x);
+                            trilist.Add((y * sampleCount) + x + sampleCount + 1);
+                            trilist.Add((y * sampleCount) + x + 1);
+                        }
+                    }
+                    mesh.SetTriangles(trilist, 0);
+                    
+                    var uvlist = new List<Vector2>();
+                    var step = 1f/(sampleCount-1);
+                    for (int i = 0; i < sampleCount; i++)
                     {
-                        new Vector2(0, 1),
-                        new Vector2(0, 0.5f),
-                        new Vector2(0, 0),
-                        new Vector2(0.5f, 1),
-                        new Vector2(0.5f, 0.5f),
-                        new Vector2(0.5f, 0),
-                        new Vector2(1, 1),
-                        new Vector2(1, 0.5f),
-                        new Vector2(1, 0),
-                    });
+                        for (int j = 0; j < sampleCount; j++)
+                        {
+                            uvlist.Add(new Vector2(i * step, 1-(j*step)));
+                        }
+                    }
+                    mesh.SetUVs(0, uvlist);
                     mesh.RecalculateNormals();
                     go.transform.SetParent(tile.transform, false);
 
                     rend.material.mainTexture = new Texture2D(512, 512, TextureFormat.DXT5, false);
                     rend.material.color = new Color(1f, 1f, 1f, 1f);
                     success.LoadImageIntoTexture((Texture2D)rend.material.mainTexture);
+
+                    if (TerrainHeightSet != null)
+                        TerrainHeightSet(this, null);
                 },
                 error =>
                 {
