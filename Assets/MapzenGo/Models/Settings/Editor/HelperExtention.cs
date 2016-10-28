@@ -9,10 +9,10 @@ using UnityEngine;
 
 namespace MapzenGo.Models.Settings.Editor
 {
-    public class HelperExtention : MonoBehaviour {
+    public class HelperExtention : MonoBehaviour
+    {
 
-#if UNITY_EDITOR_WIN
-        public static void GetOrCreateSObject<T>(ref T scriptebleObject, string pathSaveScriptableObject,string nameScriptableObject, Action action = null) where T : ScriptableObject
+        public static void GetOrCreateSObject<T>(ref T scriptebleObject, string pathSaveScriptableObject, string nameScriptableObject, Action action = null) where T : ScriptableObject
         {
             var path = pathSaveScriptableObject + nameScriptableObject;
             if (!Directory.Exists(pathSaveScriptableObject)) Directory.CreateDirectory(pathSaveScriptableObject);
@@ -49,7 +49,6 @@ namespace MapzenGo.Models.Settings.Editor
             }
             return scriptebleObject;
         }
-#endif
 
         public static Type[] CreateScriptableObject(Type TypeSeach)
         {
@@ -57,8 +56,8 @@ namespace MapzenGo.Models.Settings.Editor
 
             // Get all classes derived from ScriptableObject
             var allScriptableObjects = (from t in assembly.GetTypes()
-                where t.IsSubclassOf(TypeSeach)
-                select t).ToArray();
+                                        where t.IsSubclassOf(TypeSeach)
+                                        select t).ToArray();
             return allScriptableObjects;
         }
 
