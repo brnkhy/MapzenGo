@@ -11,7 +11,7 @@ namespace MapzenGo.Models.Settings.Editor
 {
     public class HelperExtention : MonoBehaviour {
 
-#if UNITY_EDITOR_WIN
+
         public static void GetOrCreateSObject<T>(ref T scriptebleObject, string pathSaveScriptableObject,string nameScriptableObject, Action action = null) where T : ScriptableObject
         {
             var path = pathSaveScriptableObject + nameScriptableObject;
@@ -49,7 +49,7 @@ namespace MapzenGo.Models.Settings.Editor
             }
             return scriptebleObject;
         }
-#endif
+
 
         public static Type[] CreateScriptableObject(Type TypeSeach)
         {
