@@ -1,6 +1,9 @@
 # MapzenGo 
 Pokemon Go clone using Unity3D, Mapzen & OpenStreetMap
 
+Latest blog post about the state of MapzenGo Project;
+http://barankahyaoglu.com/dev/new-job-new-project-new-horizons/
+
 Website: http://barankahyaoglu.com/dev/    
 Twitter: http://www.twitter.com/brnkhy
 
